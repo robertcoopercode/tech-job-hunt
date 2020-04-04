@@ -1,0 +1,5 @@
+node_modules
+.next
+web-app/types/graphql
+web-app/graphql
+api/src/generated

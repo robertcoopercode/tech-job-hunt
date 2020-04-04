@@ -1,0 +1,17 @@
+{
+    "name": "viewer-request-function",
+    "version": "1.0.0",
+    "main": "index.js",
+    "private": true,
+    "dependencies": {
+        "querystring": "^0.2.0"
+    },
+    "scripts": {
+        "zip": "tsc && cd dist && zip -FSr ../viewer-request-function.zip . ../node_modules",
+        "deploy": "yarn zip && aws lambda update-function-code --function-name viewer-request-function --zip-file fileb://viewer-request-function.zip",
+        "publish-aws": "aws lambda publish-version --function-name viewer-request-function"
+    },
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.46"
+    }
+}

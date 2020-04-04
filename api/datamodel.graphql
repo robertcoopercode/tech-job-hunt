@@ -1,0 +1,156 @@
+enum JobDecision {
+  REJECTED # Company rejects application
+  ACCEPTED # Applicant accepts company
+  DECLINED # Applicant rejects company
+}
+
+enum ApplicationStatus {
+  INTERESTED
+  APPLIED
+  INTERVIEWING
+  OFFER
+  DECIDED
+}
+
+enum BillingFrequency {
+  MONTHLY
+  YEARLY
+}
+
+type Card {
+  id: ID! @id
+  billingInfo: BillingInfo!
+  last4Digits: String!
+  expMonth: Int!
+  expYear: Int!
+  brand: String!
+  stripePaymentMethodId: String!
+}
+
+type BillingInfo {
+  id: ID! @id
+  user: User!
+  # User's that are given free premium accounts will have the stripeCustomerId equal to null
+  stripeCustomerId: String @unique
+  stripeSubscriptionId: String
+  billingFrequency: BillingFrequency
+  startOfBillingPeriod: Int # Date in ms
+  endOfBillingPeriod: Int # Date in ms
+  willCancelAtEndOfPeriod: Boolean! @default(value: false)
+  isPremiumActive: Boolean! @default(value: false)
+  card: Card @relation(link: INLINE, onDelete: CASCADE)
+}
+
+type User {
+  id: ID! @id
+  resetToken: String
+  resetTokenExpiry: Float
+  emailConfirmationToken: String
+  hasVerifiedEmail: Boolean @default(value: false)
+  hasCompletedOnboarding: Boolean! @default(value: false)
+  googleId: String @unique
+  email: String! @unique
+  password: String
+  billing: BillingInfo @relation(link: INLINE, onDelete: CASCADE)
+  jobApplications: [JobApplication!]! @relation(onDelete: CASCADE)
+  companies: [Company!]! @relation(onDelete: CASCADE)
+  resumes: [Resume!]! @relation(onDelete: CASCADE)
+}
+
+type JobApplicationResume {
+  id: ID! @id
+  resume: Resume
+  selectedVersionId: String!
+}
+
+type JobApplication {
+  id: ID! @id
+  user: User!
+  company: Company!
+  companyName: String! # Used for table sorting purposes
+  createdAt: DateTime! @createdAt
+  position: String!
+  location: GoogleMapsLocation
+  locationName: String # Used for table sorting purposes
+  rating: Int
+  isRemote: Boolean! @default(value: false)
+  jobListingLink: String
+  jobListingNotes: String
+  resume: JobApplicationResume @relation(link: INLINE, onDelete: CASCADE)
+  notes: String
+  isApplicationActive: Boolean! @default(value: true)
+  dateApplied: DateTime
+  dateInterviewing: [DateTime] @scalarList(strategy: RELATION)
+  dateOffered: DateTime
+  dateDecided: DateTime
+  jobDecision: JobDecision
+  updatedAt: DateTime! @updatedAt
+  applicationStatus: ApplicationStatus! @default(value: INTERESTED)
+  coverLetterFile: AwsFileData @relation(name: "CoverLetterFile", onDelete: CASCADE)
+  contacts: [JobApplicationContact!]! @relation(onDelete: CASCADE)
+}
+
+type GoogleMapsLocation {
+  id: ID! @id
+  name: String!
+  googlePlacesId: String!
+}
+
+type Company {
+  id: ID! @id
+  user: User!
+  name: String!
+  website: String
+  rating: Int
+  notes: String
+  jobApplicationsCount: Int! @default(value: 0)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  image: AwsFileData @relation(onDelete: CASCADE)
+  contacts: [CompanyContact!]! @relation(onDelete: CASCADE)
+  jobApplications: [JobApplication!]! @relation(onDelete: CASCADE)
+}
+
+type AwsFileData {
+  id: ID! @id
+  ETag: String!
+  Key: String!
+  Location: String!
+  s3Url: String!
+  cloudfrontUrl: String!
+  Bucket: String!
+  VersionId: String!
+  fileName: String!
+  createdAt: DateTime! @createdAt
+}
+
+type Resume {
+  id: ID! @id
+  name: String!
+  updatedAt: DateTime! @updatedAt
+  user: User!
+  versions: [AwsFileData!]! @relation(name: "FileVersions")
+  createdAt: DateTime! @createdAt
+}
+
+type CompanyContact {
+  id: ID! @id
+  name: String!
+  position: String
+  email: String
+  phone: String
+  notes: String
+  company: Company!
+  order: Int!
+}
+
+type JobApplicationContact {
+  id: ID! @id
+  name: String!
+  position: String
+  email: String
+  phone: String
+  notes: String
+  order: Int!
+  jobApplication: JobApplication!
+}

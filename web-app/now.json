@@ -1,0 +1,14 @@
+{
+    "build": {
+        "env": {
+            "COMMON_BACKEND_URL": "@dev_backend_url",
+            "COMMON_FRONTEND_URL": "@dev_frontend_url",
+            "COMMON_STRIPE_YEARLY_PLAN_ID": "@dev_stripe_yearly_plan_id",
+            "COMMON_STRIPE_MONTHLY_PLAN_ID": "@dev_stripe_monthly_plan_id",
+            "WEB_APP_STRIPE_PUBLISHABLE_KEY": "@dev_stripe_publishable_key",
+            "WEB_APP_GOOGLE_API_KEY": "@dev_google_api_key",
+            "WEB_APP_MARKETING_SITE": "@dev_marketing_site",
+            "WEB_APP_SENTRY_DSN": "@dev_sentry_dsn"
+        }
+    }
+}

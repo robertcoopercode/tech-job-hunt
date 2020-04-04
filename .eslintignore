@@ -1,0 +1,6 @@
+node_modules
+lambdas/**/*.js
+# Don't ignore dotfiles
+*.js
+!.*.js
+api/src/generated

@@ -1,0 +1,10 @@
+.DS_Store
+node_modules
+yarn-error.log
+.next
+.vscode
+.env*
+!.env
+.now
+.s3
+now.env*

@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "lib": ["es2016", "esnext.asynciterable"],
+        "types": ["node"],
+        "esModuleInterop": true,
+        "skipLibCheck": true
+    },
+    "exclude": ["node_modules"],
+    "include": ["**/*.ts"]
+}

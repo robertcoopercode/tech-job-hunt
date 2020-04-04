@@ -1,0 +1,130 @@
+on: pull_request
+
+jobs:
+  lint-repo:
+    runs-on: ubuntu-latest
+    name: Lint all repository files
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+      - name: Lint
+        run: yarn lint
+  lint-be:
+    runs-on: ubuntu-latest
+    name: Type check back-end files
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./api
+      - name: Type check
+
+        run: yarn tsc
+        working-directory: ./api
+  lint-fe:
+    runs-on: ubuntu-latest
+    name: Type check front-end files
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./web-app
+      - name: Type check
+        run: yarn tsc
+        working-directory: ./web-app
+  tests-fe:
+    runs-on: ubuntu-latest
+    name: Run front-end tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./web-app
+      - name: Run tests
+        run: yarn test
+        working-directory: ./web-app
+  generated-backend:
+    runs-on: ubuntu-latest
+    name: Verify back-end generated code
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./api
+      # Need to run the server in order to generate all the prisma client code
+      # Also, need to set NODE_ENV to 'development' in order to have prisma
+      # generate the prisma client code (doesn't get generated in any other env)
+      - name: Run server in the background and output logs to file
+        run: export NODE_ENV=development && yarn start > output.txt &
+        working-directory: ./api
+        env:
+          API_AWS_ACCESS_KEY_ID: ${{ secrets.DEV_API_AWS_ACCESS_KEY_ID }}
+          API_AWS_ACCESS_KEY: ${{ secrets.DEV_API_AWS_ACCESS_KEY }}
+          PRISMA_ENDPOINT: ${{ secrets.DEV_PRISMA_ENDPOINT }}
+          PRISMA_SECRET: ${{ secrets.DEV_PRISMA_SECRET }}
+          COMMON_FRONTEND_URL: ${{ secrets.DEV_COMMON_FRONTEND_URL }}
+          COMMON_BACKEND_URL: ${{ secrets.DEV_COMMON_BACKEND_URL }}
+          API_GOOGLE_CLIENT_ID: ${{ secrets.DEV_API_GOOGLE_CLIENT_ID }}
+          API_GOOGLE_CLIENT_SECRET: ${{ secrets.DEV_API_GOOGLE_CLIENT_SECRET }}
+          API_APP_SECRET: ${{ secrets.DEV_API_APP_SECRET }}
+          API_PORT: ${{ secrets.DEV_API_PORT }}
+      - name: Verify the server is running
+        run: $GITHUB_WORKSPACE/.github/workflows/scripts/verify-backend-server-is-running.sh "Server running at"
+        working-directory: ./api
+      - name: Install dependencies
+        run: yarn
+      - name: Verify no new code has been generated
+        run: git add --all && git diff-index HEAD --compact-summary --exit-code
+        working-directory: ./api
+  generated-frontend:
+    runs-on: ubuntu-latest
+    name: Verify front-end generated code
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./web-app
+      - name: Download graphql schema and generate apollo code
+        run: yarn apollo:download
+        working-directory: ./web-app
+      - name: Verify no new code has been generated
+        run: git add --all && git diff-index HEAD --compact-summary --exit-code
+        working-directory: ./web-app
+  prisma-dev-updated:
+    runs-on: ubuntu-latest
+    name: Verify prisma dev server is up-to-date
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./api
+      - name: Verify prisma dev server is up-to-date
+        run: yarn prisma:deploy --dry-run --skip-hooks > output.txt
+        working-directory: ./api
+        env:
+          PRISMA_MANAGEMENT_API_SECRET: ${{ secrets.DEV_PRISMA_MANAGEMENT_API_SECRET}}
+          PRISMA_ENDPOINT: ${{ secrets.DEV_PRISMA_ENDPOINT }}
+          PRISMA_SECRET: ${{ secrets.DEV_PRISMA_SECRET }}
+      - name: Verify the prisma dev server is up-to-date
+        run: cat output.txt| grep "There are no changes."
+        working-directory: ./api
+  build-frontend:
+    runs-on: ubuntu-latest
+    name: Build front-end
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./web-app
+      - name: Build NextJS app
+        run: yarn build
+        working-directory: ./web-app

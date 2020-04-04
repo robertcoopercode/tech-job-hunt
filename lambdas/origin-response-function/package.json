@@ -1,0 +1,21 @@
+{
+    "name": "origin-response-function",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+        "aws-sdk": "^2.601.0",
+        "querystring": "^0.2.0",
+        "sharp": "^0.24.1"
+    },
+    "scripts": {
+        "zip": "tsc && cd dist && zip -FSr ../origin-response-function.zip . ../node_modules",
+        "deploy": "yarn zip && aws lambda update-function-code --function-name origin-response-function --zip-file fileb://origin-response-function.zip",
+        "publish-aws": "aws lambda publish-version --function-name origin-response-function"
+    },
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.46",
+        "@types/aws-sdk": "^2.7.0",
+        "@types/sharp": "^0.24.0"
+    }
+}

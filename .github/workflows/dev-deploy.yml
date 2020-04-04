@@ -1,0 +1,84 @@
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish-backend:
+    runs-on: ubuntu-latest
+    name: Publish api image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.CI_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CI_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build and publish docker image
+        env:
+          COMMON_FRONTEND_URL: ${{ secrets.DEV_COMMON_FRONTEND_URL }}
+          COMMON_BACKEND_URL: ${{ secrets.DEV_COMMON_BACKEND_URL }}
+          COMMON_STRIPE_YEARLY_PLAN_ID: ${{ secrets.DEV_COMMON_STRIPE_YEARLY_PLAN_ID }}
+          COMMON_STRIPE_MONTHLY_PLAN_ID: ${{ secrets.DEV_COMMON_STRIPE_MONTHLY_PLAN_ID }}
+          PRISMA_ENDPOINT: ${{ secrets.DEV_PRISMA_ENDPOINT }}
+          PRISMA_SECRET: ${{ secrets.DEV_PRISMA_SECRET }}
+          PRISMA_MANAGEMENT_API_SECRET: ${{ secrets.DEV_PRISMA_MANAGEMENT_API_SECRET }}
+          API_AWS_ACCESS_KEY_ID: ${{ secrets.DEV_API_AWS_ACCESS_KEY_ID }}
+          API_AWS_ACCESS_KEY: ${{ secrets.DEV_API_AWS_ACCESS_KEY }}
+          API_AWS_BUCKET_NAME: ${{ secrets.DEV_API_AWS_BUCKET_NAME }}
+          API_COOKIE_DOMAIN: ${{ secrets.DEV_API_COOKIE_DOMAIN }}
+          API_GOOGLE_CLIENT_ID: ${{ secrets.DEV_API_GOOGLE_CLIENT_ID }}
+          API_GOOGLE_CLIENT_SECRET: ${{ secrets.DEV_API_GOOGLE_CLIENT_SECRET }}
+          API_APP_SECRET: ${{ secrets.DEV_API_APP_SECRET }}
+          API_PORT: ${{ secrets.DEV_API_PORT }}
+          API_STRIPE_API_KEY: ${{ secrets.DEV_API_STRIPE_API_KEY }}
+          API_STRIPE_WEBHOOK_SECRET: ${{ secrets.DEV_API_STRIPE_WEBHOOK_SECRET }}
+          API_CLOUDFRONT_DOMAIN: ${{ secrets.DEV_API_CLOUDFRONT_DOMAIN }}
+          API_AMPLITUDE_API_KEY: ${{ secrets.DEV_API_AMPLITUDE_API_KEY }}
+        run: |
+          yarn publish:api:dev
+      - name: Logout of Amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}
+  deploy-api-dev:
+    runs-on: ubuntu-latest
+    name: Deploy api
+    needs:
+      - publish-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: 64.227.30.182
+          username: root
+          key: ${{ secrets.CI_SSH_PRIVATE_KEY }}
+          script: |
+            aws ecr get-login-password | docker login --username AWS --password-stdin 233737578294.dkr.ecr.us-east-1.amazonaws.com
+            docker pull 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest
+            docker tag 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest dokku/backend:latest
+            docker image prune --force
+            dokku tags:deploy backend latest
+  deploy-web-app-dev:
+    runs-on: ubuntu-latest
+    name: Deploy web app
+    env:
+      NOW_ORG_ID: ${{ secrets.DEV_NOW_ORG_ID }}
+      NOW_PROJECT_ID: ${{ secrets.DEV_NOW_PROJECT_ID }}
+    needs:
+      - deploy-api-dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./web-app
+      - name: Deploy
+        run: yarn ci:deploy:dev --token ${{ secrets.CI_ZEIT_NOW_TOKEN }}
+        working-directory: ./web-app

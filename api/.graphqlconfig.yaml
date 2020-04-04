@@ -1,0 +1,6 @@
+projects:
+  Web App:
+    schemaPath: src/generated/schema.graphql
+    extensions:
+      endpoints:
+        local: 'http://local.api.techjobhunt.com:4000'

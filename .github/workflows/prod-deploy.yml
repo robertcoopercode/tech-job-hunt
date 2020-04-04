@@ -1,0 +1,105 @@
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  prisma-updated:
+    runs-on: ubuntu-latest
+    name: Verify prisma prod server is up-to-date
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./api
+      - name: Verify prisma prod server is up-to-date
+        run: yarn prisma:deploy --dry-run --skip-hooks > output.txt
+        working-directory: ./api
+        env:
+          PRISMA_MANAGEMENT_API_SECRET: ${{ secrets.PROD_PRISMA_MANAGEMENT_API_SECRET }}
+          PRISMA_ENDPOINT: ${{ secrets.PROD_PRISMA_ENDPOINT }}
+          PRISMA_SECRET: ${{ secrets.PROD_PRISMA_SECRET }}
+      - name: Verify the prisma prod server is up-to-date
+        run: cat output.txt| grep "There are no changes."
+        working-directory: ./api
+  publish-backend:
+    runs-on: ubuntu-latest
+    name: Publish back-end image to prod
+    needs:
+      - prisma-updated
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.CI_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CI_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build and publish docker image
+        env:
+          COMMON_FRONTEND_URL: ${{ secrets.PROD_COMMON_FRONTEND_URL }}
+          COMMON_BACKEND_URL: ${{ secrets.PROD_COMMON_BACKEND_URL }}
+          COMMON_STRIPE_YEARLY_PLAN_ID: ${{ secrets.PROD_COMMON_STRIPE_YEARLY_PLAN_ID }}
+          COMMON_STRIPE_MONTHLY_PLAN_ID: ${{ secrets.PROD_COMMON_STRIPE_MONTHLY_PLAN_ID }}
+          PRISMA_ENDPOINT: ${{ secrets.PROD_PRISMA_ENDPOINT }}
+          PRISMA_SECRET: ${{ secrets.PROD_PRISMA_SECRET }}
+          PRISMA_MANAGEMENT_API_SECRET: ${{ secrets.PROD_PRISMA_MANAGEMENT_API_SECRET }}
+          API_AWS_ACCESS_KEY_ID: ${{ secrets.PROD_API_AWS_ACCESS_KEY_ID }}
+          API_AWS_ACCESS_KEY: ${{ secrets.PROD_API_AWS_ACCESS_KEY }}
+          API_AWS_BUCKET_NAME: ${{ secrets.PROD_API_AWS_BUCKET_NAME }}
+          API_COOKIE_DOMAIN: ${{ secrets.PROD_API_COOKIE_DOMAIN }}
+          API_GOOGLE_CLIENT_ID: ${{ secrets.PROD_API_GOOGLE_CLIENT_ID }}
+          API_GOOGLE_CLIENT_SECRET: ${{ secrets.PROD_API_GOOGLE_CLIENT_SECRET }}
+          API_APP_SECRET: ${{ secrets.PROD_API_APP_SECRET }}
+          API_PORT: ${{ secrets.PROD_API_PORT }}
+          API_STRIPE_API_KEY: ${{ secrets.PROD_API_STRIPE_API_KEY }}
+          API_STRIPE_WEBHOOK_SECRET: ${{ secrets.PROD_API_STRIPE_WEBHOOK_SECRET }}
+          API_CLOUDFRONT_DOMAIN: ${{ secrets.PROD_API_CLOUDFRONT_DOMAIN }}
+          API_AMPLITUDE_API_KEY: ${{ secrets.PROD_API_AMPLITUDE_API_KEY }}
+        run: |
+          yarn publish:api:prod
+      - name: Logout of Amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}
+  deploy-api-prod:
+    runs-on: ubuntu-latest
+    name: Deploy api
+    needs:
+      - publish-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: 157.245.95.216
+          username: root
+          key: ${{ secrets.CI_SSH_PRIVATE_KEY }}
+          script: |
+            aws ecr get-login-password | docker login --username AWS --password-stdin 233737578294.dkr.ecr.us-east-1.amazonaws.com
+            docker pull 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-prod/api:latest
+            docker tag 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-prod/api:latest dokku/backend:latest
+            dokku tags:deploy backend latest
+            docker image prune --force
+  deploy-web-app-prod:
+    runs-on: ubuntu-latest
+    name: Deploy web app
+    env:
+      NOW_ORG_ID: ${{ secrets.PROD_NOW_ORG_ID }}
+      NOW_PROJECT_ID: ${{ secrets.PROD_NOW_PROJECT_ID }}
+    needs:
+      - deploy-api-prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./web-app
+      - name: Deploy
+        run: yarn ci:deploy:prod --token ${{ secrets.CI_ZEIT_NOW_TOKEN }}
+        working-directory: ./web-app

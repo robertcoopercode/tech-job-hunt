@@ -1,0 +1,145 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Setup assets solutions with S3 and Cloudfront
+Parameters:
+  BucketName:
+    Type: String
+    Description: The name of the bucket
+    AllowedPattern: '[a-zA-Z0-9-]+'
+    ConstraintDescription: Must contain only alphanumeric characters.
+  AllowedOrigins:
+    Type: CommaDelimitedList
+    Description: The allowed origins (comma separated) for CORS settings on the S3 Bucket
+  AssetsDomainName:
+    Type: String
+    Description: The Cloudfront domain name
+    Default: dev.assets.techjobhunt.com
+  SSLCertificate:
+    Type: String
+    Description: The ARN of an AWS Certificate Manager (ACM) certificate
+    AllowedPattern: 'arn:aws:acm:.*'
+  ViewerRequestLambdaARN:
+    Type: String
+    Default: arn:aws:lambda:us-east-1:233737578294:function:viewer-request-function:12
+    Description: The ARN of the Viewer Request Lambda
+    AllowedPattern: 'arn:aws:lambda:.*'
+  OriginResponseLambdaARN:
+    Type: String
+    Default: arn:aws:lambda:us-east-1:233737578294:function:origin-response-function:6
+    Description: The ARN of the Origin Response Lambda
+    AllowedPattern: 'arn:aws:lambda:.*'
+  OriginResponseLambdaIAM:
+    Type: String
+    Default: arn:aws:iam::233737578294:role/service-role/origin-response-function-role-orctjxmv
+    Description: The IAM for the the Origin Response Lambda, used for the S3 Bucket Policy
+    AllowedPattern: 'arn:aws:iam:.*'
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+      AccessControl: PublicRead
+      BucketName: !Ref BucketName
+      VersioningConfiguration:
+        Status: Enabled
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods:
+              - GET
+              - POST
+              - PUT
+            AllowedOrigins: !Ref AllowedOrigins
+            AllowedHeaders:
+              - '*'
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref BucketName
+      PolicyDocument:
+        Statement:
+          - Sid: AppReadObjects
+            Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+            Resource: !Join ['', ['arn:aws:s3:::', !Ref BucketName, '/*']]
+            Effect: Allow
+            Principal: '*'
+          - Sid: LambdaReadWriteObjects
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+              - s3:GetObjectVersion
+            Effect: Allow
+            Resource: !Join ['', ['arn:aws:s3:::', !Ref BucketName, '/*']]
+            Principal:
+              AWS: !Ref OriginResponseLambdaIAM
+          - Sid: CloudfrontReadObjects
+            Action:
+              - s3:GetObject
+              - s3:ListBucket
+            Effect: Allow
+            Resource:
+              - !Join ['', ['arn:aws:s3:::', !Ref BucketName, '/*']]
+              - !Join ['', ['arn:aws:s3:::', !Ref BucketName]]
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
+
+  Cloudfront:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: CDN for S3
+        Aliases: [!Ref AssetsDomainName]
+        Enabled: true
+        DefaultCacheBehavior:
+          ForwardedValues:
+            Cookies:
+              Forward: none
+            QueryString: true
+            Headers:
+              - Access-Control-Request-Headers
+              - Access-Control-Request-Method
+              - Origin
+            QueryStringCacheKeys:
+              - d
+              - versionId
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          LambdaFunctionAssociations:
+            - EventType: viewer-request
+              LambdaFunctionARN: !Ref ViewerRequestLambdaARN
+            - EventType: origin-response
+              LambdaFunctionARN: !Ref OriginResponseLambdaARN
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: allow-all
+        ViewerCertificate:
+          AcmCertificateArn: !Ref SSLCertificate
+          SslSupportMethod: sni-only
+        PriceClass: PriceClass_All
+        HttpVersion: 'http2'
+        Origins:
+          - S3OriginConfig:
+              OriginAccessIdentity:
+                !Join ['', ['origin-access-identity/cloudfront/', !Ref CloudFrontOriginAccessIdentity]]
+            DomainName: !Join ['', [!Ref 'S3Bucket', .s3.amazonaws.com]]
+            Id: S3Origin
+
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'CloudFront Origin Access Identity for ${AssetsDomainName}'
+
+  CloudfrontCNAMERecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: techjobhunt.com.
+      Comment: CNAME redirect to CloudFront distribution
+      Name: !Ref AssetsDomainName
+      Type: CNAME
+      TTL: '300'
+      ResourceRecords:
+        - !GetAtt [Cloudfront, DomainName]

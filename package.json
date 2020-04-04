@@ -1,0 +1,62 @@
+{
+    "name": "tech-job-hunt",
+    "description": "Monorepo for Tech Job Hunt",
+    "dependencies": {
+        "@commitlint/cli": "^8.2.0",
+        "@commitlint/config-conventional": "^8.2.0",
+        "@typescript-eslint/eslint-plugin": "^2.7.0",
+        "@typescript-eslint/parser": "^2.7.0",
+        "eslint": "6.6.0",
+        "eslint-config-prettier": "^6.6.0",
+        "eslint-plugin-import": "^2.18.2",
+        "eslint-plugin-prettier": "^3.1.1",
+        "eslint-plugin-react": "^7.16.0",
+        "eslint-plugin-react-hooks": "^2.3.0",
+        "husky": "^3.0.9",
+        "lint-staged": "^9.4.3",
+        "prettier": "^1.19.1",
+        "typescript": "^3.7.2"
+    },
+    "scripts": {
+        "lint": "eslint '**/*.{js,jsx,ts,tsx}' --quiet --fix",
+        "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,yaml}\"",
+        "publish:api:dev": "docker-compose -f docker-compose.prod.yml --env-file .env.dev build --no-cache api && docker tag tech-job-hunt/api:latest 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest && docker push 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest",
+        "publish:api:prod": "docker-compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache api && docker tag tech-job-hunt/api:latest 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-prod/api:latest && docker push 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-prod/api:latest"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged",
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx}": [
+            "eslint --quiet --fix",
+            "git add"
+        ],
+        "*.{json,md,html,graphql}": [
+            "prettier --config .prettierrc.js --write",
+            "git add"
+        ]
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ],
+        "rules": {
+            "type-enum": [
+                2,
+                "always",
+                [
+                    "fix",
+                    "feat",
+                    "chore",
+                    "test",
+                    "docs",
+                    "refactor",
+                    "revert"
+                ]
+            ]
+        }
+    }
+}
