@@ -8,9 +8,11 @@ A Node.js GraphQL server built with [GraphQL Yoga](https://github.com/prisma/gra
 
 The following must be installed locally in order to run the api and it's backing services:
 
-- yarn
-- node
-- docker engine
+- yarn (https://classic.yarnpkg.com/en/docs/install/#mac-stable)
+- node (https://nodejs.org/en/download/)
+- docker engine (https://docs.docker.com/install/)
+- docker compose cli (https://docs.docker.com/compose/install/)
+- aws cli (https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 
 ### Host file
 
@@ -31,7 +33,6 @@ Run the following commands to get started.
 ```bash
 yarn # Install all dependencies
 docker-compose build --env-file ../.env build --no-cache prisma # Build prisma docker image
-docker-compose up -d prisma # Starts a docker container for a local mysql server and a prisma server
 yarn prisma:deploy # Setup DB with data
 yarn dev # Starts the local api server accessible at http://local.api.techjobhunt.com:4000
 ```
@@ -41,7 +42,6 @@ yarn dev # Starts the local api server accessible at http://local.api.techjobhun
 In order to save files to S3 locally, we need to setup a local S3 bucket. Run the following commands to do so:
 
 ```bash
-docker-compose up -d s3 # Starts a docker container for the s3 bucket using localstack
 aws --endpoint-url=http://localhost:4572 s3 mb s3://local-bucket # Creates the s3 bucket locally
 aws --endpoint-url=http://localhost:4572 s3api put-bucket-acl --bucket local-bucket --acl public-read # Allows the read/write access to the bucket
 aws --endpoint-url=http://localhost:4572 s3api put-bucket-versioning --bucket local-bucket --versioning-configuration Status=Enabled # Enable file versioning
@@ -62,8 +62,6 @@ Once the GraphQL API server is running, visit http://local.api.techjobhunt.com:4
 This project uses [Prisma](https://www.prisma.io/) which provides the app with a database along with simple APIs to interact with the database. The way things are setup in the project is that we define the shape of our database objects in `datamodel.prisma` and in order to update the model in the database, run `yarn prisma:deploy`. After running the prisma deploy command, there is a hook that will automatically generate code in the `src/generated` directory which is used to define the GraphQL API we want to expose.
 
 ## Deployment
-
-### Development
 
 ### GraphQL Server
 

@@ -1,5 +1,4 @@
 node_modules
 .next
-web-app/types/graphql
-web-app/graphql
+.s3
 api/src/generated

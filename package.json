@@ -18,8 +18,8 @@
         "typescript": "^3.7.2"
     },
     "scripts": {
-        "lint": "eslint '**/*.{js,jsx,ts,tsx}' --quiet --fix",
-        "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,yaml}\"",
+        "lint": "eslint '**/*.{ts,tsx}' --quiet --fix",
+        "format": "prettier --write \"**/*.{json,md,js,yaml,yml,graphql}\"",
         "publish:api:dev": "docker-compose -f docker-compose.prod.yml --env-file .env.dev build --no-cache api && docker tag tech-job-hunt/api:latest 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest && docker push 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest",
         "publish:api:prod": "docker-compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache api && docker tag tech-job-hunt/api:latest 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-prod/api:latest && docker push 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-prod/api:latest"
     },
@@ -30,11 +30,11 @@
         }
     },
     "lint-staged": {
-        "*.{js,jsx,ts,tsx}": [
+        "*.{ts,tsx}": [
             "eslint --quiet --fix",
             "git add"
         ],
-        "*.{json,md,html,graphql}": [
+        "*.{json,md,js,yaml,yml,graphql}": [
             "prettier --config .prettierrc.js --write",
             "git add"
         ]

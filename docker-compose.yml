@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   api:
     build:
@@ -26,7 +26,7 @@ services:
     image: tech-job-hunt/api
     container_name: tech-job-hunt-api
     ports:
-      - "4000:4000"
+      - '4000:4000'
     volumes:
       - ./api/src/:/usr/src/app/src/
   prisma:
@@ -49,13 +49,13 @@ services:
               password: ${PRISMA_DB_PASSWORD}
     image: tech-job-hunt/prisma
     ports:
-      - "4466:4466"
+      - '4466:4466'
     restart: always
   db:
     image: mysql:5.7
     restart: always
     ports:
-      - "3306:3306"
+      - '3306:3306'
     environment:
       MYSQL_ROOT_PASSWORD: ${PRISMA_DB_PASSWORD}
     volumes:
@@ -64,14 +64,14 @@ services:
     image: localstack/localstack:latest
     container_name: tech-job-hunt-s3
     ports:
-      - "4572:4572"
-      - "8000:8080"
+      - '4572:4572'
+      - '8000:8080'
     environment:
       - SERVICES=s3
       - DEBUG=1
       - DATA_DIR=/tmp/localstack/data
     volumes:
-      - "./.s3:/tmp/localstack"
+      - './.s3:/tmp/localstack'
   web-app:
     build:
       context: ./web-app
@@ -87,6 +87,6 @@ services:
     image: tech-job-hunt/web-app
     container_name: techjobhunt-web-app
     ports:
-      - "3000:3000"
+      - '3000:3000'
 volumes:
   mysql:
