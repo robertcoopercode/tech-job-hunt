@@ -13,8 +13,7 @@
         "prisma:token": "prisma token",
         "prisma:token:dev": "prisma token --env-file .env.dev",
         "prisma:token:prod": "prisma token --env-file .env.prod",
-        "prisma:post-deploy": "yarn prisma:nexus && rm ./src/generated/nexus-prisma/nexus-prisma.ts",
-        "prisma:nexus": "nexus-prisma-generate --client ./src/generated/prisma-client --output ./src/generated/nexus-prisma",
+        "prisma:post-deploy": "nexus-prisma-generate --client ./src/generated/prisma-client --output ./src/generated/nexus-prisma && rm ./src/generated/nexus-prisma/nexus-prisma.ts",
         "seed": "prisma seed",
         "stripe": "stripe listen --forward-to local.api.techjobhunt.com:4000/stripe"
     },

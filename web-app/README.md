@@ -8,8 +8,8 @@ A Next.js application for the web application of Tech Job Hunt.
 
 The following must be installed locally in order to run the web application:
 
-- yarn
-- node
+- yarn (https://classic.yarnpkg.com/en/docs/install/#mac-stable)
+- node (https://nodejs.org/en/download/)
 
 ### Host file
 
