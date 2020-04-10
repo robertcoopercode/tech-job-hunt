@@ -7,7 +7,7 @@
 // GraphQL query operation: SuggestedResumesQuery
 // ====================================================
 
-export interface SuggestedResumesQuery_me_resumes_versions {
+export interface SuggestedResumesQuery_resumes_nodes_Versions {
   __typename: "AwsFileData";
   id: string;
   cloudfrontUrl: string;
@@ -15,21 +15,23 @@ export interface SuggestedResumesQuery_me_resumes_versions {
   createdAt: any;
 }
 
-export interface SuggestedResumesQuery_me_resumes {
+export interface SuggestedResumesQuery_resumes_nodes {
   __typename: "Resume";
   id: string;
   name: string;
-  versions: SuggestedResumesQuery_me_resumes_versions[] | null;
+  Versions: SuggestedResumesQuery_resumes_nodes_Versions[];
 }
 
-export interface SuggestedResumesQuery_me {
-  __typename: "User";
-  id: string;
-  resumes: SuggestedResumesQuery_me_resumes[] | null;
+export interface SuggestedResumesQuery_resumes {
+  __typename: "QueryResumes_Connection";
+  /**
+   * Flattened list of Resume type
+   */
+  nodes: SuggestedResumesQuery_resumes_nodes[];
 }
 
 export interface SuggestedResumesQuery {
-  me: SuggestedResumesQuery_me | null;
+  resumes: SuggestedResumesQuery_resumes;
 }
 
 export interface SuggestedResumesQueryVariables {

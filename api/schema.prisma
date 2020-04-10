@@ -1,0 +1,216 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("API_DATABASE_URL")
+}
+
+enum ApplicationStatus {
+  INTERESTED
+  APPLIED
+  INTERVIEWING
+  OFFER
+  DECIDED
+}
+
+enum BillingFrequency {
+  MONTHLY
+  YEARLY
+}
+
+// REJECTED: Company rejects application
+// ACCEPTED: Applicant accepts company
+// DECLINED: Applicant rejects company
+enum JobDecision {
+  REJECTED
+  ACCEPTED
+  DECLINED
+}
+
+model AwsFileData {
+  Bucket         String
+  cloudfrontUrl  String
+  createdAt      DateTime         @default(now())
+  ETag           String
+  fileName       String
+  id             String           @default(cuid()) @id
+  Key            String
+  Location       String
+  s3Url          String
+  VersionId      String
+  Company        Company[]
+  JobApplication JobApplication[]
+  Resume         Resume[]         @relation("FileVersions", references: [id])
+}
+
+model BillingInfo {
+  billingFrequency        BillingFrequency?
+  endOfBillingPeriod      Int?
+  id                      String            @default(cuid()) @id
+  isPremiumActive         Boolean           @default(false)
+  startOfBillingPeriod    Int?
+  stripeCustomerId        String?           @unique
+  stripeSubscriptionId    String?
+  willCancelAtEndOfPeriod Boolean           @default(false)
+  User                    User[]
+  card                    String?
+  Card                    Card?             @relation(fields: [card], references: [id])
+
+  @@index([card], name: "card")
+}
+
+model Card {
+  brand                 String
+  expMonth              Int
+  expYear               Int
+  id                    String        @default(cuid()) @id
+  last4Digits           String
+  stripePaymentMethodId String
+  BillingInfo           BillingInfo[]
+}
+
+model Company {
+  createdAt            DateTime         @default(now())
+  id                   String           @default(cuid()) @id
+  jobApplicationsCount Int              @default(0)
+  name                 String
+  notes                String?
+  rating               Int?
+  updatedAt            DateTime         @updatedAt
+  website              String?
+  Contacts             CompanyContact[]
+  JobApplication       JobApplication[]
+  user                 String?
+  User                 User?            @relation(fields: [user], references: [id])
+  image                String?
+  Image                AwsFileData?     @relation(fields: [image], references: [id])
+
+  @@index([image], name: "image")
+  @@index([user], name: "user")
+}
+
+model CompanyContact {
+  email    String?
+  id       String   @default(cuid()) @id
+  name     String
+  notes    String?
+  order    Int
+  phone    String?
+  position String?
+  company  String?
+  Company  Company? @relation(fields: [company], references: [id])
+
+  @@index([company], name: "company")
+}
+
+model GoogleMapsLocation {
+  googlePlacesId String
+  id             String           @default(cuid()) @id
+  name           String
+  JobApplication JobApplication[]
+}
+
+model JobApplication {
+  applicationStatus               ApplicationStatus                 @default(INTERESTED)
+  companyName                     String
+  createdAt                       DateTime                          @default(now())
+  dateApplied                     DateTime?
+  dateDecided                     DateTime?
+  dateOffered                     DateTime?
+  id                              String                            @default(cuid()) @id
+  isApplicationActive             Boolean                           @default(true)
+  isRemote                        Boolean
+  jobDecision                     JobDecision?
+  jobListingLink                  String?
+  jobListingNotes                 String?
+  locationName                    String?
+  notes                           String?
+  position                        String
+  rating                          Int?
+  updatedAt                       DateTime                          @updatedAt
+  company                         String?
+  Company                         Company?                          @relation(fields: [company], references: [id])
+  coverLetterFile                 String?
+  CoverLetterFile                 AwsFileData?                      @relation(fields: [coverLetterFile], references: [id])
+  location                        String?
+  Location                        GoogleMapsLocation?               @relation(fields: [location], references: [id])
+  resume                          String?
+  Resume                          JobApplicationResume?             @relation(fields: [resume], references: [id])
+  user                            String?
+  User                            User?                             @relation(fields: [user], references: [id])
+  Contacts                        JobApplicationContact[]
+  JobApplication_dateInterviewing JobApplication_dateInterviewing[]
+
+  @@index([company], name: "company")
+  @@index([coverLetterFile], name: "coverLetterFile")
+  @@index([location], name: "location")
+  @@index([resume], name: "resume")
+  @@index([user], name: "user")
+}
+
+model JobApplicationContact {
+  email          String?
+  id             String          @default(cuid()) @id
+  name           String
+  notes          String?
+  order          Int
+  phone          String?
+  position       String?
+  jobApplication String?
+  JobApplication JobApplication? @relation(fields: [jobApplication], references: [id])
+
+  @@index([jobApplication], name: "jobApplication")
+}
+
+model JobApplicationResume {
+  id                String           @default(cuid()) @id
+  selectedVersionId String
+  JobApplication    JobApplication[]
+  resume            String?
+  Resume            Resume?          @relation(fields: [resume], references: [id])
+
+  @@index([resume], name: "resume")
+}
+
+model JobApplication_dateInterviewing {
+  nodeId         String         @default(cuid()) @id
+  position       Int
+  value          DateTime
+  JobApplication JobApplication @relation(fields: [nodeId], references: [id])
+
+  @@index([value], name: "value")
+}
+
+model Resume {
+  createdAt            DateTime               @default(now())
+  id                   String                 @default(cuid()) @id
+  name                 String
+  updatedAt            DateTime               @updatedAt
+  JobApplicationResume JobApplicationResume[]
+  Versions             AwsFileData[]          @relation("FileVersions", references: [id])
+  user                 String?
+  User                 User?                  @relation(fields: [user], references: [id])
+
+  @@index([user], name: "user")
+}
+
+model User {
+  email                  String           @unique
+  emailConfirmationToken String?
+  googleId               String?          @unique
+  hasCompletedOnboarding Boolean          @default(false)
+  hasVerifiedEmail       Boolean?
+  id                     String           @default(cuid()) @id
+  password               String?
+  resetToken             String?
+  resetTokenExpiry       Float?
+  Company                Company[]
+  JobApplication         JobApplication[]
+  Resume                 Resume[]
+  billing                String?
+  Billing                BillingInfo?     @relation(fields: [billing], references: [id])
+
+  @@index([billing], name: "billing")
+}

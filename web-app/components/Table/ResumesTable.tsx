@@ -1,11 +1,7 @@
 import React, { useRef } from 'react';
 import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks';
 import { Text, useDisclosure, useToast } from '@robertcooper/chakra-ui-core';
-import {
-    ResumesQuery,
-    ResumesQueryVariables,
-    ResumesQuery_resumesConnection_edges,
-} from '../../graphql/generated/ResumesQuery';
+import { ResumesQuery, ResumesQueryVariables, ResumesQuery_resumes_nodes } from '../../graphql/generated/ResumesQuery';
 import { formatDate } from '../../utils/formatDate';
 import { QueryParamKeys } from '../../utils/constants';
 import { DeleteResumeMutation, DeleteResumeMutationVariables } from '../../graphql/generated/DeleteResumeMutation';
@@ -13,7 +9,7 @@ import Loader from '../Loader/Loader';
 import { deleteResumeMutation } from '../../graphql/mutations';
 import { resumesQuery } from '../../graphql/queries';
 import { useModalQuery } from '../../utils/hooks/useModalQuery';
-import { ResumeOrderByInput } from '../../graphql/generated/graphql-global-types';
+import { OrderByArg } from '../../graphql/generated/graphql-global-types';
 import { usePaginationQuery } from '../../utils/hooks/usePaginationQuery';
 import { ConfirmDeleteResume } from '../ViewResumeModal/ViewResumeModal';
 import Table, {
@@ -33,13 +29,13 @@ type Props = {
 
 const ResumeTableRow: React.FC<{
     columns: Column[];
-} & ResumesQuery_resumesConnection_edges> = ({ columns, ...item }) => {
+} & ResumesQuery_resumes_nodes> = ({ columns, id, name, updatedAt }) => {
     const actionButtons = useRef<HTMLDivElement>(null);
     const toast = useToast();
     const client = useApolloClient();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { onOpen: onOpenView } = useModalQuery(QueryParamKeys.VIEW_RESUME, item.node.id);
+    const { onOpen: onOpenView } = useModalQuery(QueryParamKeys.VIEW_RESUME, id);
 
     const [deleteResume, { loading: isLoadingDeleteResume }] = useMutation<
         DeleteResumeMutation,
@@ -68,7 +64,7 @@ const ResumeTableRow: React.FC<{
             });
             client.resetStore();
         },
-        variables: { id: item.node.id },
+        variables: { id },
     });
 
     return (
@@ -85,20 +81,20 @@ const ResumeTableRow: React.FC<{
                 columns={columns}
             >
                 <TableCell>
-                    <Text as="span" fontWeight="medium" title={item.node.name}>
-                        {item.node.name}
+                    <Text as="span" fontWeight="medium" title={name}>
+                        {name}
                     </Text>
                 </TableCell>
                 <TableCell>
-                    <Text as="span" title={formatDate(item.node.updatedAt)}>
-                        {formatDate(item.node.updatedAt)}
+                    <Text as="span" title={formatDate(updatedAt)}>
+                        {formatDate(updatedAt)}
                     </Text>
                 </TableCell>
                 <ActionsTableCell containerRef={actionButtons} onDelete={onOpen} />
             </TableRow>
             <ConfirmDeleteResume
                 isOpen={isOpen}
-                resumeName={item.node.name}
+                resumeName={name}
                 onDelete={deleteResume}
                 isOnDeleteLoading={isLoadingDeleteResume}
                 onClose={onClose}
@@ -108,15 +104,18 @@ const ResumeTableRow: React.FC<{
 };
 
 const ResumesTable: React.FC<Props> = ({ isPreview = false }) => {
-    const { page, orderBy, pageSize, setQuery } = usePaginationQuery({
-        orderBy: ResumeOrderByInput.updatedAt_DESC,
+    const { page, orderBy, pageSize, setQuery, direction } = usePaginationQuery({
+        orderBy: 'updatedAt',
+        direction: OrderByArg.desc,
     });
     const skip = (page - 1) * pageSize;
     const { data: resumes, loading, refetch } = useQuery<ResumesQuery, ResumesQueryVariables>(resumesQuery, {
         variables: {
             first: isPreview ? previewPageSize : pageSize,
             skip: isPreview ? 0 : skip,
-            orderBy: orderBy as ResumeOrderByInput,
+            orderBy: {
+                [orderBy]: direction,
+            },
         },
     });
     const { onOpen: onOpenAddNewResume } = useModalQuery(QueryParamKeys.ADD_RESUME);
@@ -125,29 +124,23 @@ const ResumesTable: React.FC<Props> = ({ isPreview = false }) => {
         {
             text: 'Name',
             columnSizeFraction: 2,
-            order: {
-                columnAscendingKey: ResumeOrderByInput.name_ASC,
-                columnDescendingKey: ResumeOrderByInput.name_DESC,
-            },
+            orderBy: 'name',
         },
         {
             text: 'Updated at',
             minWidth: '130px',
-            order: {
-                columnAscendingKey: ResumeOrderByInput.updatedAt_ASC,
-                columnDescendingKey: ResumeOrderByInput.updatedAt_DESC,
-            },
+            orderBy: 'updatedAt',
         },
         { text: 'Actions', minWidth: '100px', isLabelHidden: true },
     ];
 
-    const totalNumberOfResults = resumes?.resumesTotal.aggregate.count ?? 0;
+    const totalNumberOfResults = resumes?.resumes.totalCount ?? 0;
 
     return loading ? (
         <Loader />
     ) : (
         <>
-            {resumes?.resumesTotal.aggregate.count === 0 ? (
+            {totalNumberOfResults === 0 ? (
                 <TableEmptyState
                     onClick={(): void => {
                         onOpenAddNewResume();
@@ -165,9 +158,10 @@ const ResumesTable: React.FC<Props> = ({ isPreview = false }) => {
                     totalNumberOfResults={totalNumberOfResults}
                     refetch={refetch}
                     columns={resumeColumns}
-                    rows={resumes?.resumesConnection.edges?.map(
-                        (item: any): JSX.Element => (
-                            <ResumeTableRow key={item.node.id} columns={resumeColumns} {...item} />
+                    direction={direction}
+                    rows={resumes?.resumes.nodes.map(
+                        (item): JSX.Element => (
+                            <ResumeTableRow key={item.id} columns={resumeColumns} {...item} />
                         )
                     )}
                 />

@@ -3,70 +3,58 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { JobApplicationOrderByInput, ApplicationStatus } from "./graphql-global-types";
+import { QueryJobApplicationsOrderByInput, ApplicationStatus } from "./graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: JobApplicationsQuery
 // ====================================================
 
-export interface JobApplicationsQuery_jobApplicationsConnection_edges_node_company_image {
+export interface JobApplicationsQuery_jobApplications_nodes_Company_Image {
   __typename: "AwsFileData";
   cloudfrontUrl: string;
   Key: string;
 }
 
-export interface JobApplicationsQuery_jobApplicationsConnection_edges_node_company {
+export interface JobApplicationsQuery_jobApplications_nodes_Company {
   __typename: "Company";
   name: string;
-  image: JobApplicationsQuery_jobApplicationsConnection_edges_node_company_image | null;
+  Image: JobApplicationsQuery_jobApplications_nodes_Company_Image | null;
 }
 
-export interface JobApplicationsQuery_jobApplicationsConnection_edges_node_location {
+export interface JobApplicationsQuery_jobApplications_nodes_Location {
   __typename: "GoogleMapsLocation";
   id: string;
   googlePlacesId: string;
   name: string;
 }
 
-export interface JobApplicationsQuery_jobApplicationsConnection_edges_node {
+export interface JobApplicationsQuery_jobApplications_nodes {
   __typename: "JobApplication";
   id: string;
-  company: JobApplicationsQuery_jobApplicationsConnection_edges_node_company;
+  Company: JobApplicationsQuery_jobApplications_nodes_Company | null;
   isRemote: boolean;
   position: string;
   createdAt: any;
   updatedAt: any;
-  location: JobApplicationsQuery_jobApplicationsConnection_edges_node_location | null;
+  Location: JobApplicationsQuery_jobApplications_nodes_Location | null;
   applicationStatus: ApplicationStatus;
 }
 
-export interface JobApplicationsQuery_jobApplicationsConnection_edges {
-  __typename: "JobApplicationEdge";
-  node: JobApplicationsQuery_jobApplicationsConnection_edges_node;
-}
-
-export interface JobApplicationsQuery_jobApplicationsConnection {
-  __typename: "JobApplicationConnection";
-  edges: JobApplicationsQuery_jobApplicationsConnection_edges[];
-}
-
-export interface JobApplicationsQuery_jobsTotal_aggregate {
-  __typename: "AggregateJobApplication";
-  count: number;
-}
-
-export interface JobApplicationsQuery_jobsTotal {
-  __typename: "JobApplicationConnection";
-  aggregate: JobApplicationsQuery_jobsTotal_aggregate;
+export interface JobApplicationsQuery_jobApplications {
+  __typename: "QueryJobApplications_Connection";
+  /**
+   * Flattened list of JobApplication type
+   */
+  nodes: JobApplicationsQuery_jobApplications_nodes[];
+  totalCount: number;
 }
 
 export interface JobApplicationsQuery {
-  jobApplicationsConnection: JobApplicationsQuery_jobApplicationsConnection;
-  jobsTotal: JobApplicationsQuery_jobsTotal;
+  jobApplications: JobApplicationsQuery_jobApplications;
 }
 
 export interface JobApplicationsQueryVariables {
-  orderBy?: JobApplicationOrderByInput | null;
+  orderBy?: QueryJobApplicationsOrderByInput | null;
   first?: number | null;
   skip?: number | null;
 }

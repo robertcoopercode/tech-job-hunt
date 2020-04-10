@@ -24,7 +24,7 @@ Add the following line to your `/etc/hosts` file in order to alias your localhos
 
 ### Environment variables
 
-Local environment variables are set in the `.env` file. The `.env.dev` and `.env.prod` files are only required when running prisma CLI commands with the dev and production prisma servers.
+Local environment variables are set in the `.env` file.
 
 ### Starting the server
 
@@ -32,8 +32,6 @@ Run the following commands to get started.
 
 ```bash
 yarn # Install all dependencies
-docker-compose build --env-file ../.env build --no-cache prisma # Build prisma docker image
-yarn prisma:deploy # Setup DB with data
 yarn dev # Starts the local api server accessible at http://local.api.techjobhunt.com:4000
 ```
 
@@ -57,16 +55,18 @@ Make sure that if you're running stripe locally, that you get a webhook secret b
 
 Once the GraphQL API server is running, visit http://local.api.techjobhunt.com:4000/ to view the GraphQL playground. The playground allows for calls to queries and mutations that have been defined in this repository.
 
-## Prisma
+## Prisma & Nexus
 
-This project uses [Prisma](https://www.prisma.io/) which provides the app with a database along with simple APIs to interact with the database. The way things are setup in the project is that we define the shape of our database objects in `datamodel.prisma` and in order to update the model in the database, run `yarn prisma:deploy`. After running the prisma deploy command, there is a hook that will automatically generate code in the `src/generated` directory which is used to define the GraphQL API we want to expose.
+This project uses [Prisma](https://www.prisma.io/) to generate a CRUD API to interact with the back-end database. Nexus is used to generate a fully typed back-end API.
+
+```bash
+yarn generate # Generates the prisma API, API graphql schema, and API types
+yarn generate:prisma # Generates the prisma API
+yarn generate:nexus # Generates a graphql schema and types for the API
+```
 
 ## Deployment
 
 ### GraphQL Server
 
 The graphql server api is deployed on Digital Ocean. The CI is setup to automatically deploy the API to dev (https://dev.api.techjobhunt.com) and merges to master. Tagging a commit on master with a new version will trigger the CI to deploy the API to prod (https://api.dev.techjobhunt.com).
-
-### Prisma Server
-
-Similarly to the graphql server, the Prisma server and it's MySQL database are both on a Digital Ocean server. The Prisma server is accessible at https://dev.prisma.techjobhunt.com and https://prisma.techjobhunt.com for the dev and production servers, respectively. Since the docker images for the Prisma server doesn't change regularly, it requires manual intervention to deploy a new version of Prisma to those servers.

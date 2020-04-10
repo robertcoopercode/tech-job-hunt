@@ -1,4 +1,3 @@
-import React, { useRef, useState, useEffect } from 'react';
 import {
     Button,
     Text,
@@ -19,6 +18,7 @@ import {
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { format } from 'date-fns';
 import { Elements, StripeProvider, injectStripe, CardElement } from 'react-stripe-elements';
+import { useEffect, useRef, useState } from 'react';
 import { CurrentUserQuery } from '../../graphql/generated/CurrentUserQuery';
 import { currentUserQuery } from '../../graphql/queries';
 import Loader from '../Loader/Loader';
@@ -211,18 +211,18 @@ const SettingsModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
     const getPremiumText = (): string => {
         return `Premium
-        ${currentUserData?.me?.billing?.billingFrequency === BillingFrequency.MONTHLY ? '(Monthly)' : '(Yearly)'}`;
+        ${currentUserData?.me?.Billing?.billingFrequency === BillingFrequency.MONTHLY ? '(Monthly)' : '(Yearly)'}`;
     };
 
     const getFormattedRenewalDate = (): string => {
-        return currentUserData?.me?.billing?.endOfBillingPeriod
-            ? `${format(new Date(currentUserData?.me?.billing?.endOfBillingPeriod * 1000), 'MMMM do, yyyy')}`
+        return currentUserData?.me?.Billing?.endOfBillingPeriod
+            ? `${format(new Date(currentUserData?.me?.Billing?.endOfBillingPeriod * 1000), 'MMMM do, yyyy')}`
             : '';
     };
 
     const getRenewalText = (): string => {
         return `${
-            currentUserData?.me?.billing?.willCancelAtEndOfPeriod ? 'Ends on ' : 'Automatically renews on '
+            currentUserData?.me?.Billing?.willCancelAtEndOfPeriod ? 'Ends on ' : 'Automatically renews on '
         }${getFormattedRenewalDate()}`;
     };
 
@@ -240,9 +240,9 @@ const SettingsModal: React.FC<Props> = ({ isOpen, onClose }) => {
                             </Section>
                             <Section>
                                 <SectionTitle fontWeight="semibold">Plan</SectionTitle>
-                                {currentUserData?.me?.billing?.isPremiumActive ? (
+                                {currentUserData?.me?.Billing?.isPremiumActive ? (
                                     // User's that have been given free premium account status will not have a stripe customer ID
-                                    currentUserData.me.billing.stripeCustomerId === null ? (
+                                    currentUserData.me.Billing.stripeCustomerId === null ? (
                                         <>
                                             <Text mt={0} mb={1}>
                                                 Premium for life 🚀
@@ -253,12 +253,12 @@ const SettingsModal: React.FC<Props> = ({ isOpen, onClose }) => {
                                             <Text mt={0} mb={1}>
                                                 {getPremiumText()}
                                             </Text>
-                                            {currentUserData?.me?.billing?.endOfBillingPeriod !== null && (
+                                            {currentUserData?.me?.Billing?.endOfBillingPeriod !== null && (
                                                 <Text as="span" color="gray.400" d="block" mb={1} fontSize="xs">
                                                     {getRenewalText()}
                                                 </Text>
                                             )}
-                                            {!currentUserData?.me?.billing?.willCancelAtEndOfPeriod && (
+                                            {!currentUserData?.me?.Billing?.willCancelAtEndOfPeriod && (
                                                 <Button
                                                     onClick={(): void => setIsOpenConfirmCancellation(true)}
                                                     variant="link"
@@ -312,17 +312,17 @@ const SettingsModal: React.FC<Props> = ({ isOpen, onClose }) => {
                                     </>
                                 )}
                             </Section>
-                            {currentUserData?.me?.billing?.isPremiumActive && currentUserData?.me?.billing?.card && (
+                            {currentUserData?.me?.Billing?.isPremiumActive && currentUserData?.me?.Billing?.Card && (
                                 <Section>
                                     <SectionTitle fontWeight="semibold">Billing Method</SectionTitle>
                                     <Text marginTop={0} marginBottom={1} fontWeight="medium">
-                                        {currentUserData?.me?.billing?.card.brand[0].toUpperCase() +
-                                            currentUserData?.me?.billing?.card.brand.substring(1)}
+                                        {currentUserData.me.Billing.Card?.brand?.[0]?.toUpperCase() +
+                                            currentUserData.me.Billing.Card?.brand?.substring(1)}
                                     </Text>
                                     <Text mt={0} mb={1}>
-                                        •••• •••• •••• {currentUserData?.me?.billing?.card.last4Digits} (Expires on{' '}
-                                        {currentUserData?.me?.billing?.card.expMonth}/
-                                        {currentUserData?.me?.billing?.card.expMonth})
+                                        {currentUserData?.me?.Billing?.Card?.last4Digits} (Expires on{' '}
+                                        {currentUserData?.me?.Billing?.Card?.expMonth}/
+                                        {currentUserData?.me?.Billing?.Card?.expMonth})
                                     </Text>
                                     <Button
                                         variant="link"

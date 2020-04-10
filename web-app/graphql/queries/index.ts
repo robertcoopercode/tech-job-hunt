@@ -4,14 +4,14 @@ export const currentUserQuery = gql`
     query CurrentUserQuery {
         me {
             id
-            billing {
+            Billing {
                 billingFrequency
                 isPremiumActive
                 startOfBillingPeriod
                 endOfBillingPeriod
                 willCancelAtEndOfPeriod
                 stripeCustomerId
-                card {
+                Card {
                     brand
                     last4Digits
                     expMonth
@@ -27,12 +27,11 @@ export const currentUserQuery = gql`
 
 export const suggestedCompaniesQuery = gql`
     query SuggestedCompanies($searchQuery: String!) {
-        me {
-            id
-            companies(where: { name_contains: $searchQuery }, first: 4, orderBy: updatedAt_DESC) {
+        companies(first: 4, nameQuery: $searchQuery) {
+            nodes {
                 id
                 name
-                image {
+                Image {
                     cloudfrontUrl
                 }
             }
@@ -42,12 +41,11 @@ export const suggestedCompaniesQuery = gql`
 
 export const suggestedResumesQuery = gql`
     query SuggestedResumesQuery($searchQuery: String!) {
-        me {
-            id
-            resumes(where: { name_contains: $searchQuery }, first: 4, orderBy: updatedAt_DESC) {
+        resumes(nameQuery: $searchQuery, first: 4) {
+            nodes {
                 id
                 name
-                versions {
+                Versions {
                     id
                     cloudfrontUrl
                     VersionId
@@ -59,42 +57,31 @@ export const suggestedResumesQuery = gql`
 `;
 
 export const resumesQuery = gql`
-    query ResumesQuery($orderBy: ResumeOrderByInput, $first: Int, $skip: Int) {
-        resumesConnection(orderBy: $orderBy, first: $first, skip: $skip) {
-            edges {
-                node {
-                    id
-                    name
-                    updatedAt
-                    versions {
-                        cloudfrontUrl
-                        VersionId
-                        createdAt
-                    }
-                    versions {
-                        cloudfrontUrl
-                        fileName
-                        VersionId
-                        createdAt
-                    }
+    query ResumesQuery($first: Int = 10000, $skip: Int, $orderBy: QueryResumesOrderByInput) {
+        resumes(first: $first, skip: $skip, orderBy: $orderBy) {
+            nodes {
+                id
+                name
+                updatedAt
+                Versions {
+                    cloudfrontUrl
+                    fileName
+                    VersionId
+                    createdAt
                 }
             }
-        }
-        resumesTotal: resumesConnection {
-            aggregate {
-                count
-            }
+            totalCount
         }
     }
 `;
 
 export const resumeQuery = gql`
     query ResumeQuery($id: ID!) {
-        resume(where: { id: $id }) {
+        resume(id: $id) {
             id
             name
             updatedAt
-            versions(orderBy: createdAt_DESC) {
+            Versions(orderBy: { createdAt: desc }) {
                 fileName
                 cloudfrontUrl
                 VersionId
@@ -106,91 +93,77 @@ export const resumeQuery = gql`
 
 export const jobApplicationsCountQuery = gql`
     query JobApplicationsCountQuery {
-        jobApplicationsConnection {
-            aggregate {
-                count
-            }
+        jobApplications(first: 1) {
+            totalCount
         }
     }
 `;
 
 export const jobApplicationsQuery = gql`
     query JobApplicationsQuery(
-        $orderBy: JobApplicationOrderByInput = updatedAt_DESC
-        $first: Int = 10
-        $skip: Int = 0
+        $orderBy: QueryJobApplicationsOrderByInput = { updatedAt: desc }
+        $first: Int = 10000
+        $skip: Int
     ) {
-        jobApplicationsConnection(orderBy: $orderBy, first: $first, skip: $skip) {
-            edges {
-                node {
-                    id
-                    company {
-                        name
-                        image {
-                            cloudfrontUrl
-                            Key
-                        }
+        jobApplications(first: $first, skip: $skip, orderBy: $orderBy) {
+            nodes {
+                id
+                Company {
+                    name
+                    Image {
+                        cloudfrontUrl
+                        Key
                     }
-                    isRemote
-                    position
-                    createdAt
-                    updatedAt
-                    location {
-                        id
-                        googlePlacesId
-                        name
-                    }
-                    applicationStatus
                 }
+                isRemote
+                position
+                createdAt
+                updatedAt
+                Location {
+                    id
+                    googlePlacesId
+                    name
+                }
+                applicationStatus
             }
-        }
-        jobsTotal: jobApplicationsConnection {
-            aggregate {
-                count
-            }
+            totalCount
         }
     }
 `;
 
 export const companiesQuery = gql`
-    query CompaniesQuery($orderBy: CompanyOrderByInput, $first: Int, $skip: Int) {
-        companiesConnection(orderBy: $orderBy, first: $first, skip: $skip) {
-            edges {
-                node {
-                    id
-                    name
-                    rating
-                    image {
-                        cloudfrontUrl
-                        Key
-                    }
-                    jobApplicationsCount
-                    updatedAt
+    query CompaniesQuery($orderBy: QueryCompaniesOrderByInput, $first: Int = 10000, $skip: Int) {
+        companies(orderBy: $orderBy, first: $first, skip: $skip) {
+            nodes {
+                id
+                name
+                rating
+                Image {
+                    cloudfrontUrl
+                    Key
                 }
+                jobApplicationsCount
+                updatedAt
             }
-        }
-        companiesTotal: companiesConnection {
-            aggregate {
-                count
-            }
+            totalCount
         }
     }
 `;
 
 export const jobApplicationQuery = gql`
     query JobApplicationQuery($id: ID!) {
-        jobApplication(where: { id: $id }) {
+        jobApplication(id: $id) {
             id
-            company {
+            Company {
                 name
                 id
-                image {
+                Image {
                     cloudfrontUrl
                     fileName
                 }
             }
             position
-            location {
+            Location {
                 googlePlacesId
                 id
                 name
@@ -198,11 +171,11 @@ export const jobApplicationQuery = gql`
             rating
             jobListingLink
             jobListingNotes
-            coverLetterFile {
+            CoverLetterFile {
                 cloudfrontUrl
                 fileName
             }
-            contacts(orderBy: order_ASC) {
+            Contacts(orderBy: { order: asc }) {
                 id
                 name
                 position
@@ -211,12 +184,12 @@ export const jobApplicationQuery = gql`
                 notes
                 order
             }
-            resume {
+            Resume {
                 id
-                resume {
+                Resume {
                     id
                     name
-                    versions {
+                    Versions {
                         id
                         cloudfrontUrl
                         createdAt
@@ -229,7 +202,9 @@ export const jobApplicationQuery = gql`
             createdAt
             dateApplied
             dateDecided
-            dateInterviewing
+            JobApplication_dateInterviewing {
+                value
+            }
             dateOffered
             isRemote
             notes
@@ -240,10 +215,10 @@ export const jobApplicationQuery = gql`
 
 export const companyQuery = gql`
     query CompanyQuery($id: ID!) {
-        company(where: { id: $id }) {
+        company(id: $id) {
             id
             name
-            contacts(orderBy: order_ASC) {
+            Contacts(orderBy: { order: asc }) {
                 email
                 id
                 name
@@ -253,7 +228,7 @@ export const companyQuery = gql`
                 order
             }
             rating
-            image {
+            Image {
                 cloudfrontUrl
                 fileName
                 Key
@@ -267,22 +242,24 @@ export const companyQuery = gql`
 
 export const analyticsQuery = gql`
     query AnalyticsQuery($startDate: DateTime!) {
-        me {
-            addedJobs: jobApplications(where: { AND: { createdAt_gte: $startDate } }) {
+        addedJobs: jobApplications(first: 10000, where: { AND: { createdAt: { gte: $startDate } } }) {
+            nodes {
                 applicationStatus
                 createdAt
                 dateApplied
                 dateDecided
-                dateInterviewing
+                JobApplication_dateInterviewing {
+                    value
+                }
                 dateOffered
                 isRemote
-                location {
+                Location {
                     name
                     googlePlacesId
                 }
-                company {
+                Company {
                     id
-                    image {
+                    Image {
                         cloudfrontUrl
                     }
                     name

@@ -11,9 +11,9 @@ jobs:
         run: yarn
       - name: Lint
         run: yarn lint
-  lint-be:
+  lint-api:
     runs-on: ubuntu-latest
-    name: Type check back-end files
+    name: Type check API files
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -24,9 +24,9 @@ jobs:
 
         run: yarn tsc
         working-directory: ./api
-  lint-fe:
+  lint-web-app:
     runs-on: ubuntu-latest
-    name: Type check front-end files
+    name: Type check web app files
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -36,9 +36,9 @@ jobs:
       - name: Type check
         run: yarn tsc
         working-directory: ./web-app
-  tests-fe:
+  tests-web-app:
     runs-on: ubuntu-latest
-    name: Run front-end tests
+    name: Run web app tests
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -48,43 +48,21 @@ jobs:
       - name: Run tests
         run: yarn test
         working-directory: ./web-app
-  generated-backend:
+  generated-api:
     runs-on: ubuntu-latest
-    name: Verify back-end generated code
+    name: Verify API generated code up-to-date
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Install dependencies
-        run: yarn
+      - name: Install dependencies and generate prisma client (via postinstall script)
         working-directory: ./api
-      # Need to run the server in order to generate all the prisma client code
-      # Also, need to set NODE_ENV to 'development' in order to have prisma
-      # generate the prisma client code (doesn't get generated in any other env)
-      - name: Run server in the background and output logs to file
-        run: export NODE_ENV=development && yarn start > output.txt &
-        working-directory: ./api
-        env:
-          API_AWS_ACCESS_KEY_ID: ${{ secrets.DEV_API_AWS_ACCESS_KEY_ID }}
-          API_AWS_ACCESS_KEY: ${{ secrets.DEV_API_AWS_ACCESS_KEY }}
-          PRISMA_ENDPOINT: ${{ secrets.DEV_PRISMA_ENDPOINT }}
-          PRISMA_SECRET: ${{ secrets.DEV_PRISMA_SECRET }}
-          COMMON_FRONTEND_URL: ${{ secrets.DEV_COMMON_FRONTEND_URL }}
-          COMMON_BACKEND_URL: ${{ secrets.DEV_COMMON_BACKEND_URL }}
-          API_GOOGLE_CLIENT_ID: ${{ secrets.DEV_API_GOOGLE_CLIENT_ID }}
-          API_GOOGLE_CLIENT_SECRET: ${{ secrets.DEV_API_GOOGLE_CLIENT_SECRET }}
-          API_APP_SECRET: ${{ secrets.DEV_API_APP_SECRET }}
-          API_PORT: ${{ secrets.DEV_API_PORT }}
-      - name: Verify the server is running
-        run: $GITHUB_WORKSPACE/.github/workflows/scripts/verify-backend-server-is-running.sh "Server running at"
-        working-directory: ./api
-      - name: Install dependencies
         run: yarn
       - name: Verify no new code has been generated
         run: git add --all && git diff-index HEAD --compact-summary --exit-code
         working-directory: ./api
-  generated-frontend:
+  generated-web-app:
     runs-on: ubuntu-latest
-    name: Verify front-end generated code
+    name: Verify web app generated code up-to-date
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -97,28 +75,9 @@ jobs:
       - name: Verify no new code has been generated
         run: git add --all && git diff-index HEAD --compact-summary --exit-code
         working-directory: ./web-app
-  prisma-dev-updated:
+  build-web-app:
     runs-on: ubuntu-latest
-    name: Verify prisma dev server is up-to-date
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install dependencies
-        run: yarn
-        working-directory: ./api
-      - name: Verify prisma dev server is up-to-date
-        run: yarn prisma:deploy --dry-run --skip-hooks > output.txt
-        working-directory: ./api
-        env:
-          PRISMA_MANAGEMENT_API_SECRET: ${{ secrets.DEV_PRISMA_MANAGEMENT_API_SECRET}}
-          PRISMA_ENDPOINT: ${{ secrets.DEV_PRISMA_ENDPOINT }}
-          PRISMA_SECRET: ${{ secrets.DEV_PRISMA_SECRET }}
-      - name: Verify the prisma dev server is up-to-date
-        run: cat output.txt| grep "There are no changes."
-        working-directory: ./api
-  build-frontend:
-    runs-on: ubuntu-latest
-    name: Build front-end
+    name: Build web app
     steps:
       - name: Checkout
         uses: actions/checkout@v1

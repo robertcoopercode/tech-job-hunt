@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "lib": ["es2016", "esnext.asynciterable"],
-        "types": ["node"],
         "esModuleInterop": true,
         "skipLibCheck": true
     },

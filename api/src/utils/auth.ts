@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { Strategy as GoogleStrategy, VerifyCallback } from 'passport-google-oauth20';
 import { PassportStatic } from 'passport';
-import { Prisma } from '../generated/prisma-client';
+import { PrismaClient } from '@prisma/client';
 import { cookieDuration } from './constants';
 import analytics from './analytics';
 
@@ -55,7 +55,7 @@ const handleAuthentication = ({
     return { newUser };
 };
 
-export const authenticationStrategy = (prisma: Prisma): GoogleStrategy =>
+export const authenticationStrategy = (prisma: PrismaClient): GoogleStrategy =>
     new GoogleStrategy(
         {
             clientID: process.env.API_GOOGLE_CLIENT_ID,
@@ -65,7 +65,7 @@ export const authenticationStrategy = (prisma: Prisma): GoogleStrategy =>
         async function(accessToken, refreshToken, profile, done) {
             try {
                 // Check if user already exists
-                const existingUser = await prisma.user({ email: profile._json.email });
+                const existingUser = await prisma.user.findOne({ where: { email: profile._json.email } });
                 // If user already exists, return that user
                 if (existingUser) {
                     analytics.track({
@@ -76,7 +76,7 @@ export const authenticationStrategy = (prisma: Prisma): GoogleStrategy =>
                     // Attach googleId to existing user if they don't already have a googleId set on their account.
                     // The user account can also safely be set to verified if the user has logged in with oauth
                     if (!existingUser.googleId) {
-                        const updatedUser = await prisma.updateUser({
+                        const updatedUser = await prisma.user.update({
                             where: { email: profile._json.email },
                             data: {
                                 googleId: profile.id,
@@ -89,10 +89,12 @@ export const authenticationStrategy = (prisma: Prisma): GoogleStrategy =>
                 }
 
                 // If the user doesn't exist, create a new user
-                const newUser = await prisma.createUser({
-                    googleId: profile.id,
-                    email: profile._json.email,
-                    hasVerifiedEmail: true,
+                const newUser = await prisma.user.create({
+                    data: {
+                        googleId: profile.id,
+                        email: profile._json.email,
+                        hasVerifiedEmail: true,
+                    },
                 });
 
                 // If there was a problem creating the new user, call done with an error

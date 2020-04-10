@@ -1,66 +1,43 @@
 // Used to load .env for local development. Will not be used when app is deployed to Zeit now since Zeit does not deploy the .env file.
 require('dotenv-flow').config();
 
-import path from 'path';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
 import session from 'express-session';
-import { makePrismaSchema, prismaObjectType } from 'nexus-prisma';
 import { GraphQLServer } from 'graphql-yoga';
 import passport from 'passport';
-import { ContextParameters } from 'graphql-yoga/dist/types';
-import { Request } from 'express';
-import Stripe, { events, invoices, customers } from 'stripe';
-import datamodelInfo from './generated/nexus-prisma';
-import { prisma, Prisma } from './generated/prisma-client';
+import { events, invoices, customers } from 'stripe';
+import { PrismaClient } from '@prisma/client';
+import { shield, deny } from 'graphql-shield';
 import { passportAuthentication, passportAuthenticationCallback, authenticationStrategy } from './utils/auth';
-import { Query, JobApplicationConnection, CompanyConnection, ResumeConnection } from './Query';
-import { Mutation, Upload } from './Mutation';
-import { StripeSubscription } from './CustomType';
 import analytics from './utils/analytics';
+import { schema, createContext } from './schema';
+import { stripe } from './utils/stripe';
 
-export const stripe = new Stripe('sk_test_WEEHCPAAw4mYtS71SZcQ9LCn00VuDg7wVY');
-
+const prisma = new PrismaClient();
 // Makes sure that it's truly Stripe making the API calls the the /stripe endpoint
 const stripeWebhookSecret = process.env.API_STRIPE_WEBHOOK_SECRET;
 
-export const BatchPayload = prismaObjectType({
-    name: 'BatchPayload',
-    definition: t => t.prismaFields(['*']),
-});
-
-const schema = makePrismaSchema({
-    types: [
-        Query,
-        Mutation,
-        BatchPayload,
-        StripeSubscription,
-        JobApplicationConnection,
-        CompanyConnection,
-        ResumeConnection,
-        Upload,
-    ],
-    prisma: {
-        datamodelInfo,
-        client: prisma,
+// Prevent access to private mutations that have only been generated in order to get generated types
+// for certain inputs
+const permissions = shield({
+    Mutation: {
+        _updateOneCard: deny,
+        _updateOneGoogleMapsLocation: deny,
+        _createOneGoogleMapsLocation: deny,
     },
-    outputs: {
-        schema: path.join(__dirname, './generated/schema.graphql'),
-        typegen: path.join(__dirname, './generated/nexus.ts'),
+    Query: {
+        _companies: deny,
+        _jobApplications: deny,
+        _resumes: deny,
     },
 });
-
-export type GraphQLServerContext = {
-    prisma: Prisma;
-} & ContextParameters & { request: Request & { userId?: string } };
 
 const server = new GraphQLServer({
     schema,
-    context: (contextParams): GraphQLServerContext => ({
-        prisma,
-        ...contextParams,
-    }),
+    middlewares: [permissions],
+    context: createContext,
 });
 
 const handleStripeWebhook = async (request, response): Promise<void> => {
@@ -85,14 +62,18 @@ const handleStripeWebhook = async (request, response): Promise<void> => {
                 // Make sure there is a user associated with the stripe ID, otherwise make sure to create/update the billing info
                 // of of user with the customer ID provided by stripe. This happens when gifting people premium memberships through
                 // the stripe UI
-                const billingInfo = await prisma.billingInfo({ stripeCustomerId: setIsPremiumData.customer });
+                const billingInfo = await prisma.billingInfo.findOne({
+                    where: { stripeCustomerId: setIsPremiumData.customer },
+                });
                 if (billingInfo === null) {
-                    await prisma.createBillingInfo({
-                        user: { connect: { email: setIsPremiumData.customer_email } },
-                        stripeCustomerId: setIsPremiumData.customer,
+                    await prisma.billingInfo.create({
+                        data: {
+                            User: { connect: { email: setIsPremiumData.customer_email } },
+                            stripeCustomerId: setIsPremiumData.customer,
+                        },
                     });
                 }
-                await prisma.updateBillingInfo({
+                await prisma.billingInfo.update({
                     where: { stripeCustomerId: setIsPremiumData.customer },
                     data: {
                         isPremiumActive: true,
@@ -113,18 +94,18 @@ const handleStripeWebhook = async (request, response): Promise<void> => {
             console.log('Downgrading user to free tier');
             const unsetIsPremiumData = event.data.object as invoices.IInvoice;
             if (unsetIsPremiumData.customer && typeof unsetIsPremiumData.customer === 'string') {
-                await prisma.updateBillingInfo({
+                await prisma.billingInfo.update({
                     where: { stripeCustomerId: unsetIsPremiumData.customer },
                     data: {
                         isPremiumActive: false,
                         billingFrequency: null,
-                        card: null,
                         endOfBillingPeriod: null,
                         startOfBillingPeriod: null,
                         stripeSubscriptionId: null,
                         willCancelAtEndOfPeriod: false,
                     },
                 });
+
                 analytics.track({
                     eventType: 'Downgrading user to free tier',
                     eventProperties: {
@@ -138,9 +119,7 @@ const handleStripeWebhook = async (request, response): Promise<void> => {
             console.log('Downgrading user to free tier');
             const unsetCustomerData = event.data.object as customers.ICustomer;
             if (unsetCustomerData.id) {
-                await prisma.deleteBillingInfo({
-                    stripeCustomerId: unsetCustomerData.id,
-                });
+                await prisma.billingInfo.delete({ where: { stripeCustomerId: unsetCustomerData.id } });
             }
             analytics.track({
                 eventType: 'Downgrading user to free tier',
@@ -169,11 +148,10 @@ server.express.use(
 
 // Authentication
 passport.use(authenticationStrategy(prisma));
-// Make the user object accessible through `req.user`
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(null, user);
 });
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
     done(null, user);
 });
 
@@ -185,11 +163,11 @@ server.express.get('/auth/google/callback', passportAuthenticationCallback(passp
 server.express.post('/stripe', bodyParser.raw({ type: 'application/json' }), handleStripeWebhook);
 
 // decode the JWT so we can get the user Id on each request
-server.express.use((req: any, res, next) => {
+server.express.use((req, res, next) => {
     const { token } = req.cookies;
     if (token) {
         try {
-            const { userId } = jwt.verify(token, process.env.API_APP_SECRET) as any;
+            const { userId } = jwt.verify(token, process.env.API_APP_SECRET) as { userId?: string };
             // put the userId onto the req for future requests to access
             req.userId = userId;
         } catch (e) {
@@ -202,17 +180,6 @@ server.express.use((req: any, res, next) => {
             });
         }
     }
-    next();
-});
-
-// Middleware that populates the user on each request
-server.express.use(async (req: any, res, next) => {
-    // if they aren't logged in, skip this
-    if (!req.userId) {
-        return next();
-    }
-    const user = await prisma.user({ id: req.userId });
-    req.user = user;
     next();
 });
 

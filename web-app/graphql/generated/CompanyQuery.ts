@@ -7,7 +7,7 @@
 // GraphQL query operation: CompanyQuery
 // ====================================================
 
-export interface CompanyQuery_company_contacts {
+export interface CompanyQuery_company_Contacts {
   __typename: "CompanyContact";
   email: string | null;
   id: string;
@@ -18,7 +18,7 @@ export interface CompanyQuery_company_contacts {
   order: number;
 }
 
-export interface CompanyQuery_company_image {
+export interface CompanyQuery_company_Image {
   __typename: "AwsFileData";
   cloudfrontUrl: string;
   fileName: string;
@@ -29,16 +29,16 @@ export interface CompanyQuery_company {
   __typename: "Company";
   id: string;
   name: string;
-  contacts: CompanyQuery_company_contacts[] | null;
+  Contacts: CompanyQuery_company_Contacts[];
   rating: number | null;
-  image: CompanyQuery_company_image | null;
+  Image: CompanyQuery_company_Image | null;
   website: string | null;
   notes: string | null;
   jobApplicationsCount: number;
 }
 
 export interface CompanyQuery {
-  company: CompanyQuery_company | null;
+  company: CompanyQuery_company;
 }
 
 export interface CompanyQueryVariables {

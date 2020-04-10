@@ -7,7 +7,7 @@
 // GraphQL mutation operation: CreateResumeMutation
 // ====================================================
 
-export interface CreateResumeMutation_createResume_versions {
+export interface CreateResumeMutation_createResume_Versions {
   __typename: "AwsFileData";
   cloudfrontUrl: string;
   Key: string;
@@ -17,7 +17,7 @@ export interface CreateResumeMutation_createResume {
   __typename: "Resume";
   id: string;
   name: string;
-  versions: CreateResumeMutation_createResume_versions[] | null;
+  Versions: CreateResumeMutation_createResume_Versions[];
 }
 
 export interface CreateResumeMutation {

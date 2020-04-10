@@ -25,9 +25,6 @@ jobs:
           COMMON_BACKEND_URL: ${{ secrets.DEV_COMMON_BACKEND_URL }}
           COMMON_STRIPE_YEARLY_PLAN_ID: ${{ secrets.DEV_COMMON_STRIPE_YEARLY_PLAN_ID }}
           COMMON_STRIPE_MONTHLY_PLAN_ID: ${{ secrets.DEV_COMMON_STRIPE_MONTHLY_PLAN_ID }}
-          PRISMA_ENDPOINT: ${{ secrets.DEV_PRISMA_ENDPOINT }}
-          PRISMA_SECRET: ${{ secrets.DEV_PRISMA_SECRET }}
-          PRISMA_MANAGEMENT_API_SECRET: ${{ secrets.DEV_PRISMA_MANAGEMENT_API_SECRET }}
           API_AWS_ACCESS_KEY_ID: ${{ secrets.DEV_API_AWS_ACCESS_KEY_ID }}
           API_AWS_ACCESS_KEY: ${{ secrets.DEV_API_AWS_ACCESS_KEY }}
           API_AWS_BUCKET_NAME: ${{ secrets.DEV_API_AWS_BUCKET_NAME }}
@@ -40,6 +37,7 @@ jobs:
           API_STRIPE_WEBHOOK_SECRET: ${{ secrets.DEV_API_STRIPE_WEBHOOK_SECRET }}
           API_CLOUDFRONT_DOMAIN: ${{ secrets.DEV_API_CLOUDFRONT_DOMAIN }}
           API_AMPLITUDE_API_KEY: ${{ secrets.DEV_API_AMPLITUDE_API_KEY }}
+          API_DATABASE_URL: ${{ secrets.DEV_API_DATABASE_URL }}
         run: |
           yarn publish:api:dev
       - name: Logout of Amazon ECR

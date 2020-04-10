@@ -1,11 +1,13 @@
 import { useRouter } from 'next/router';
 import { QueryParamKeys, defaultNumberOfTableRows } from '../constants';
-import { TableOrderBy } from '../../components/Table/Table';
+import { OrderByQueryParamKeys } from '../../components/Table/Table';
+import { OrderByArg } from '../../graphql/generated/graphql-global-types';
 
-export type PaginationQuery<OrderByType> = {
+export type PaginationQuery = {
     page: number;
     pageSize: number;
-    orderBy: OrderByType;
+    orderBy: OrderByQueryParamKeys;
+    direction: OrderByArg;
 };
 
 /**
@@ -14,18 +16,18 @@ export type PaginationQuery<OrderByType> = {
 export const usePaginationQuery = ({
     page: defaultPage = 1,
     pageSize: defaultPageSize = defaultNumberOfTableRows,
-    orderBy: defaultOrderBy,
-}: Omit<Partial<PaginationQuery<TableOrderBy>>, 'orderBy'> & { orderBy: TableOrderBy }): PaginationQuery<
-    TableOrderBy
-> & {
-    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery<TableOrderBy>>) => void;
+    orderBy: defaultOrderBy = 'updatedAt',
+    direction: defaultDirection = OrderByArg.desc,
+}: Partial<PaginationQuery>): PaginationQuery & {
+    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery>) => void;
 } => {
     const router = useRouter();
     const page = parseInt(router.query[QueryParamKeys.PAGE] as string, 10) || defaultPage;
     const pageSize = parseInt(router.query[QueryParamKeys.PAGE_SIZE] as string, 10) || defaultPageSize;
-    const orderBy = (router.query[QueryParamKeys.ORDER_BY] as TableOrderBy) || defaultOrderBy;
+    const orderBy = (router.query[QueryParamKeys.ORDER_BY] as OrderByQueryParamKeys) || defaultOrderBy;
+    const direction = (router.query[QueryParamKeys.DIRECTION] as OrderByArg) || defaultDirection;
 
-    const setQuery = (newQuery: Partial<PaginationQuery<TableOrderBy>>): void => {
+    const setQuery = (newQuery: Partial<PaginationQuery>): void => {
         router.push({
             pathname: router.pathname,
             query: {
@@ -38,6 +40,7 @@ export const usePaginationQuery = ({
     return {
         page,
         orderBy,
+        direction,
         pageSize,
         setQuery,
     };

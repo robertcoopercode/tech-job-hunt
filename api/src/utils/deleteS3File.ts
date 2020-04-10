@@ -11,14 +11,14 @@ export const deleteS3Files = ({
     const params = {
         Bucket: process.env.API_AWS_BUCKET_NAME,
         Delete: {
-            Objects: versionIds.map(versionId => ({
+            Objects: versionIds.map((versionId) => ({
                 Key: key,
                 VersionId: versionId,
             })),
         },
     };
     return new Promise((resolve, reject) => {
-        s3.deleteObjects(params as S3.DeleteObjectsRequest, function(err, data) {
+        s3.deleteObjects(params as S3.DeleteObjectsRequest, function (err, data) {
             if (err) {
                 // eslint-disable-next-line no-console
                 console.log('Error', err);

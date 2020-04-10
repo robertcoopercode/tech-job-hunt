@@ -2,18 +2,6 @@
 ### Do not make changes to this file directly
 
 
-type AggregateCompany {
-  count: Int!
-}
-
-type AggregateJobApplication {
-  count: Int!
-}
-
-type AggregateResume {
-  count: Int!
-}
-
 enum ApplicationStatus {
   APPLIED
   DECIDED
@@ -23,185 +11,240 @@ enum ApplicationStatus {
 }
 
 type AwsFileData {
-  Bucket: String!
   cloudfrontUrl: String!
+  Company(after: CompanyWhereUniqueInput, before: CompanyWhereUniqueInput, first: Int, last: Int, skip: Int): [Company!]!
   createdAt: DateTime!
   ETag: String!
   fileName: String!
-  id: ID!
+  id: String!
+  JobApplication(after: JobApplicationWhereUniqueInput, before: JobApplicationWhereUniqueInput, first: Int, last: Int, skip: Int): [JobApplication!]!
+  Key: String!
+  Location: String!
+  Resume(after: ResumeWhereUniqueInput, before: ResumeWhereUniqueInput, first: Int, last: Int, skip: Int): [Resume!]!
+  s3Url: String!
+  VersionId: String!
+}
+
+input AwsFileDataCreateManyWithoutResumeInput {
+  connect: [AwsFileDataWhereUniqueInput!]
+  create: [AwsFileDataCreateWithoutResumeInput!]
+}
+
+input AwsFileDataCreateOneWithoutCompanyInput {
+  connect: AwsFileDataWhereUniqueInput
+  create: AwsFileDataCreateWithoutCompanyInput
+}
+
+input AwsFileDataCreateOneWithoutJobApplicationInput {
+  connect: AwsFileDataWhereUniqueInput
+  create: AwsFileDataCreateWithoutJobApplicationInput
+}
+
+input AwsFileDataCreateWithoutCompanyInput {
+  Bucket: String!
+  cloudfrontUrl: String!
+  createdAt: DateTime
+  ETag: String!
+  fileName: String!
+  id: String
+  JobApplication: JobApplicationCreateManyWithoutCoverLetterFileInput
+  Key: String!
+  Location: String!
+  Resume: ResumeCreateManyWithoutVersionsInput
+  s3Url: String!
+  VersionId: String!
+}
+
+input AwsFileDataCreateWithoutJobApplicationInput {
+  Bucket: String!
+  cloudfrontUrl: String!
+  Company: CompanyCreateManyWithoutImageInput
+  createdAt: DateTime
+  ETag: String!
+  fileName: String!
+  id: String
+  Key: String!
+  Location: String!
+  Resume: ResumeCreateManyWithoutVersionsInput
+  s3Url: String!
+  VersionId: String!
+}
+
+input AwsFileDataCreateWithoutResumeInput {
+  Bucket: String!
+  cloudfrontUrl: String!
+  Company: CompanyCreateManyWithoutImageInput
+  createdAt: DateTime
+  ETag: String!
+  fileName: String!
+  id: String
+  JobApplication: JobApplicationCreateManyWithoutCoverLetterFileInput
   Key: String!
   Location: String!
   s3Url: String!
   VersionId: String!
 }
 
-enum AwsFileDataOrderByInput {
-  Bucket_ASC
-  Bucket_DESC
-  cloudfrontUrl_ASC
-  cloudfrontUrl_DESC
-  createdAt_ASC
-  createdAt_DESC
-  ETag_ASC
-  ETag_DESC
-  fileName_ASC
-  fileName_DESC
-  id_ASC
-  id_DESC
-  Key_ASC
-  Key_DESC
-  Location_ASC
-  Location_DESC
-  s3Url_ASC
-  s3Url_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  VersionId_ASC
-  VersionId_DESC
+input AwsFileDataFilter {
+  every: AwsFileDataWhereInput
+  none: AwsFileDataWhereInput
+  some: AwsFileDataWhereInput
+}
+
+input AwsFileDataScalarWhereInput {
+  AND: [AwsFileDataScalarWhereInput!]
+  Bucket: StringFilter
+  cloudfrontUrl: StringFilter
+  Company: CompanyFilter
+  createdAt: DateTimeFilter
+  ETag: StringFilter
+  fileName: StringFilter
+  id: StringFilter
+  JobApplication: JobApplicationFilter
+  Key: StringFilter
+  Location: StringFilter
+  NOT: [AwsFileDataScalarWhereInput!]
+  OR: [AwsFileDataScalarWhereInput!]
+  Resume: ResumeFilter
+  s3Url: StringFilter
+  VersionId: StringFilter
+}
+
+input AwsFileDataUpdateManyDataInput {
+  Bucket: String
+  cloudfrontUrl: String
+  createdAt: DateTime
+  ETag: String
+  fileName: String
+  id: String
+  Key: String
+  Location: String
+  s3Url: String
+  VersionId: String
+}
+
+input AwsFileDataUpdateManyWithoutResumeInput {
+  connect: [AwsFileDataWhereUniqueInput!]
+  create: [AwsFileDataCreateWithoutResumeInput!]
+  delete: [AwsFileDataWhereUniqueInput!]
+  deleteMany: [AwsFileDataScalarWhereInput!]
+  disconnect: [AwsFileDataWhereUniqueInput!]
+  set: [AwsFileDataWhereUniqueInput!]
+  update: [AwsFileDataUpdateWithWhereUniqueWithoutResumeInput!]
+  updateMany: [AwsFileDataUpdateManyWithWhereNestedInput!]
+  upsert: [AwsFileDataUpsertWithWhereUniqueWithoutResumeInput!]
+}
+
+input AwsFileDataUpdateManyWithWhereNestedInput {
+  data: AwsFileDataUpdateManyDataInput!
+  where: AwsFileDataScalarWhereInput!
+}
+
+input AwsFileDataUpdateOneWithoutCompanyInput {
+  connect: AwsFileDataWhereUniqueInput
+  create: AwsFileDataCreateWithoutCompanyInput
+  delete: Boolean
+  disconnect: Boolean
+  update: AwsFileDataUpdateWithoutCompanyDataInput
+  upsert: AwsFileDataUpsertWithoutCompanyInput
+}
+
+input AwsFileDataUpdateOneWithoutJobApplicationInput {
+  connect: AwsFileDataWhereUniqueInput
+  create: AwsFileDataCreateWithoutJobApplicationInput
+  delete: Boolean
+  disconnect: Boolean
+  update: AwsFileDataUpdateWithoutJobApplicationDataInput
+  upsert: AwsFileDataUpsertWithoutJobApplicationInput
+}
+
+input AwsFileDataUpdateWithoutCompanyDataInput {
+  Bucket: String
+  cloudfrontUrl: String
+  createdAt: DateTime
+  ETag: String
+  fileName: String
+  id: String
+  JobApplication: JobApplicationUpdateManyWithoutCoverLetterFileInput
+  Key: String
+  Location: String
+  Resume: ResumeUpdateManyWithoutVersionsInput
+  s3Url: String
+  VersionId: String
+}
+
+input AwsFileDataUpdateWithoutJobApplicationDataInput {
+  Bucket: String
+  cloudfrontUrl: String
+  Company: CompanyUpdateManyWithoutImageInput
+  createdAt: DateTime
+  ETag: String
+  fileName: String
+  id: String
+  Key: String
+  Location: String
+  Resume: ResumeUpdateManyWithoutVersionsInput
+  s3Url: String
+  VersionId: String
+}
+
+input AwsFileDataUpdateWithoutResumeDataInput {
+  Bucket: String
+  cloudfrontUrl: String
+  Company: CompanyUpdateManyWithoutImageInput
+  createdAt: DateTime
+  ETag: String
+  fileName: String
+  id: String
+  JobApplication: JobApplicationUpdateManyWithoutCoverLetterFileInput
+  Key: String
+  Location: String
+  s3Url: String
+  VersionId: String
+}
+
+input AwsFileDataUpdateWithWhereUniqueWithoutResumeInput {
+  data: AwsFileDataUpdateWithoutResumeDataInput!
+  where: AwsFileDataWhereUniqueInput!
+}
+
+input AwsFileDataUpsertWithoutCompanyInput {
+  create: AwsFileDataCreateWithoutCompanyInput!
+  update: AwsFileDataUpdateWithoutCompanyDataInput!
+}
+
+input AwsFileDataUpsertWithoutJobApplicationInput {
+  create: AwsFileDataCreateWithoutJobApplicationInput!
+  update: AwsFileDataUpdateWithoutJobApplicationDataInput!
+}
+
+input AwsFileDataUpsertWithWhereUniqueWithoutResumeInput {
+  create: AwsFileDataCreateWithoutResumeInput!
+  update: AwsFileDataUpdateWithoutResumeDataInput!
+  where: AwsFileDataWhereUniqueInput!
 }
 
 input AwsFileDataWhereInput {
   AND: [AwsFileDataWhereInput!]
-  Bucket: String
-  Bucket_contains: String
-  Bucket_ends_with: String
-  Bucket_gt: String
-  Bucket_gte: String
-  Bucket_in: [String!]
-  Bucket_lt: String
-  Bucket_lte: String
-  Bucket_not: String
-  Bucket_not_contains: String
-  Bucket_not_ends_with: String
-  Bucket_not_in: [String!]
-  Bucket_not_starts_with: String
-  Bucket_starts_with: String
-  cloudfrontUrl: String
-  cloudfrontUrl_contains: String
-  cloudfrontUrl_ends_with: String
-  cloudfrontUrl_gt: String
-  cloudfrontUrl_gte: String
-  cloudfrontUrl_in: [String!]
-  cloudfrontUrl_lt: String
-  cloudfrontUrl_lte: String
-  cloudfrontUrl_not: String
-  cloudfrontUrl_not_contains: String
-  cloudfrontUrl_not_ends_with: String
-  cloudfrontUrl_not_in: [String!]
-  cloudfrontUrl_not_starts_with: String
-  cloudfrontUrl_starts_with: String
-  createdAt: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_not: DateTime
-  createdAt_not_in: [DateTime!]
-  ETag: String
-  ETag_contains: String
-  ETag_ends_with: String
-  ETag_gt: String
-  ETag_gte: String
-  ETag_in: [String!]
-  ETag_lt: String
-  ETag_lte: String
-  ETag_not: String
-  ETag_not_contains: String
-  ETag_not_ends_with: String
-  ETag_not_in: [String!]
-  ETag_not_starts_with: String
-  ETag_starts_with: String
-  fileName: String
-  fileName_contains: String
-  fileName_ends_with: String
-  fileName_gt: String
-  fileName_gte: String
-  fileName_in: [String!]
-  fileName_lt: String
-  fileName_lte: String
-  fileName_not: String
-  fileName_not_contains: String
-  fileName_not_ends_with: String
-  fileName_not_in: [String!]
-  fileName_not_starts_with: String
-  fileName_starts_with: String
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  Key: String
-  Key_contains: String
-  Key_ends_with: String
-  Key_gt: String
-  Key_gte: String
-  Key_in: [String!]
-  Key_lt: String
-  Key_lte: String
-  Key_not: String
-  Key_not_contains: String
-  Key_not_ends_with: String
-  Key_not_in: [String!]
-  Key_not_starts_with: String
-  Key_starts_with: String
-  Location: String
-  Location_contains: String
-  Location_ends_with: String
-  Location_gt: String
-  Location_gte: String
-  Location_in: [String!]
-  Location_lt: String
-  Location_lte: String
-  Location_not: String
-  Location_not_contains: String
-  Location_not_ends_with: String
-  Location_not_in: [String!]
-  Location_not_starts_with: String
-  Location_starts_with: String
+  Bucket: StringFilter
+  cloudfrontUrl: StringFilter
+  Company: CompanyFilter
+  createdAt: DateTimeFilter
+  ETag: StringFilter
+  fileName: StringFilter
+  id: StringFilter
+  JobApplication: JobApplicationFilter
+  Key: StringFilter
+  Location: StringFilter
   NOT: [AwsFileDataWhereInput!]
   OR: [AwsFileDataWhereInput!]
-  s3Url: String
-  s3Url_contains: String
-  s3Url_ends_with: String
-  s3Url_gt: String
-  s3Url_gte: String
-  s3Url_in: [String!]
-  s3Url_lt: String
-  s3Url_lte: String
-  s3Url_not: String
-  s3Url_not_contains: String
-  s3Url_not_ends_with: String
-  s3Url_not_in: [String!]
-  s3Url_not_starts_with: String
-  s3Url_starts_with: String
-  VersionId: String
-  VersionId_contains: String
-  VersionId_ends_with: String
-  VersionId_gt: String
-  VersionId_gte: String
-  VersionId_in: [String!]
-  VersionId_lt: String
-  VersionId_lte: String
-  VersionId_not: String
-  VersionId_not_contains: String
-  VersionId_not_ends_with: String
-  VersionId_not_in: [String!]
-  VersionId_not_starts_with: String
-  VersionId_starts_with: String
+  Resume: ResumeFilter
+  s3Url: StringFilter
+  VersionId: StringFilter
 }
 
-type BatchPayload {
-  count: Long!
+input AwsFileDataWhereUniqueInput {
+  id: String
 }
 
 enum BillingFrequency {
@@ -211,223 +254,279 @@ enum BillingFrequency {
 
 type BillingInfo {
   billingFrequency: BillingFrequency
-  card: Card
+  Card: Card
   endOfBillingPeriod: Int
-  id: ID!
+  id: String!
   isPremiumActive: Boolean!
   startOfBillingPeriod: Int
   stripeCustomerId: String
   stripeSubscriptionId: String
-  user: User!
+  User(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int, skip: Int): [User!]!
   willCancelAtEndOfPeriod: Boolean!
+}
+
+input BillingInfoCreateOneWithoutUserInput {
+  connect: BillingInfoWhereUniqueInput
+  create: BillingInfoCreateWithoutUserInput
+}
+
+input BillingInfoCreateWithoutCardInput {
+  billingFrequency: BillingFrequency
+  endOfBillingPeriod: Int
+  id: String
+  isPremiumActive: Boolean
+  startOfBillingPeriod: Int
+  stripeCustomerId: String
+  stripeSubscriptionId: String
+  User: UserCreateManyWithoutBillingInput
+  willCancelAtEndOfPeriod: Boolean
+}
+
+input BillingInfoCreateWithoutUserInput {
+  billingFrequency: BillingFrequency
+  Card: CardCreateOneWithoutBillingInfoInput
+  endOfBillingPeriod: Int
+  id: String
+  isPremiumActive: Boolean
+  startOfBillingPeriod: Int
+  stripeCustomerId: String
+  stripeSubscriptionId: String
+  willCancelAtEndOfPeriod: Boolean
+}
+
+input BillingInfoFilter {
+  every: BillingInfoWhereInput
+  none: BillingInfoWhereInput
+  some: BillingInfoWhereInput
+}
+
+input BillingInfoScalarWhereInput {
+  AND: [BillingInfoScalarWhereInput!]
+  billingFrequency: BillingFrequency
+  card: NullableStringFilter
+  endOfBillingPeriod: NullableIntFilter
+  id: StringFilter
+  isPremiumActive: BooleanFilter
+  NOT: [BillingInfoScalarWhereInput!]
+  OR: [BillingInfoScalarWhereInput!]
+  startOfBillingPeriod: NullableIntFilter
+  stripeCustomerId: NullableStringFilter
+  stripeSubscriptionId: NullableStringFilter
+  User: UserFilter
+  willCancelAtEndOfPeriod: BooleanFilter
+}
+
+input BillingInfoUpdateManyDataInput {
+  billingFrequency: BillingFrequency
+  endOfBillingPeriod: Int
+  id: String
+  isPremiumActive: Boolean
+  startOfBillingPeriod: Int
+  stripeCustomerId: String
+  stripeSubscriptionId: String
+  willCancelAtEndOfPeriod: Boolean
+}
+
+input BillingInfoUpdateManyWithoutCardInput {
+  connect: [BillingInfoWhereUniqueInput!]
+  create: [BillingInfoCreateWithoutCardInput!]
+  delete: [BillingInfoWhereUniqueInput!]
+  deleteMany: [BillingInfoScalarWhereInput!]
+  disconnect: [BillingInfoWhereUniqueInput!]
+  set: [BillingInfoWhereUniqueInput!]
+  update: [BillingInfoUpdateWithWhereUniqueWithoutCardInput!]
+  updateMany: [BillingInfoUpdateManyWithWhereNestedInput!]
+  upsert: [BillingInfoUpsertWithWhereUniqueWithoutCardInput!]
+}
+
+input BillingInfoUpdateManyWithWhereNestedInput {
+  data: BillingInfoUpdateManyDataInput!
+  where: BillingInfoScalarWhereInput!
+}
+
+input BillingInfoUpdateOneWithoutUserInput {
+  connect: BillingInfoWhereUniqueInput
+  create: BillingInfoCreateWithoutUserInput
+  delete: Boolean
+  disconnect: Boolean
+  update: BillingInfoUpdateWithoutUserDataInput
+  upsert: BillingInfoUpsertWithoutUserInput
+}
+
+input BillingInfoUpdateWithoutCardDataInput {
+  billingFrequency: BillingFrequency
+  endOfBillingPeriod: Int
+  id: String
+  isPremiumActive: Boolean
+  startOfBillingPeriod: Int
+  stripeCustomerId: String
+  stripeSubscriptionId: String
+  User: UserUpdateManyWithoutBillingInput
+  willCancelAtEndOfPeriod: Boolean
+}
+
+input BillingInfoUpdateWithoutUserDataInput {
+  billingFrequency: BillingFrequency
+  Card: CardUpdateOneWithoutBillingInfoInput
+  endOfBillingPeriod: Int
+  id: String
+  isPremiumActive: Boolean
+  startOfBillingPeriod: Int
+  stripeCustomerId: String
+  stripeSubscriptionId: String
+  willCancelAtEndOfPeriod: Boolean
+}
+
+input BillingInfoUpdateWithWhereUniqueWithoutCardInput {
+  data: BillingInfoUpdateWithoutCardDataInput!
+  where: BillingInfoWhereUniqueInput!
+}
+
+input BillingInfoUpsertWithoutUserInput {
+  create: BillingInfoCreateWithoutUserInput!
+  update: BillingInfoUpdateWithoutUserDataInput!
+}
+
+input BillingInfoUpsertWithWhereUniqueWithoutCardInput {
+  create: BillingInfoCreateWithoutCardInput!
+  update: BillingInfoUpdateWithoutCardDataInput!
+  where: BillingInfoWhereUniqueInput!
 }
 
 input BillingInfoWhereInput {
   AND: [BillingInfoWhereInput!]
   billingFrequency: BillingFrequency
-  billingFrequency_in: [BillingFrequency!]
-  billingFrequency_not: BillingFrequency
-  billingFrequency_not_in: [BillingFrequency!]
-  card: CardWhereInput
-  endOfBillingPeriod: Int
-  endOfBillingPeriod_gt: Int
-  endOfBillingPeriod_gte: Int
-  endOfBillingPeriod_in: [Int!]
-  endOfBillingPeriod_lt: Int
-  endOfBillingPeriod_lte: Int
-  endOfBillingPeriod_not: Int
-  endOfBillingPeriod_not_in: [Int!]
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  isPremiumActive: Boolean
-  isPremiumActive_not: Boolean
+  card: NullableStringFilter
+  Card: CardWhereInput
+  endOfBillingPeriod: NullableIntFilter
+  id: StringFilter
+  isPremiumActive: BooleanFilter
   NOT: [BillingInfoWhereInput!]
   OR: [BillingInfoWhereInput!]
-  startOfBillingPeriod: Int
-  startOfBillingPeriod_gt: Int
-  startOfBillingPeriod_gte: Int
-  startOfBillingPeriod_in: [Int!]
-  startOfBillingPeriod_lt: Int
-  startOfBillingPeriod_lte: Int
-  startOfBillingPeriod_not: Int
-  startOfBillingPeriod_not_in: [Int!]
+  startOfBillingPeriod: NullableIntFilter
+  stripeCustomerId: NullableStringFilter
+  stripeSubscriptionId: NullableStringFilter
+  User: UserFilter
+  willCancelAtEndOfPeriod: BooleanFilter
+}
+
+input BillingInfoWhereUniqueInput {
+  id: String
   stripeCustomerId: String
-  stripeCustomerId_contains: String
-  stripeCustomerId_ends_with: String
-  stripeCustomerId_gt: String
-  stripeCustomerId_gte: String
-  stripeCustomerId_in: [String!]
-  stripeCustomerId_lt: String
-  stripeCustomerId_lte: String
-  stripeCustomerId_not: String
-  stripeCustomerId_not_contains: String
-  stripeCustomerId_not_ends_with: String
-  stripeCustomerId_not_in: [String!]
-  stripeCustomerId_not_starts_with: String
-  stripeCustomerId_starts_with: String
-  stripeSubscriptionId: String
-  stripeSubscriptionId_contains: String
-  stripeSubscriptionId_ends_with: String
-  stripeSubscriptionId_gt: String
-  stripeSubscriptionId_gte: String
-  stripeSubscriptionId_in: [String!]
-  stripeSubscriptionId_lt: String
-  stripeSubscriptionId_lte: String
-  stripeSubscriptionId_not: String
-  stripeSubscriptionId_not_contains: String
-  stripeSubscriptionId_not_ends_with: String
-  stripeSubscriptionId_not_in: [String!]
-  stripeSubscriptionId_not_starts_with: String
-  stripeSubscriptionId_starts_with: String
-  user: UserWhereInput
-  willCancelAtEndOfPeriod: Boolean
-  willCancelAtEndOfPeriod_not: Boolean
+}
+
+input BooleanFilter {
+  equals: Boolean
+  not: Boolean
 }
 
 type Card {
-  billingInfo: BillingInfo!
   brand: String!
   expMonth: Int!
   expYear: Int!
-  id: ID!
+  id: String!
   last4Digits: String!
   stripePaymentMethodId: String!
+}
+
+input CardCreateOneWithoutBillingInfoInput {
+  connect: CardWhereUniqueInput
+  create: CardCreateWithoutBillingInfoInput
+}
+
+input CardCreateWithoutBillingInfoInput {
+  brand: String!
+  expMonth: Int!
+  expYear: Int!
+  id: String
+  last4Digits: String!
+  stripePaymentMethodId: String!
+}
+
+input CardUpdateInput {
+  BillingInfo: BillingInfoUpdateManyWithoutCardInput
+  brand: String
+  expMonth: Int
+  expYear: Int
+  id: String
+  last4Digits: String
+  stripePaymentMethodId: String
+}
+
+input CardUpdateOneWithoutBillingInfoInput {
+  connect: CardWhereUniqueInput
+  create: CardCreateWithoutBillingInfoInput
+  delete: Boolean
+  disconnect: Boolean
+  update: CardUpdateWithoutBillingInfoDataInput
+  upsert: CardUpsertWithoutBillingInfoInput
 }
 
 input CardUpdateWithoutBillingInfoDataInput {
   brand: String
   expMonth: Int
   expYear: Int
+  id: String
   last4Digits: String
   stripePaymentMethodId: String
+}
+
+input CardUpsertWithoutBillingInfoInput {
+  create: CardCreateWithoutBillingInfoInput!
+  update: CardUpdateWithoutBillingInfoDataInput!
 }
 
 input CardWhereInput {
   AND: [CardWhereInput!]
-  billingInfo: BillingInfoWhereInput
-  brand: String
-  brand_contains: String
-  brand_ends_with: String
-  brand_gt: String
-  brand_gte: String
-  brand_in: [String!]
-  brand_lt: String
-  brand_lte: String
-  brand_not: String
-  brand_not_contains: String
-  brand_not_ends_with: String
-  brand_not_in: [String!]
-  brand_not_starts_with: String
-  brand_starts_with: String
-  expMonth: Int
-  expMonth_gt: Int
-  expMonth_gte: Int
-  expMonth_in: [Int!]
-  expMonth_lt: Int
-  expMonth_lte: Int
-  expMonth_not: Int
-  expMonth_not_in: [Int!]
-  expYear: Int
-  expYear_gt: Int
-  expYear_gte: Int
-  expYear_in: [Int!]
-  expYear_lt: Int
-  expYear_lte: Int
-  expYear_not: Int
-  expYear_not_in: [Int!]
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  last4Digits: String
-  last4Digits_contains: String
-  last4Digits_ends_with: String
-  last4Digits_gt: String
-  last4Digits_gte: String
-  last4Digits_in: [String!]
-  last4Digits_lt: String
-  last4Digits_lte: String
-  last4Digits_not: String
-  last4Digits_not_contains: String
-  last4Digits_not_ends_with: String
-  last4Digits_not_in: [String!]
-  last4Digits_not_starts_with: String
-  last4Digits_starts_with: String
+  BillingInfo: BillingInfoFilter
+  brand: StringFilter
+  expMonth: IntFilter
+  expYear: IntFilter
+  id: StringFilter
+  last4Digits: StringFilter
   NOT: [CardWhereInput!]
   OR: [CardWhereInput!]
-  stripePaymentMethodId: String
-  stripePaymentMethodId_contains: String
-  stripePaymentMethodId_ends_with: String
-  stripePaymentMethodId_gt: String
-  stripePaymentMethodId_gte: String
-  stripePaymentMethodId_in: [String!]
-  stripePaymentMethodId_lt: String
-  stripePaymentMethodId_lte: String
-  stripePaymentMethodId_not: String
-  stripePaymentMethodId_not_contains: String
-  stripePaymentMethodId_not_ends_with: String
-  stripePaymentMethodId_not_in: [String!]
-  stripePaymentMethodId_not_starts_with: String
-  stripePaymentMethodId_starts_with: String
+  stripePaymentMethodId: StringFilter
+}
+
+input CardWhereUniqueInput {
+  id: String
 }
 
 type Company {
-  contacts(after: String, before: String, first: Int, last: Int, orderBy: CompanyContactOrderByInput, skip: Int, where: CompanyContactWhereInput): [CompanyContact!]
+  Contacts(after: CompanyContactWhereUniqueInput, before: CompanyContactWhereUniqueInput, first: Int, last: Int, orderBy: CompanyContactsOrderByInput, skip: Int): [CompanyContact!]!
   createdAt: DateTime!
-  id: ID!
-  image: AwsFileData
-  jobApplications(after: String, before: String, first: Int, last: Int, orderBy: JobApplicationOrderByInput, skip: Int, where: JobApplicationWhereInput): [JobApplication!]
+  id: String!
+  Image: AwsFileData
+  JobApplication(after: JobApplicationWhereUniqueInput, before: JobApplicationWhereUniqueInput, first: Int, last: Int, skip: Int): [JobApplication!]!
   jobApplicationsCount: Int!
   name: String!
   notes: String
   rating: Int
   updatedAt: DateTime!
-  user: User!
+  User: User
   website: String
 }
 
-type CompanyConnection {
-  aggregate: AggregateCompany!
-  edges: [CompanyEdge!]!
-  pageInfo: PageInfo!
-}
-
 type CompanyContact {
-  company: Company!
+  Company: Company
   email: String
-  id: ID!
+  id: String!
   name: String!
   notes: String
   order: Int!
   phone: String
   position: String
+}
+
+input CompanyContactCreateManyWithoutCompanyInput {
+  connect: [CompanyContactWhereUniqueInput!]
+  create: [CompanyContactCreateWithoutCompanyInput!]
 }
 
 input CompanyContactCreateWithoutCompanyInput {
   email: String
-  id: ID
+  id: String
   name: String!
   notes: String
   order: Int!
@@ -435,365 +534,548 @@ input CompanyContactCreateWithoutCompanyInput {
   position: String
 }
 
-enum CompanyContactOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-  email_ASC
-  email_DESC
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  notes_ASC
-  notes_DESC
-  order_ASC
-  order_DESC
-  phone_ASC
-  phone_DESC
-  position_ASC
-  position_DESC
-  updatedAt_ASC
-  updatedAt_DESC
+input CompanyContactFilter {
+  every: CompanyContactWhereInput
+  none: CompanyContactWhereInput
+  some: CompanyContactWhereInput
+}
+
+input CompanyContactScalarWhereInput {
+  AND: [CompanyContactScalarWhereInput!]
+  company: NullableStringFilter
+  email: NullableStringFilter
+  id: StringFilter
+  name: StringFilter
+  NOT: [CompanyContactScalarWhereInput!]
+  notes: NullableStringFilter
+  OR: [CompanyContactScalarWhereInput!]
+  order: IntFilter
+  phone: NullableStringFilter
+  position: NullableStringFilter
+}
+
+input CompanyContactsOrderByInput {
+  order: OrderByArg
+}
+
+input CompanyContactUpdateManyDataInput {
+  email: String
+  id: String
+  name: String
+  notes: String
+  order: Int
+  phone: String
+  position: String
+}
+
+input CompanyContactUpdateManyWithoutCompanyInput {
+  connect: [CompanyContactWhereUniqueInput!]
+  create: [CompanyContactCreateWithoutCompanyInput!]
+  delete: [CompanyContactWhereUniqueInput!]
+  deleteMany: [CompanyContactScalarWhereInput!]
+  disconnect: [CompanyContactWhereUniqueInput!]
+  set: [CompanyContactWhereUniqueInput!]
+  update: [CompanyContactUpdateWithWhereUniqueWithoutCompanyInput!]
+  updateMany: [CompanyContactUpdateManyWithWhereNestedInput!]
+  upsert: [CompanyContactUpsertWithWhereUniqueWithoutCompanyInput!]
+}
+
+input CompanyContactUpdateManyWithWhereNestedInput {
+  data: CompanyContactUpdateManyDataInput!
+  where: CompanyContactScalarWhereInput!
+}
+
+input CompanyContactUpdateWithoutCompanyDataInput {
+  email: String
+  id: String
+  name: String
+  notes: String
+  order: Int
+  phone: String
+  position: String
+}
+
+input CompanyContactUpdateWithWhereUniqueWithoutCompanyInput {
+  data: CompanyContactUpdateWithoutCompanyDataInput!
+  where: CompanyContactWhereUniqueInput!
+}
+
+input CompanyContactUpsertWithWhereUniqueWithoutCompanyInput {
+  create: CompanyContactCreateWithoutCompanyInput!
+  update: CompanyContactUpdateWithoutCompanyDataInput!
+  where: CompanyContactWhereUniqueInput!
 }
 
 input CompanyContactWhereInput {
   AND: [CompanyContactWhereInput!]
-  company: CompanyWhereInput
-  email: String
-  email_contains: String
-  email_ends_with: String
-  email_gt: String
-  email_gte: String
-  email_in: [String!]
-  email_lt: String
-  email_lte: String
-  email_not: String
-  email_not_contains: String
-  email_not_ends_with: String
-  email_not_in: [String!]
-  email_not_starts_with: String
-  email_starts_with: String
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  name: String
-  name_contains: String
-  name_ends_with: String
-  name_gt: String
-  name_gte: String
-  name_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_not: String
-  name_not_contains: String
-  name_not_ends_with: String
-  name_not_in: [String!]
-  name_not_starts_with: String
-  name_starts_with: String
+  company: NullableStringFilter
+  Company: CompanyWhereInput
+  email: NullableStringFilter
+  id: StringFilter
+  name: StringFilter
   NOT: [CompanyContactWhereInput!]
-  notes: String
-  notes_contains: String
-  notes_ends_with: String
-  notes_gt: String
-  notes_gte: String
-  notes_in: [String!]
-  notes_lt: String
-  notes_lte: String
-  notes_not: String
-  notes_not_contains: String
-  notes_not_ends_with: String
-  notes_not_in: [String!]
-  notes_not_starts_with: String
-  notes_starts_with: String
+  notes: NullableStringFilter
   OR: [CompanyContactWhereInput!]
-  order: Int
-  order_gt: Int
-  order_gte: Int
-  order_in: [Int!]
-  order_lt: Int
-  order_lte: Int
-  order_not: Int
-  order_not_in: [Int!]
-  phone: String
-  phone_contains: String
-  phone_ends_with: String
-  phone_gt: String
-  phone_gte: String
-  phone_in: [String!]
-  phone_lt: String
-  phone_lte: String
-  phone_not: String
-  phone_not_contains: String
-  phone_not_ends_with: String
-  phone_not_in: [String!]
-  phone_not_starts_with: String
-  phone_starts_with: String
-  position: String
-  position_contains: String
-  position_ends_with: String
-  position_gt: String
-  position_gte: String
-  position_in: [String!]
-  position_lt: String
-  position_lte: String
-  position_not: String
-  position_not_contains: String
-  position_not_ends_with: String
-  position_not_in: [String!]
-  position_not_starts_with: String
-  position_starts_with: String
+  order: IntFilter
+  phone: NullableStringFilter
+  position: NullableStringFilter
+}
+
+input CompanyContactWhereUniqueInput {
+  id: String
+}
+
+input CompanyCreateManyWithoutImageInput {
+  connect: [CompanyWhereUniqueInput!]
+  create: [CompanyCreateWithoutImageInput!]
+}
+
+input CompanyCreateManyWithoutUserInput {
+  connect: [CompanyWhereUniqueInput!]
+  create: [CompanyCreateWithoutUserInput!]
+}
+
+input CompanyCreateOneWithoutJobApplicationInput {
+  connect: CompanyWhereUniqueInput
+  create: CompanyCreateWithoutJobApplicationInput
+}
+
+input CompanyCreateWithoutImageInput {
+  Contacts: CompanyContactCreateManyWithoutCompanyInput
+  createdAt: DateTime
+  id: String
+  JobApplication: JobApplicationCreateManyWithoutCompanyInput
+  jobApplicationsCount: Int
+  name: String!
+  notes: String
+  rating: Int
+  updatedAt: DateTime
+  User: UserCreateOneWithoutCompanyInput
+  website: String
+}
+
+input CompanyCreateWithoutJobApplicationInput {
+  Contacts: CompanyContactCreateManyWithoutCompanyInput
+  createdAt: DateTime
+  id: String
+  Image: AwsFileDataCreateOneWithoutCompanyInput
+  jobApplicationsCount: Int
+  name: String!
+  notes: String
+  rating: Int
+  updatedAt: DateTime
+  User: UserCreateOneWithoutCompanyInput
+  website: String
+}
+
+input CompanyCreateWithoutUserInput {
+  Contacts: CompanyContactCreateManyWithoutCompanyInput
+  createdAt: DateTime
+  id: String
+  Image: AwsFileDataCreateOneWithoutCompanyInput
+  JobApplication: JobApplicationCreateManyWithoutCompanyInput
+  jobApplicationsCount: Int
+  name: String!
+  notes: String
+  rating: Int
+  updatedAt: DateTime
+  website: String
 }
 
 type CompanyEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
   cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
   node: Company!
 }
 
-enum CompanyOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  jobApplicationsCount_ASC
-  jobApplicationsCount_DESC
-  name_ASC
-  name_DESC
-  notes_ASC
-  notes_DESC
-  rating_ASC
-  rating_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  website_ASC
-  website_DESC
+input CompanyFilter {
+  every: CompanyWhereInput
+  none: CompanyWhereInput
+  some: CompanyWhereInput
+}
+
+input CompanyScalarWhereInput {
+  AND: [CompanyScalarWhereInput!]
+  Contacts: CompanyContactFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  image: NullableStringFilter
+  JobApplication: JobApplicationFilter
+  jobApplicationsCount: IntFilter
+  name: StringFilter
+  NOT: [CompanyScalarWhereInput!]
+  notes: NullableStringFilter
+  OR: [CompanyScalarWhereInput!]
+  rating: NullableIntFilter
+  updatedAt: DateTimeFilter
+  user: NullableStringFilter
+  website: NullableStringFilter
+}
+
+input CompanyUpdateManyDataInput {
+  createdAt: DateTime
+  id: String
+  jobApplicationsCount: Int
+  name: String
+  notes: String
+  rating: Int
+  updatedAt: DateTime
+  website: String
+}
+
+input CompanyUpdateManyWithoutImageInput {
+  connect: [CompanyWhereUniqueInput!]
+  create: [CompanyCreateWithoutImageInput!]
+  delete: [CompanyWhereUniqueInput!]
+  deleteMany: [CompanyScalarWhereInput!]
+  disconnect: [CompanyWhereUniqueInput!]
+  set: [CompanyWhereUniqueInput!]
+  update: [CompanyUpdateWithWhereUniqueWithoutImageInput!]
+  updateMany: [CompanyUpdateManyWithWhereNestedInput!]
+  upsert: [CompanyUpsertWithWhereUniqueWithoutImageInput!]
+}
+
+input CompanyUpdateManyWithoutUserInput {
+  connect: [CompanyWhereUniqueInput!]
+  create: [CompanyCreateWithoutUserInput!]
+  delete: [CompanyWhereUniqueInput!]
+  deleteMany: [CompanyScalarWhereInput!]
+  disconnect: [CompanyWhereUniqueInput!]
+  set: [CompanyWhereUniqueInput!]
+  update: [CompanyUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [CompanyUpdateManyWithWhereNestedInput!]
+  upsert: [CompanyUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input CompanyUpdateManyWithWhereNestedInput {
+  data: CompanyUpdateManyDataInput!
+  where: CompanyScalarWhereInput!
+}
+
+input CompanyUpdateOneWithoutJobApplicationInput {
+  connect: CompanyWhereUniqueInput
+  create: CompanyCreateWithoutJobApplicationInput
+  delete: Boolean
+  disconnect: Boolean
+  update: CompanyUpdateWithoutJobApplicationDataInput
+  upsert: CompanyUpsertWithoutJobApplicationInput
+}
+
+input CompanyUpdateWithoutImageDataInput {
+  Contacts: CompanyContactUpdateManyWithoutCompanyInput
+  createdAt: DateTime
+  id: String
+  JobApplication: JobApplicationUpdateManyWithoutCompanyInput
+  jobApplicationsCount: Int
+  name: String
+  notes: String
+  rating: Int
+  updatedAt: DateTime
+  User: UserUpdateOneWithoutCompanyInput
+  website: String
+}
+
+input CompanyUpdateWithoutJobApplicationDataInput {
+  Contacts: CompanyContactUpdateManyWithoutCompanyInput
+  createdAt: DateTime
+  id: String
+  Image: AwsFileDataUpdateOneWithoutCompanyInput
+  jobApplicationsCount: Int
+  name: String
+  notes: String
+  rating: Int
+  updatedAt: DateTime
+  User: UserUpdateOneWithoutCompanyInput
+  website: String
+}
+
+input CompanyUpdateWithoutUserDataInput {
+  Contacts: CompanyContactUpdateManyWithoutCompanyInput
+  createdAt: DateTime
+  id: String
+  Image: AwsFileDataUpdateOneWithoutCompanyInput
+  JobApplication: JobApplicationUpdateManyWithoutCompanyInput
+  jobApplicationsCount: Int
+  name: String
+  notes: String
+  rating: Int
+  updatedAt: DateTime
+  website: String
+}
+
+input CompanyUpdateWithWhereUniqueWithoutImageInput {
+  data: CompanyUpdateWithoutImageDataInput!
+  where: CompanyWhereUniqueInput!
+}
+
+input CompanyUpdateWithWhereUniqueWithoutUserInput {
+  data: CompanyUpdateWithoutUserDataInput!
+  where: CompanyWhereUniqueInput!
+}
+
+input CompanyUpsertWithoutJobApplicationInput {
+  create: CompanyCreateWithoutJobApplicationInput!
+  update: CompanyUpdateWithoutJobApplicationDataInput!
+}
+
+input CompanyUpsertWithWhereUniqueWithoutImageInput {
+  create: CompanyCreateWithoutImageInput!
+  update: CompanyUpdateWithoutImageDataInput!
+  where: CompanyWhereUniqueInput!
+}
+
+input CompanyUpsertWithWhereUniqueWithoutUserInput {
+  create: CompanyCreateWithoutUserInput!
+  update: CompanyUpdateWithoutUserDataInput!
+  where: CompanyWhereUniqueInput!
 }
 
 input CompanyWhereInput {
   AND: [CompanyWhereInput!]
-  contacts_every: CompanyContactWhereInput
-  contacts_none: CompanyContactWhereInput
-  contacts_some: CompanyContactWhereInput
-  createdAt: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_not: DateTime
-  createdAt_not_in: [DateTime!]
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  image: AwsFileDataWhereInput
-  jobApplications_every: JobApplicationWhereInput
-  jobApplications_none: JobApplicationWhereInput
-  jobApplications_some: JobApplicationWhereInput
-  jobApplicationsCount: Int
-  jobApplicationsCount_gt: Int
-  jobApplicationsCount_gte: Int
-  jobApplicationsCount_in: [Int!]
-  jobApplicationsCount_lt: Int
-  jobApplicationsCount_lte: Int
-  jobApplicationsCount_not: Int
-  jobApplicationsCount_not_in: [Int!]
-  name: String
-  name_contains: String
-  name_ends_with: String
-  name_gt: String
-  name_gte: String
-  name_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_not: String
-  name_not_contains: String
-  name_not_ends_with: String
-  name_not_in: [String!]
-  name_not_starts_with: String
-  name_starts_with: String
+  Contacts: CompanyContactFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  image: NullableStringFilter
+  Image: AwsFileDataWhereInput
+  JobApplication: JobApplicationFilter
+  jobApplicationsCount: IntFilter
+  name: StringFilter
   NOT: [CompanyWhereInput!]
-  notes: String
-  notes_contains: String
-  notes_ends_with: String
-  notes_gt: String
-  notes_gte: String
-  notes_in: [String!]
-  notes_lt: String
-  notes_lte: String
-  notes_not: String
-  notes_not_contains: String
-  notes_not_ends_with: String
-  notes_not_in: [String!]
-  notes_not_starts_with: String
-  notes_starts_with: String
+  notes: NullableStringFilter
   OR: [CompanyWhereInput!]
-  rating: Int
-  rating_gt: Int
-  rating_gte: Int
-  rating_in: [Int!]
-  rating_lt: Int
-  rating_lte: Int
-  rating_not: Int
-  rating_not_in: [Int!]
-  updatedAt: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_not: DateTime
-  updatedAt_not_in: [DateTime!]
-  user: UserWhereInput
-  website: String
-  website_contains: String
-  website_ends_with: String
-  website_gt: String
-  website_gte: String
-  website_in: [String!]
-  website_lt: String
-  website_lte: String
-  website_not: String
-  website_not_contains: String
-  website_not_ends_with: String
-  website_not_in: [String!]
-  website_not_starts_with: String
-  website_starts_with: String
+  rating: NullableIntFilter
+  updatedAt: DateTimeFilter
+  user: NullableStringFilter
+  User: UserWhereInput
+  website: NullableStringFilter
 }
 
 input CompanyWhereUniqueInput {
-  id: ID
+  id: String
 }
 
 scalar DateTime
 
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: DateTime
+  notIn: [DateTime!]
+}
+
 type GoogleMapsLocation {
   googlePlacesId: String!
-  id: ID!
+  id: String!
+  JobApplication(after: JobApplicationWhereUniqueInput, before: JobApplicationWhereUniqueInput, first: Int, last: Int, skip: Int): [JobApplication!]!
   name: String!
 }
 
 input GoogleMapsLocationCreateInput {
   googlePlacesId: String!
-  id: ID
+  id: String
+  JobApplication: JobApplicationCreateManyWithoutLocationInput
   name: String!
+}
+
+input GoogleMapsLocationCreateOneWithoutJobApplicationInput {
+  connect: GoogleMapsLocationWhereUniqueInput
+  create: GoogleMapsLocationCreateWithoutJobApplicationInput
+}
+
+input GoogleMapsLocationCreateWithoutJobApplicationInput {
+  googlePlacesId: String!
+  id: String
+  name: String!
+}
+
+input GoogleMapsLocationUpdateInput {
+  googlePlacesId: String
+  id: String
+  JobApplication: JobApplicationUpdateManyWithoutLocationInput
+  name: String
+}
+
+input GoogleMapsLocationUpdateOneWithoutJobApplicationInput {
+  connect: GoogleMapsLocationWhereUniqueInput
+  create: GoogleMapsLocationCreateWithoutJobApplicationInput
+  delete: Boolean
+  disconnect: Boolean
+  update: GoogleMapsLocationUpdateWithoutJobApplicationDataInput
+  upsert: GoogleMapsLocationUpsertWithoutJobApplicationInput
+}
+
+input GoogleMapsLocationUpdateWithoutJobApplicationDataInput {
+  googlePlacesId: String
+  id: String
+  name: String
+}
+
+input GoogleMapsLocationUpsertWithoutJobApplicationInput {
+  create: GoogleMapsLocationCreateWithoutJobApplicationInput!
+  update: GoogleMapsLocationUpdateWithoutJobApplicationDataInput!
 }
 
 input GoogleMapsLocationWhereInput {
   AND: [GoogleMapsLocationWhereInput!]
-  googlePlacesId: String
-  googlePlacesId_contains: String
-  googlePlacesId_ends_with: String
-  googlePlacesId_gt: String
-  googlePlacesId_gte: String
-  googlePlacesId_in: [String!]
-  googlePlacesId_lt: String
-  googlePlacesId_lte: String
-  googlePlacesId_not: String
-  googlePlacesId_not_contains: String
-  googlePlacesId_not_ends_with: String
-  googlePlacesId_not_in: [String!]
-  googlePlacesId_not_starts_with: String
-  googlePlacesId_starts_with: String
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  name: String
-  name_contains: String
-  name_ends_with: String
-  name_gt: String
-  name_gte: String
-  name_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_not: String
-  name_not_contains: String
-  name_not_ends_with: String
-  name_not_in: [String!]
-  name_not_starts_with: String
-  name_starts_with: String
+  googlePlacesId: StringFilter
+  id: StringFilter
+  JobApplication: JobApplicationFilter
+  name: StringFilter
   NOT: [GoogleMapsLocationWhereInput!]
   OR: [GoogleMapsLocationWhereInput!]
 }
 
+input GoogleMapsLocationWhereUniqueInput {
+  id: String
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: Int
+  notIn: [Int!]
+}
+
 type JobApplication {
   applicationStatus: ApplicationStatus!
-  company: Company!
+  Company: Company
   companyName: String!
-  contacts(after: String, before: String, first: Int, last: Int, orderBy: JobApplicationContactOrderByInput, skip: Int, where: JobApplicationContactWhereInput): [JobApplicationContact!]
-  coverLetterFile: AwsFileData
+  Contacts(after: JobApplicationContactWhereUniqueInput, before: JobApplicationContactWhereUniqueInput, first: Int, last: Int, orderBy: JobApplicationContactsOrderByInput, skip: Int): [JobApplicationContact!]!
+  CoverLetterFile: AwsFileData
   createdAt: DateTime!
   dateApplied: DateTime
   dateDecided: DateTime
-  dateInterviewing: [DateTime!]!
   dateOffered: DateTime
-  id: ID!
+  id: String!
   isApplicationActive: Boolean!
   isRemote: Boolean!
+  JobApplication_dateInterviewing(after: JobApplication_dateInterviewingWhereUniqueInput, before: JobApplication_dateInterviewingWhereUniqueInput, first: Int, last: Int, skip: Int): [JobApplication_dateInterviewing!]!
   jobDecision: JobDecision
   jobListingLink: String
   jobListingNotes: String
-  location: GoogleMapsLocation
+  Location: GoogleMapsLocation
   locationName: String
   notes: String
   position: String!
   rating: Int
-  resume: JobApplicationResume
+  Resume: JobApplicationResume
   updatedAt: DateTime!
-  user: User!
+  User: User
 }
 
-type JobApplicationConnection {
-  aggregate: AggregateJobApplication!
-  edges: [JobApplicationEdge!]!
-  pageInfo: PageInfo!
+type JobApplication_dateInterviewing {
+  JobApplication: JobApplication!
+  nodeId: String!
+  position: Int!
+  value: DateTime!
+}
+
+input JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput {
+  connect: [JobApplication_dateInterviewingWhereUniqueInput!]
+  create: [JobApplication_dateInterviewingCreateWithoutJobApplicationInput!]
+}
+
+input JobApplication_dateInterviewingCreateWithoutJobApplicationInput {
+  position: Int!
+  value: DateTime!
+}
+
+input JobApplication_dateInterviewingFilter {
+  every: JobApplication_dateInterviewingWhereInput
+  none: JobApplication_dateInterviewingWhereInput
+  some: JobApplication_dateInterviewingWhereInput
+}
+
+input JobApplication_dateInterviewingScalarWhereInput {
+  AND: [JobApplication_dateInterviewingScalarWhereInput!]
+  nodeId: StringFilter
+  NOT: [JobApplication_dateInterviewingScalarWhereInput!]
+  OR: [JobApplication_dateInterviewingScalarWhereInput!]
+  position: IntFilter
+  value: DateTimeFilter
+}
+
+input JobApplication_dateInterviewingUpdateManyDataInput {
+  position: Int
+  value: DateTime
+}
+
+input JobApplication_dateInterviewingUpdateManyWithoutJobApplicationInput {
+  connect: [JobApplication_dateInterviewingWhereUniqueInput!]
+  create: [JobApplication_dateInterviewingCreateWithoutJobApplicationInput!]
+  delete: [JobApplication_dateInterviewingWhereUniqueInput!]
+  deleteMany: [JobApplication_dateInterviewingScalarWhereInput!]
+  disconnect: [JobApplication_dateInterviewingWhereUniqueInput!]
+  set: [JobApplication_dateInterviewingWhereUniqueInput!]
+  update: [JobApplication_dateInterviewingUpdateWithWhereUniqueWithoutJobApplicationInput!]
+  updateMany: [JobApplication_dateInterviewingUpdateManyWithWhereNestedInput!]
+  upsert: [JobApplication_dateInterviewingUpsertWithWhereUniqueWithoutJobApplicationInput!]
+}
+
+input JobApplication_dateInterviewingUpdateManyWithWhereNestedInput {
+  data: JobApplication_dateInterviewingUpdateManyDataInput!
+  where: JobApplication_dateInterviewingScalarWhereInput!
+}
+
+input JobApplication_dateInterviewingUpdateWithoutJobApplicationDataInput {
+  position: Int
+  value: DateTime
+}
+
+input JobApplication_dateInterviewingUpdateWithWhereUniqueWithoutJobApplicationInput {
+  data: JobApplication_dateInterviewingUpdateWithoutJobApplicationDataInput!
+  where: JobApplication_dateInterviewingWhereUniqueInput!
+}
+
+input JobApplication_dateInterviewingUpsertWithWhereUniqueWithoutJobApplicationInput {
+  create: JobApplication_dateInterviewingCreateWithoutJobApplicationInput!
+  update: JobApplication_dateInterviewingUpdateWithoutJobApplicationDataInput!
+  where: JobApplication_dateInterviewingWhereUniqueInput!
+}
+
+input JobApplication_dateInterviewingWhereInput {
+  AND: [JobApplication_dateInterviewingWhereInput!]
+  JobApplication: JobApplicationWhereInput
+  nodeId: StringFilter
+  NOT: [JobApplication_dateInterviewingWhereInput!]
+  OR: [JobApplication_dateInterviewingWhereInput!]
+  position: IntFilter
+  value: DateTimeFilter
+}
+
+input JobApplication_dateInterviewingWhereUniqueInput {
+  nodeId: String
 }
 
 type JobApplicationContact {
   email: String
-  id: ID!
-  jobApplication: JobApplication!
+  id: String!
+  JobApplication: JobApplication
   name: String!
   notes: String
   order: Int!
   phone: String
   position: String
+}
+
+input JobApplicationContactCreateManyWithoutJobApplicationInput {
+  connect: [JobApplicationContactWhereUniqueInput!]
+  create: [JobApplicationContactCreateWithoutJobApplicationInput!]
 }
 
 input JobApplicationContactCreateWithoutJobApplicationInput {
   email: String
-  id: ID
+  id: String
   name: String!
   notes: String
   order: Int!
@@ -801,383 +1083,726 @@ input JobApplicationContactCreateWithoutJobApplicationInput {
   position: String
 }
 
-enum JobApplicationContactOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-  email_ASC
-  email_DESC
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  notes_ASC
-  notes_DESC
-  order_ASC
-  order_DESC
-  phone_ASC
-  phone_DESC
-  position_ASC
-  position_DESC
-  updatedAt_ASC
-  updatedAt_DESC
+input JobApplicationContactFilter {
+  every: JobApplicationContactWhereInput
+  none: JobApplicationContactWhereInput
+  some: JobApplicationContactWhereInput
+}
+
+input JobApplicationContactScalarWhereInput {
+  AND: [JobApplicationContactScalarWhereInput!]
+  email: NullableStringFilter
+  id: StringFilter
+  jobApplication: NullableStringFilter
+  name: StringFilter
+  NOT: [JobApplicationContactScalarWhereInput!]
+  notes: NullableStringFilter
+  OR: [JobApplicationContactScalarWhereInput!]
+  order: IntFilter
+  phone: NullableStringFilter
+  position: NullableStringFilter
+}
+
+input JobApplicationContactsOrderByInput {
+  order: OrderByArg
+}
+
+input JobApplicationContactUpdateManyDataInput {
+  email: String
+  id: String
+  name: String
+  notes: String
+  order: Int
+  phone: String
+  position: String
+}
+
+input JobApplicationContactUpdateManyWithoutJobApplicationInput {
+  connect: [JobApplicationContactWhereUniqueInput!]
+  create: [JobApplicationContactCreateWithoutJobApplicationInput!]
+  delete: [JobApplicationContactWhereUniqueInput!]
+  deleteMany: [JobApplicationContactScalarWhereInput!]
+  disconnect: [JobApplicationContactWhereUniqueInput!]
+  set: [JobApplicationContactWhereUniqueInput!]
+  update: [JobApplicationContactUpdateWithWhereUniqueWithoutJobApplicationInput!]
+  updateMany: [JobApplicationContactUpdateManyWithWhereNestedInput!]
+  upsert: [JobApplicationContactUpsertWithWhereUniqueWithoutJobApplicationInput!]
+}
+
+input JobApplicationContactUpdateManyWithWhereNestedInput {
+  data: JobApplicationContactUpdateManyDataInput!
+  where: JobApplicationContactScalarWhereInput!
+}
+
+input JobApplicationContactUpdateWithoutJobApplicationDataInput {
+  email: String
+  id: String
+  name: String
+  notes: String
+  order: Int
+  phone: String
+  position: String
+}
+
+input JobApplicationContactUpdateWithWhereUniqueWithoutJobApplicationInput {
+  data: JobApplicationContactUpdateWithoutJobApplicationDataInput!
+  where: JobApplicationContactWhereUniqueInput!
+}
+
+input JobApplicationContactUpsertWithWhereUniqueWithoutJobApplicationInput {
+  create: JobApplicationContactCreateWithoutJobApplicationInput!
+  update: JobApplicationContactUpdateWithoutJobApplicationDataInput!
+  where: JobApplicationContactWhereUniqueInput!
 }
 
 input JobApplicationContactWhereInput {
   AND: [JobApplicationContactWhereInput!]
-  email: String
-  email_contains: String
-  email_ends_with: String
-  email_gt: String
-  email_gte: String
-  email_in: [String!]
-  email_lt: String
-  email_lte: String
-  email_not: String
-  email_not_contains: String
-  email_not_ends_with: String
-  email_not_in: [String!]
-  email_not_starts_with: String
-  email_starts_with: String
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  jobApplication: JobApplicationWhereInput
-  name: String
-  name_contains: String
-  name_ends_with: String
-  name_gt: String
-  name_gte: String
-  name_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_not: String
-  name_not_contains: String
-  name_not_ends_with: String
-  name_not_in: [String!]
-  name_not_starts_with: String
-  name_starts_with: String
+  email: NullableStringFilter
+  id: StringFilter
+  jobApplication: NullableStringFilter
+  JobApplication: JobApplicationWhereInput
+  name: StringFilter
   NOT: [JobApplicationContactWhereInput!]
-  notes: String
-  notes_contains: String
-  notes_ends_with: String
-  notes_gt: String
-  notes_gte: String
-  notes_in: [String!]
-  notes_lt: String
-  notes_lte: String
-  notes_not: String
-  notes_not_contains: String
-  notes_not_ends_with: String
-  notes_not_in: [String!]
-  notes_not_starts_with: String
-  notes_starts_with: String
+  notes: NullableStringFilter
   OR: [JobApplicationContactWhereInput!]
-  order: Int
-  order_gt: Int
-  order_gte: Int
-  order_in: [Int!]
-  order_lt: Int
-  order_lte: Int
-  order_not: Int
-  order_not_in: [Int!]
-  phone: String
-  phone_contains: String
-  phone_ends_with: String
-  phone_gt: String
-  phone_gte: String
-  phone_in: [String!]
-  phone_lt: String
-  phone_lte: String
-  phone_not: String
-  phone_not_contains: String
-  phone_not_ends_with: String
-  phone_not_in: [String!]
-  phone_not_starts_with: String
-  phone_starts_with: String
-  position: String
-  position_contains: String
-  position_ends_with: String
-  position_gt: String
-  position_gte: String
-  position_in: [String!]
-  position_lt: String
-  position_lte: String
-  position_not: String
-  position_not_contains: String
-  position_not_ends_with: String
-  position_not_in: [String!]
-  position_not_starts_with: String
-  position_starts_with: String
+  order: IntFilter
+  phone: NullableStringFilter
+  position: NullableStringFilter
+}
+
+input JobApplicationContactWhereUniqueInput {
+  id: String
+}
+
+input JobApplicationCreateManyWithoutCompanyInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutCompanyInput!]
+}
+
+input JobApplicationCreateManyWithoutCoverLetterFileInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutCoverLetterFileInput!]
+}
+
+input JobApplicationCreateManyWithoutLocationInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutLocationInput!]
+}
+
+input JobApplicationCreateManyWithoutResumeInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutResumeInput!]
+}
+
+input JobApplicationCreateManyWithoutUserInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutUserInput!]
+}
+
+input JobApplicationCreateWithoutCompanyInput {
+  applicationStatus: ApplicationStatus
+  companyName: String!
+  Contacts: JobApplicationContactCreateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataCreateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean!
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationCreateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String!
+  rating: Int
+  Resume: JobApplicationResumeCreateOneWithoutJobApplicationInput
+  updatedAt: DateTime
+  User: UserCreateOneWithoutJobApplicationInput
+}
+
+input JobApplicationCreateWithoutCoverLetterFileInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyCreateOneWithoutJobApplicationInput
+  companyName: String!
+  Contacts: JobApplicationContactCreateManyWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean!
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationCreateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String!
+  rating: Int
+  Resume: JobApplicationResumeCreateOneWithoutJobApplicationInput
+  updatedAt: DateTime
+  User: UserCreateOneWithoutJobApplicationInput
+}
+
+input JobApplicationCreateWithoutLocationInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyCreateOneWithoutJobApplicationInput
+  companyName: String!
+  Contacts: JobApplicationContactCreateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataCreateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean!
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  locationName: String
+  notes: String
+  position: String!
+  rating: Int
+  Resume: JobApplicationResumeCreateOneWithoutJobApplicationInput
+  updatedAt: DateTime
+  User: UserCreateOneWithoutJobApplicationInput
+}
+
+input JobApplicationCreateWithoutResumeInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyCreateOneWithoutJobApplicationInput
+  companyName: String!
+  Contacts: JobApplicationContactCreateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataCreateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean!
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationCreateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String!
+  rating: Int
+  updatedAt: DateTime
+  User: UserCreateOneWithoutJobApplicationInput
+}
+
+input JobApplicationCreateWithoutUserInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyCreateOneWithoutJobApplicationInput
+  companyName: String!
+  Contacts: JobApplicationContactCreateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataCreateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean!
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationCreateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String!
+  rating: Int
+  Resume: JobApplicationResumeCreateOneWithoutJobApplicationInput
+  updatedAt: DateTime
 }
 
 type JobApplicationEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
   cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
   node: JobApplication!
 }
 
-enum JobApplicationOrderByInput {
-  applicationStatus_ASC
-  applicationStatus_DESC
-  companyName_ASC
-  companyName_DESC
-  createdAt_ASC
-  createdAt_DESC
-  dateApplied_ASC
-  dateApplied_DESC
-  dateDecided_ASC
-  dateDecided_DESC
-  dateOffered_ASC
-  dateOffered_DESC
-  id_ASC
-  id_DESC
-  isApplicationActive_ASC
-  isApplicationActive_DESC
-  isRemote_ASC
-  isRemote_DESC
-  jobDecision_ASC
-  jobDecision_DESC
-  jobListingLink_ASC
-  jobListingLink_DESC
-  jobListingNotes_ASC
-  jobListingNotes_DESC
-  locationName_ASC
-  locationName_DESC
-  notes_ASC
-  notes_DESC
-  position_ASC
-  position_DESC
-  rating_ASC
-  rating_DESC
-  updatedAt_ASC
-  updatedAt_DESC
+input JobApplicationFilter {
+  every: JobApplicationWhereInput
+  none: JobApplicationWhereInput
+  some: JobApplicationWhereInput
+}
+
+input JobApplicationOrderByInput {
+  updatedAt: OrderByArg
 }
 
 type JobApplicationResume {
-  id: ID!
-  resume: Resume
+  id: String!
+  JobApplication(after: JobApplicationWhereUniqueInput, before: JobApplicationWhereUniqueInput, first: Int, last: Int, skip: Int): [JobApplication!]!
+  Resume: Resume
   selectedVersionId: String!
+}
+
+input JobApplicationResumeCreateManyWithoutResumeInput {
+  connect: [JobApplicationResumeWhereUniqueInput!]
+  create: [JobApplicationResumeCreateWithoutResumeInput!]
+}
+
+input JobApplicationResumeCreateOneWithoutJobApplicationInput {
+  connect: JobApplicationResumeWhereUniqueInput
+  create: JobApplicationResumeCreateWithoutJobApplicationInput
+}
+
+input JobApplicationResumeCreateWithoutJobApplicationInput {
+  id: String
+  Resume: ResumeCreateOneWithoutJobApplicationResumeInput
+  selectedVersionId: String!
+}
+
+input JobApplicationResumeCreateWithoutResumeInput {
+  id: String
+  JobApplication: JobApplicationCreateManyWithoutResumeInput
+  selectedVersionId: String!
+}
+
+input JobApplicationResumeFilter {
+  every: JobApplicationResumeWhereInput
+  none: JobApplicationResumeWhereInput
+  some: JobApplicationResumeWhereInput
+}
+
+input JobApplicationResumeScalarWhereInput {
+  AND: [JobApplicationResumeScalarWhereInput!]
+  id: StringFilter
+  JobApplication: JobApplicationFilter
+  NOT: [JobApplicationResumeScalarWhereInput!]
+  OR: [JobApplicationResumeScalarWhereInput!]
+  resume: NullableStringFilter
+  selectedVersionId: StringFilter
+}
+
+input JobApplicationResumeUpdateManyDataInput {
+  id: String
+  selectedVersionId: String
+}
+
+input JobApplicationResumeUpdateManyWithoutResumeInput {
+  connect: [JobApplicationResumeWhereUniqueInput!]
+  create: [JobApplicationResumeCreateWithoutResumeInput!]
+  delete: [JobApplicationResumeWhereUniqueInput!]
+  deleteMany: [JobApplicationResumeScalarWhereInput!]
+  disconnect: [JobApplicationResumeWhereUniqueInput!]
+  set: [JobApplicationResumeWhereUniqueInput!]
+  update: [JobApplicationResumeUpdateWithWhereUniqueWithoutResumeInput!]
+  updateMany: [JobApplicationResumeUpdateManyWithWhereNestedInput!]
+  upsert: [JobApplicationResumeUpsertWithWhereUniqueWithoutResumeInput!]
+}
+
+input JobApplicationResumeUpdateManyWithWhereNestedInput {
+  data: JobApplicationResumeUpdateManyDataInput!
+  where: JobApplicationResumeScalarWhereInput!
+}
+
+input JobApplicationResumeUpdateOneWithoutJobApplicationInput {
+  connect: JobApplicationResumeWhereUniqueInput
+  create: JobApplicationResumeCreateWithoutJobApplicationInput
+  delete: Boolean
+  disconnect: Boolean
+  update: JobApplicationResumeUpdateWithoutJobApplicationDataInput
+  upsert: JobApplicationResumeUpsertWithoutJobApplicationInput
+}
+
+input JobApplicationResumeUpdateWithoutJobApplicationDataInput {
+  id: String
+  Resume: ResumeUpdateOneWithoutJobApplicationResumeInput
+  selectedVersionId: String
+}
+
+input JobApplicationResumeUpdateWithoutResumeDataInput {
+  id: String
+  JobApplication: JobApplicationUpdateManyWithoutResumeInput
+  selectedVersionId: String
+}
+
+input JobApplicationResumeUpdateWithWhereUniqueWithoutResumeInput {
+  data: JobApplicationResumeUpdateWithoutResumeDataInput!
+  where: JobApplicationResumeWhereUniqueInput!
+}
+
+input JobApplicationResumeUpsertWithoutJobApplicationInput {
+  create: JobApplicationResumeCreateWithoutJobApplicationInput!
+  update: JobApplicationResumeUpdateWithoutJobApplicationDataInput!
+}
+
+input JobApplicationResumeUpsertWithWhereUniqueWithoutResumeInput {
+  create: JobApplicationResumeCreateWithoutResumeInput!
+  update: JobApplicationResumeUpdateWithoutResumeDataInput!
+  where: JobApplicationResumeWhereUniqueInput!
 }
 
 input JobApplicationResumeWhereInput {
   AND: [JobApplicationResumeWhereInput!]
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
+  id: StringFilter
+  JobApplication: JobApplicationFilter
   NOT: [JobApplicationResumeWhereInput!]
   OR: [JobApplicationResumeWhereInput!]
-  resume: ResumeWhereInput
-  selectedVersionId: String
-  selectedVersionId_contains: String
-  selectedVersionId_ends_with: String
-  selectedVersionId_gt: String
-  selectedVersionId_gte: String
-  selectedVersionId_in: [String!]
-  selectedVersionId_lt: String
-  selectedVersionId_lte: String
-  selectedVersionId_not: String
-  selectedVersionId_not_contains: String
-  selectedVersionId_not_ends_with: String
-  selectedVersionId_not_in: [String!]
-  selectedVersionId_not_starts_with: String
-  selectedVersionId_starts_with: String
+  resume: NullableStringFilter
+  Resume: ResumeWhereInput
+  selectedVersionId: StringFilter
+}
+
+input JobApplicationResumeWhereUniqueInput {
+  id: String
+}
+
+input JobApplicationScalarWhereInput {
+  AND: [JobApplicationScalarWhereInput!]
+  applicationStatus: ApplicationStatus
+  company: NullableStringFilter
+  companyName: StringFilter
+  Contacts: JobApplicationContactFilter
+  coverLetterFile: NullableStringFilter
+  createdAt: DateTimeFilter
+  dateApplied: NullableDateTimeFilter
+  dateDecided: NullableDateTimeFilter
+  dateOffered: NullableDateTimeFilter
+  id: StringFilter
+  isApplicationActive: BooleanFilter
+  isRemote: BooleanFilter
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingFilter
+  jobDecision: JobDecision
+  jobListingLink: NullableStringFilter
+  jobListingNotes: NullableStringFilter
+  location: NullableStringFilter
+  locationName: NullableStringFilter
+  NOT: [JobApplicationScalarWhereInput!]
+  notes: NullableStringFilter
+  OR: [JobApplicationScalarWhereInput!]
+  position: StringFilter
+  rating: NullableIntFilter
+  resume: NullableStringFilter
+  updatedAt: DateTimeFilter
+  user: NullableStringFilter
+}
+
+input JobApplicationUpdateManyDataInput {
+  applicationStatus: ApplicationStatus
+  companyName: String
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  locationName: String
+  notes: String
+  position: String
+  rating: Int
+  updatedAt: DateTime
+}
+
+input JobApplicationUpdateManyWithoutCompanyInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutCompanyInput!]
+  delete: [JobApplicationWhereUniqueInput!]
+  deleteMany: [JobApplicationScalarWhereInput!]
+  disconnect: [JobApplicationWhereUniqueInput!]
+  set: [JobApplicationWhereUniqueInput!]
+  update: [JobApplicationUpdateWithWhereUniqueWithoutCompanyInput!]
+  updateMany: [JobApplicationUpdateManyWithWhereNestedInput!]
+  upsert: [JobApplicationUpsertWithWhereUniqueWithoutCompanyInput!]
+}
+
+input JobApplicationUpdateManyWithoutCoverLetterFileInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutCoverLetterFileInput!]
+  delete: [JobApplicationWhereUniqueInput!]
+  deleteMany: [JobApplicationScalarWhereInput!]
+  disconnect: [JobApplicationWhereUniqueInput!]
+  set: [JobApplicationWhereUniqueInput!]
+  update: [JobApplicationUpdateWithWhereUniqueWithoutCoverLetterFileInput!]
+  updateMany: [JobApplicationUpdateManyWithWhereNestedInput!]
+  upsert: [JobApplicationUpsertWithWhereUniqueWithoutCoverLetterFileInput!]
+}
+
+input JobApplicationUpdateManyWithoutLocationInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutLocationInput!]
+  delete: [JobApplicationWhereUniqueInput!]
+  deleteMany: [JobApplicationScalarWhereInput!]
+  disconnect: [JobApplicationWhereUniqueInput!]
+  set: [JobApplicationWhereUniqueInput!]
+  update: [JobApplicationUpdateWithWhereUniqueWithoutLocationInput!]
+  updateMany: [JobApplicationUpdateManyWithWhereNestedInput!]
+  upsert: [JobApplicationUpsertWithWhereUniqueWithoutLocationInput!]
+}
+
+input JobApplicationUpdateManyWithoutResumeInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutResumeInput!]
+  delete: [JobApplicationWhereUniqueInput!]
+  deleteMany: [JobApplicationScalarWhereInput!]
+  disconnect: [JobApplicationWhereUniqueInput!]
+  set: [JobApplicationWhereUniqueInput!]
+  update: [JobApplicationUpdateWithWhereUniqueWithoutResumeInput!]
+  updateMany: [JobApplicationUpdateManyWithWhereNestedInput!]
+  upsert: [JobApplicationUpsertWithWhereUniqueWithoutResumeInput!]
+}
+
+input JobApplicationUpdateManyWithoutUserInput {
+  connect: [JobApplicationWhereUniqueInput!]
+  create: [JobApplicationCreateWithoutUserInput!]
+  delete: [JobApplicationWhereUniqueInput!]
+  deleteMany: [JobApplicationScalarWhereInput!]
+  disconnect: [JobApplicationWhereUniqueInput!]
+  set: [JobApplicationWhereUniqueInput!]
+  update: [JobApplicationUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [JobApplicationUpdateManyWithWhereNestedInput!]
+  upsert: [JobApplicationUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input JobApplicationUpdateManyWithWhereNestedInput {
+  data: JobApplicationUpdateManyDataInput!
+  where: JobApplicationScalarWhereInput!
+}
+
+input JobApplicationUpdateWithoutCompanyDataInput {
+  applicationStatus: ApplicationStatus
+  companyName: String
+  Contacts: JobApplicationContactUpdateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataUpdateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingUpdateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationUpdateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String
+  rating: Int
+  Resume: JobApplicationResumeUpdateOneWithoutJobApplicationInput
+  updatedAt: DateTime
+  User: UserUpdateOneWithoutJobApplicationInput
+}
+
+input JobApplicationUpdateWithoutCoverLetterFileDataInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyUpdateOneWithoutJobApplicationInput
+  companyName: String
+  Contacts: JobApplicationContactUpdateManyWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingUpdateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationUpdateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String
+  rating: Int
+  Resume: JobApplicationResumeUpdateOneWithoutJobApplicationInput
+  updatedAt: DateTime
+  User: UserUpdateOneWithoutJobApplicationInput
+}
+
+input JobApplicationUpdateWithoutLocationDataInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyUpdateOneWithoutJobApplicationInput
+  companyName: String
+  Contacts: JobApplicationContactUpdateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataUpdateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingUpdateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  locationName: String
+  notes: String
+  position: String
+  rating: Int
+  Resume: JobApplicationResumeUpdateOneWithoutJobApplicationInput
+  updatedAt: DateTime
+  User: UserUpdateOneWithoutJobApplicationInput
+}
+
+input JobApplicationUpdateWithoutResumeDataInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyUpdateOneWithoutJobApplicationInput
+  companyName: String
+  Contacts: JobApplicationContactUpdateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataUpdateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingUpdateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationUpdateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String
+  rating: Int
+  updatedAt: DateTime
+  User: UserUpdateOneWithoutJobApplicationInput
+}
+
+input JobApplicationUpdateWithoutUserDataInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyUpdateOneWithoutJobApplicationInput
+  companyName: String
+  Contacts: JobApplicationContactUpdateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataUpdateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingUpdateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationUpdateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String
+  rating: Int
+  Resume: JobApplicationResumeUpdateOneWithoutJobApplicationInput
+  updatedAt: DateTime
+}
+
+input JobApplicationUpdateWithWhereUniqueWithoutCompanyInput {
+  data: JobApplicationUpdateWithoutCompanyDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpdateWithWhereUniqueWithoutCoverLetterFileInput {
+  data: JobApplicationUpdateWithoutCoverLetterFileDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpdateWithWhereUniqueWithoutLocationInput {
+  data: JobApplicationUpdateWithoutLocationDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpdateWithWhereUniqueWithoutResumeInput {
+  data: JobApplicationUpdateWithoutResumeDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpdateWithWhereUniqueWithoutUserInput {
+  data: JobApplicationUpdateWithoutUserDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpsertWithWhereUniqueWithoutCompanyInput {
+  create: JobApplicationCreateWithoutCompanyInput!
+  update: JobApplicationUpdateWithoutCompanyDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpsertWithWhereUniqueWithoutCoverLetterFileInput {
+  create: JobApplicationCreateWithoutCoverLetterFileInput!
+  update: JobApplicationUpdateWithoutCoverLetterFileDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpsertWithWhereUniqueWithoutLocationInput {
+  create: JobApplicationCreateWithoutLocationInput!
+  update: JobApplicationUpdateWithoutLocationDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpsertWithWhereUniqueWithoutResumeInput {
+  create: JobApplicationCreateWithoutResumeInput!
+  update: JobApplicationUpdateWithoutResumeDataInput!
+  where: JobApplicationWhereUniqueInput!
+}
+
+input JobApplicationUpsertWithWhereUniqueWithoutUserInput {
+  create: JobApplicationCreateWithoutUserInput!
+  update: JobApplicationUpdateWithoutUserDataInput!
+  where: JobApplicationWhereUniqueInput!
 }
 
 input JobApplicationWhereInput {
   AND: [JobApplicationWhereInput!]
   applicationStatus: ApplicationStatus
-  applicationStatus_in: [ApplicationStatus!]
-  applicationStatus_not: ApplicationStatus
-  applicationStatus_not_in: [ApplicationStatus!]
-  company: CompanyWhereInput
-  companyName: String
-  companyName_contains: String
-  companyName_ends_with: String
-  companyName_gt: String
-  companyName_gte: String
-  companyName_in: [String!]
-  companyName_lt: String
-  companyName_lte: String
-  companyName_not: String
-  companyName_not_contains: String
-  companyName_not_ends_with: String
-  companyName_not_in: [String!]
-  companyName_not_starts_with: String
-  companyName_starts_with: String
-  contacts_every: JobApplicationContactWhereInput
-  contacts_none: JobApplicationContactWhereInput
-  contacts_some: JobApplicationContactWhereInput
-  coverLetterFile: AwsFileDataWhereInput
-  createdAt: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_not: DateTime
-  createdAt_not_in: [DateTime!]
-  dateApplied: DateTime
-  dateApplied_gt: DateTime
-  dateApplied_gte: DateTime
-  dateApplied_in: [DateTime!]
-  dateApplied_lt: DateTime
-  dateApplied_lte: DateTime
-  dateApplied_not: DateTime
-  dateApplied_not_in: [DateTime!]
-  dateDecided: DateTime
-  dateDecided_gt: DateTime
-  dateDecided_gte: DateTime
-  dateDecided_in: [DateTime!]
-  dateDecided_lt: DateTime
-  dateDecided_lte: DateTime
-  dateDecided_not: DateTime
-  dateDecided_not_in: [DateTime!]
-  dateOffered: DateTime
-  dateOffered_gt: DateTime
-  dateOffered_gte: DateTime
-  dateOffered_in: [DateTime!]
-  dateOffered_lt: DateTime
-  dateOffered_lte: DateTime
-  dateOffered_not: DateTime
-  dateOffered_not_in: [DateTime!]
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  isApplicationActive: Boolean
-  isApplicationActive_not: Boolean
-  isRemote: Boolean
-  isRemote_not: Boolean
+  company: NullableStringFilter
+  Company: CompanyWhereInput
+  companyName: StringFilter
+  Contacts: JobApplicationContactFilter
+  coverLetterFile: NullableStringFilter
+  CoverLetterFile: AwsFileDataWhereInput
+  createdAt: DateTimeFilter
+  dateApplied: NullableDateTimeFilter
+  dateDecided: NullableDateTimeFilter
+  dateOffered: NullableDateTimeFilter
+  id: StringFilter
+  isApplicationActive: BooleanFilter
+  isRemote: BooleanFilter
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingFilter
   jobDecision: JobDecision
-  jobDecision_in: [JobDecision!]
-  jobDecision_not: JobDecision
-  jobDecision_not_in: [JobDecision!]
-  jobListingLink: String
-  jobListingLink_contains: String
-  jobListingLink_ends_with: String
-  jobListingLink_gt: String
-  jobListingLink_gte: String
-  jobListingLink_in: [String!]
-  jobListingLink_lt: String
-  jobListingLink_lte: String
-  jobListingLink_not: String
-  jobListingLink_not_contains: String
-  jobListingLink_not_ends_with: String
-  jobListingLink_not_in: [String!]
-  jobListingLink_not_starts_with: String
-  jobListingLink_starts_with: String
-  jobListingNotes: String
-  jobListingNotes_contains: String
-  jobListingNotes_ends_with: String
-  jobListingNotes_gt: String
-  jobListingNotes_gte: String
-  jobListingNotes_in: [String!]
-  jobListingNotes_lt: String
-  jobListingNotes_lte: String
-  jobListingNotes_not: String
-  jobListingNotes_not_contains: String
-  jobListingNotes_not_ends_with: String
-  jobListingNotes_not_in: [String!]
-  jobListingNotes_not_starts_with: String
-  jobListingNotes_starts_with: String
-  location: GoogleMapsLocationWhereInput
-  locationName: String
-  locationName_contains: String
-  locationName_ends_with: String
-  locationName_gt: String
-  locationName_gte: String
-  locationName_in: [String!]
-  locationName_lt: String
-  locationName_lte: String
-  locationName_not: String
-  locationName_not_contains: String
-  locationName_not_ends_with: String
-  locationName_not_in: [String!]
-  locationName_not_starts_with: String
-  locationName_starts_with: String
+  jobListingLink: NullableStringFilter
+  jobListingNotes: NullableStringFilter
+  location: NullableStringFilter
+  Location: GoogleMapsLocationWhereInput
+  locationName: NullableStringFilter
   NOT: [JobApplicationWhereInput!]
-  notes: String
-  notes_contains: String
-  notes_ends_with: String
-  notes_gt: String
-  notes_gte: String
-  notes_in: [String!]
-  notes_lt: String
-  notes_lte: String
-  notes_not: String
-  notes_not_contains: String
-  notes_not_ends_with: String
-  notes_not_in: [String!]
-  notes_not_starts_with: String
-  notes_starts_with: String
+  notes: NullableStringFilter
   OR: [JobApplicationWhereInput!]
-  position: String
-  position_contains: String
-  position_ends_with: String
-  position_gt: String
-  position_gte: String
-  position_in: [String!]
-  position_lt: String
-  position_lte: String
-  position_not: String
-  position_not_contains: String
-  position_not_ends_with: String
-  position_not_in: [String!]
-  position_not_starts_with: String
-  position_starts_with: String
-  rating: Int
-  rating_gt: Int
-  rating_gte: Int
-  rating_in: [Int!]
-  rating_lt: Int
-  rating_lte: Int
-  rating_not: Int
-  rating_not_in: [Int!]
-  resume: JobApplicationResumeWhereInput
-  updatedAt: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_not: DateTime
-  updatedAt_not_in: [DateTime!]
-  user: UserWhereInput
+  position: StringFilter
+  rating: NullableIntFilter
+  resume: NullableStringFilter
+  Resume: JobApplicationResumeWhereInput
+  updatedAt: DateTimeFilter
+  user: NullableStringFilter
+  User: UserWhereInput
 }
 
 input JobApplicationWhereUniqueInput {
-  id: ID
+  id: String
 }
 
 enum JobDecision {
@@ -1186,14 +1811,15 @@ enum JobDecision {
   REJECTED
 }
 
-scalar Long
-
 type Mutation {
+  _createOneGoogleMapsLocation(data: GoogleMapsLocationCreateInput!): GoogleMapsLocation!
+  _updateOneCard(data: CardUpdateInput!, where: CardWhereUniqueInput!): Card
+  _updateOneGoogleMapsLocation(data: GoogleMapsLocationUpdateInput!, where: GoogleMapsLocationWhereUniqueInput!): GoogleMapsLocation
   cancelSubscription: User!
   checkSubscriptionPaymentHasSucceeded: Boolean!
   completeOnboarding: Boolean!
   createCompany(file: Upload, name: String): Company!
-  createJobApplication(companyId: ID, isRemote: Boolean, location: GoogleMapsLocationCreateInput, position: String): JobApplication!
+  createJobApplication(companyId: ID, isRemote: Boolean, location: GoogleMapsLocationUpdateInput, position: String): JobApplication!
   createResume(file: Upload, name: String): Resume!
   deleteAccount: User!
   deleteCompany(id: ID): Company!
@@ -1206,117 +1832,416 @@ type Mutation {
   resetPassword(confirmPassword: String, password: String, resetToken: String): User!
   signup(confirmPassword: String, email: String, password: String): User!
   updateCompany(contacts: [CompanyContactCreateWithoutCompanyInput!], file: Upload, id: ID!, isCompanyImageUpdated: Boolean!, name: String, notes: String, rating: Int, website: String): Company!
-  updateCreditCard(card: CardUpdateWithoutBillingInfoDataInput!): User!
-  updateJobApplication(applicationStatus: ApplicationStatus, companyId: ID, contacts: [JobApplicationContactCreateWithoutJobApplicationInput!], coverLetterFile: Upload, dateApplied: DateTime, dateDecided: DateTime, dateInterviewing: [DateTime!], dateOffered: DateTime, id: ID!, isApplicationActive: Boolean, isCoverLetterUpdated: Boolean!, isRemote: Boolean, jobDecision: JobDecision, jobListingLink: String, jobListingNotes: String, location: GoogleMapsLocationCreateInput, notes: String, position: String, rating: Int, resumeId: String, resumeVersionId: String): JobApplication!
+  updateCreditCard(card: CardUpdateInput!): User!
+  updateJobApplication(applicationStatus: ApplicationStatus, companyId: ID, contacts: [JobApplicationContactCreateWithoutJobApplicationInput!], coverLetterFile: Upload, dateApplied: DateTime, dateDecided: DateTime, dateInterviewing: [DateTime!], dateOffered: DateTime, id: ID!, isApplicationActive: Boolean, isCoverLetterUpdated: Boolean!, isRemote: Boolean, jobDecision: JobDecision, jobListingLink: String, jobListingNotes: String, location: GoogleMapsLocationUpdateInput, notes: String, position: String, rating: Int, resumeId: String, resumeVersionId: String): JobApplication!
   updateResume(id: ID, name: String, newFileVersion: Upload): Resume!
   upgradeUser(card: CardUpdateWithoutBillingInfoDataInput!, email: String, paymentMethodId: String, planId: String): StripeSubscription!
   verifyEmail(emailToken: String): Boolean!
 }
 
+input NullableBooleanFilter {
+  equals: Boolean
+  not: Boolean
+}
+
+input NullableDateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: DateTime
+  notIn: [DateTime!]
+}
+
+input NullableFloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: Float
+  notIn: [Float!]
+}
+
+input NullableIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: Int
+  notIn: [Int!]
+}
+
+input NullableStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: String
+  notIn: [String!]
+  startsWith: String
+}
+
+enum OrderByArg {
+  asc
+  desc
+}
+
+"""
+PageInfo cursor, as defined in https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+"""
 type PageInfo {
+  """
+  The cursor corresponding to the last nodes in edges. Null if the connection is empty.
+  """
   endCursor: String
+
+  """
+  Used to indicate whether more edges exist following the set defined by the clients arguments.
+  """
   hasNextPage: Boolean!
+
+  """
+  Used to indicate whether more edges exist prior to the set defined by the clients arguments.
+  """
   hasPreviousPage: Boolean!
+
+  """
+  The cursor corresponding to the first nodes in edges. Null if the connection is empty.
+  """
   startCursor: String
 }
 
 type Query {
-  companiesConnection(first: Int, orderBy: CompanyOrderByInput, skip: Int): CompanyConnection!
-  company(where: CompanyWhereUniqueInput!): Company
-  jobApplication(where: JobApplicationWhereUniqueInput!): JobApplication
-  jobApplicationsConnection(first: Int, orderBy: JobApplicationOrderByInput, skip: Int): JobApplicationConnection!
+  _companies(after: CompanyWhereUniqueInput, before: CompanyWhereUniqueInput, first: Int, last: Int, orderBy: QueryCompaniesOrderByInput, skip: Int): [Company!]!
+  _jobApplications(after: JobApplicationWhereUniqueInput, before: JobApplicationWhereUniqueInput, first: Int, last: Int, orderBy: QueryJobApplicationsOrderByInput, skip: Int): [JobApplication!]!
+  _resumes(after: ResumeWhereUniqueInput, before: ResumeWhereUniqueInput, first: Int, last: Int, orderBy: QueryResumesOrderByInput, skip: Int): [Resume!]!
+  companies(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the first n elements from the list."""
+    first: Int!
+    nameQuery: String
+    orderBy: QueryCompaniesOrderByInput
+    skip: Int
+    where: CompanyWhereInput
+  ): QueryCompanies_Connection!
+  company(id: ID!): Company!
+  jobApplication(id: ID!): JobApplication!
+  jobApplications(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the first n elements from the list."""
+    first: Int!
+    orderBy: QueryJobApplicationsOrderByInput
+    skip: Int
+    where: JobApplicationWhereInput
+  ): QueryJobApplications_Connection!
   me: User
-  resume(where: ResumeWhereUniqueInput!): Resume
-  resumesConnection(first: Int, orderBy: ResumeOrderByInput, skip: Int): ResumeConnection!
+  resume(id: ID!): Resume!
+  resumes(
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the first n elements from the list."""
+    first: Int!
+    nameQuery: String
+    orderBy: QueryResumesOrderByInput
+    skip: Int
+    where: ResumeWhereInput
+  ): QueryResumes_Connection!
+}
+
+type QueryCompanies_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [CompanyEdge]
+
+  """Flattened list of Company type"""
+  nodes: [Company!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input QueryCompaniesOrderByInput {
+  jobApplicationsCount: OrderByArg
+  name: OrderByArg
+  updatedAt: OrderByArg
+}
+
+type QueryJobApplications_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [JobApplicationEdge]
+
+  """Flattened list of JobApplication type"""
+  nodes: [JobApplication!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input QueryJobApplicationsOrderByInput {
+  applicationStatus: OrderByArg
+  companyName: OrderByArg
+  locationName: OrderByArg
+  position: OrderByArg
+  updatedAt: OrderByArg
+}
+
+type QueryResumes_Connection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [ResumeEdge]
+
+  """Flattened list of Resume type"""
+  nodes: [Resume!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input QueryResumesOrderByInput {
+  name: OrderByArg
+  updatedAt: OrderByArg
 }
 
 type Resume {
   createdAt: DateTime!
-  id: ID!
+  id: String!
+  JobApplicationResume(after: JobApplicationResumeWhereUniqueInput, before: JobApplicationResumeWhereUniqueInput, first: Int, last: Int, skip: Int): [JobApplicationResume!]!
   name: String!
   updatedAt: DateTime!
-  user: User!
-  versions(after: String, before: String, first: Int, last: Int, orderBy: AwsFileDataOrderByInput, skip: Int, where: AwsFileDataWhereInput): [AwsFileData!]
+  User: User
+  Versions(after: AwsFileDataWhereUniqueInput, before: AwsFileDataWhereUniqueInput, first: Int, last: Int, orderBy: ResumeVersionsOrderByInput, skip: Int): [AwsFileData!]!
 }
 
-type ResumeConnection {
-  aggregate: AggregateResume!
-  edges: [ResumeEdge!]!
-  pageInfo: PageInfo!
+input ResumeCreateManyWithoutUserInput {
+  connect: [ResumeWhereUniqueInput!]
+  create: [ResumeCreateWithoutUserInput!]
+}
+
+input ResumeCreateManyWithoutVersionsInput {
+  connect: [ResumeWhereUniqueInput!]
+  create: [ResumeCreateWithoutVersionsInput!]
+}
+
+input ResumeCreateOneWithoutJobApplicationResumeInput {
+  connect: ResumeWhereUniqueInput
+  create: ResumeCreateWithoutJobApplicationResumeInput
+}
+
+input ResumeCreateWithoutJobApplicationResumeInput {
+  createdAt: DateTime
+  id: String
+  name: String!
+  updatedAt: DateTime
+  User: UserCreateOneWithoutResumeInput
+  Versions: AwsFileDataCreateManyWithoutResumeInput
+}
+
+input ResumeCreateWithoutUserInput {
+  createdAt: DateTime
+  id: String
+  JobApplicationResume: JobApplicationResumeCreateManyWithoutResumeInput
+  name: String!
+  updatedAt: DateTime
+  Versions: AwsFileDataCreateManyWithoutResumeInput
+}
+
+input ResumeCreateWithoutVersionsInput {
+  createdAt: DateTime
+  id: String
+  JobApplicationResume: JobApplicationResumeCreateManyWithoutResumeInput
+  name: String!
+  updatedAt: DateTime
+  User: UserCreateOneWithoutResumeInput
 }
 
 type ResumeEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
   cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
   node: Resume!
 }
 
-enum ResumeOrderByInput {
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  updatedAt_ASC
-  updatedAt_DESC
+input ResumeFilter {
+  every: ResumeWhereInput
+  none: ResumeWhereInput
+  some: ResumeWhereInput
+}
+
+input ResumeScalarWhereInput {
+  AND: [ResumeScalarWhereInput!]
+  createdAt: DateTimeFilter
+  id: StringFilter
+  JobApplicationResume: JobApplicationResumeFilter
+  name: StringFilter
+  NOT: [ResumeScalarWhereInput!]
+  OR: [ResumeScalarWhereInput!]
+  updatedAt: DateTimeFilter
+  user: NullableStringFilter
+  Versions: AwsFileDataFilter
+}
+
+input ResumeUpdateManyDataInput {
+  createdAt: DateTime
+  id: String
+  name: String
+  updatedAt: DateTime
+}
+
+input ResumeUpdateManyWithoutUserInput {
+  connect: [ResumeWhereUniqueInput!]
+  create: [ResumeCreateWithoutUserInput!]
+  delete: [ResumeWhereUniqueInput!]
+  deleteMany: [ResumeScalarWhereInput!]
+  disconnect: [ResumeWhereUniqueInput!]
+  set: [ResumeWhereUniqueInput!]
+  update: [ResumeUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [ResumeUpdateManyWithWhereNestedInput!]
+  upsert: [ResumeUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input ResumeUpdateManyWithoutVersionsInput {
+  connect: [ResumeWhereUniqueInput!]
+  create: [ResumeCreateWithoutVersionsInput!]
+  delete: [ResumeWhereUniqueInput!]
+  deleteMany: [ResumeScalarWhereInput!]
+  disconnect: [ResumeWhereUniqueInput!]
+  set: [ResumeWhereUniqueInput!]
+  update: [ResumeUpdateWithWhereUniqueWithoutVersionsInput!]
+  updateMany: [ResumeUpdateManyWithWhereNestedInput!]
+  upsert: [ResumeUpsertWithWhereUniqueWithoutVersionsInput!]
+}
+
+input ResumeUpdateManyWithWhereNestedInput {
+  data: ResumeUpdateManyDataInput!
+  where: ResumeScalarWhereInput!
+}
+
+input ResumeUpdateOneWithoutJobApplicationResumeInput {
+  connect: ResumeWhereUniqueInput
+  create: ResumeCreateWithoutJobApplicationResumeInput
+  delete: Boolean
+  disconnect: Boolean
+  update: ResumeUpdateWithoutJobApplicationResumeDataInput
+  upsert: ResumeUpsertWithoutJobApplicationResumeInput
+}
+
+input ResumeUpdateWithoutJobApplicationResumeDataInput {
+  createdAt: DateTime
+  id: String
+  name: String
+  updatedAt: DateTime
+  User: UserUpdateOneWithoutResumeInput
+  Versions: AwsFileDataUpdateManyWithoutResumeInput
+}
+
+input ResumeUpdateWithoutUserDataInput {
+  createdAt: DateTime
+  id: String
+  JobApplicationResume: JobApplicationResumeUpdateManyWithoutResumeInput
+  name: String
+  updatedAt: DateTime
+  Versions: AwsFileDataUpdateManyWithoutResumeInput
+}
+
+input ResumeUpdateWithoutVersionsDataInput {
+  createdAt: DateTime
+  id: String
+  JobApplicationResume: JobApplicationResumeUpdateManyWithoutResumeInput
+  name: String
+  updatedAt: DateTime
+  User: UserUpdateOneWithoutResumeInput
+}
+
+input ResumeUpdateWithWhereUniqueWithoutUserInput {
+  data: ResumeUpdateWithoutUserDataInput!
+  where: ResumeWhereUniqueInput!
+}
+
+input ResumeUpdateWithWhereUniqueWithoutVersionsInput {
+  data: ResumeUpdateWithoutVersionsDataInput!
+  where: ResumeWhereUniqueInput!
+}
+
+input ResumeUpsertWithoutJobApplicationResumeInput {
+  create: ResumeCreateWithoutJobApplicationResumeInput!
+  update: ResumeUpdateWithoutJobApplicationResumeDataInput!
+}
+
+input ResumeUpsertWithWhereUniqueWithoutUserInput {
+  create: ResumeCreateWithoutUserInput!
+  update: ResumeUpdateWithoutUserDataInput!
+  where: ResumeWhereUniqueInput!
+}
+
+input ResumeUpsertWithWhereUniqueWithoutVersionsInput {
+  create: ResumeCreateWithoutVersionsInput!
+  update: ResumeUpdateWithoutVersionsDataInput!
+  where: ResumeWhereUniqueInput!
+}
+
+input ResumeVersionsOrderByInput {
+  createdAt: OrderByArg
 }
 
 input ResumeWhereInput {
   AND: [ResumeWhereInput!]
-  createdAt: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_not: DateTime
-  createdAt_not_in: [DateTime!]
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  name: String
-  name_contains: String
-  name_ends_with: String
-  name_gt: String
-  name_gte: String
-  name_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_not: String
-  name_not_contains: String
-  name_not_ends_with: String
-  name_not_in: [String!]
-  name_not_starts_with: String
-  name_starts_with: String
+  createdAt: DateTimeFilter
+  id: StringFilter
+  JobApplicationResume: JobApplicationResumeFilter
+  name: StringFilter
   NOT: [ResumeWhereInput!]
   OR: [ResumeWhereInput!]
-  updatedAt: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_not: DateTime
-  updatedAt_not_in: [DateTime!]
-  user: UserWhereInput
-  versions_every: AwsFileDataWhereInput
-  versions_none: AwsFileDataWhereInput
-  versions_some: AwsFileDataWhereInput
+  updatedAt: DateTimeFilter
+  user: NullableStringFilter
+  User: UserWhereInput
+  Versions: AwsFileDataFilter
 }
 
 input ResumeWhereUniqueInput {
-  id: ID
+  id: String
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: String
+  notIn: [String!]
+  startsWith: String
 }
 
 type StripeSubscription {
@@ -1328,129 +2253,285 @@ type StripeSubscription {
 scalar Upload
 
 type User {
-  billing: BillingInfo
-  companies(after: String, before: String, first: Int, last: Int, orderBy: CompanyOrderByInput, skip: Int, where: CompanyWhereInput): [Company!]
+  Billing: BillingInfo
+  Company(after: CompanyWhereUniqueInput, before: CompanyWhereUniqueInput, first: Int, last: Int, skip: Int): [Company!]!
+  email: String!
+  hasCompletedOnboarding: Boolean!
+  hasVerifiedEmail: Boolean
+  id: String!
+  JobApplication(after: JobApplicationWhereUniqueInput, before: JobApplicationWhereUniqueInput, first: Int, last: Int, skip: Int): [JobApplication!]!
+  Resume(after: ResumeWhereUniqueInput, before: ResumeWhereUniqueInput, first: Int, last: Int, skip: Int): [Resume!]!
+}
+
+input UserCreateManyWithoutBillingInput {
+  connect: [UserWhereUniqueInput!]
+  create: [UserCreateWithoutBillingInput!]
+}
+
+input UserCreateOneWithoutCompanyInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutCompanyInput
+}
+
+input UserCreateOneWithoutJobApplicationInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutJobApplicationInput
+}
+
+input UserCreateOneWithoutResumeInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutResumeInput
+}
+
+input UserCreateWithoutBillingInput {
+  Company: CompanyCreateManyWithoutUserInput
   email: String!
   emailConfirmationToken: String
   googleId: String
-  hasCompletedOnboarding: Boolean!
+  hasCompletedOnboarding: Boolean
   hasVerifiedEmail: Boolean
-  id: ID!
-  jobApplications(after: String, before: String, first: Int, last: Int, orderBy: JobApplicationOrderByInput, skip: Int, where: JobApplicationWhereInput): [JobApplication!]
+  id: String
+  JobApplication: JobApplicationCreateManyWithoutUserInput
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  resumes(after: String, before: String, first: Int, last: Int, orderBy: ResumeOrderByInput, skip: Int, where: ResumeWhereInput): [Resume!]
+  Resume: ResumeCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutCompanyInput {
+  Billing: BillingInfoCreateOneWithoutUserInput
+  email: String!
+  emailConfirmationToken: String
+  googleId: String
+  hasCompletedOnboarding: Boolean
+  hasVerifiedEmail: Boolean
+  id: String
+  JobApplication: JobApplicationCreateManyWithoutUserInput
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  Resume: ResumeCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutJobApplicationInput {
+  Billing: BillingInfoCreateOneWithoutUserInput
+  Company: CompanyCreateManyWithoutUserInput
+  email: String!
+  emailConfirmationToken: String
+  googleId: String
+  hasCompletedOnboarding: Boolean
+  hasVerifiedEmail: Boolean
+  id: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  Resume: ResumeCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutResumeInput {
+  Billing: BillingInfoCreateOneWithoutUserInput
+  Company: CompanyCreateManyWithoutUserInput
+  email: String!
+  emailConfirmationToken: String
+  googleId: String
+  hasCompletedOnboarding: Boolean
+  hasVerifiedEmail: Boolean
+  id: String
+  JobApplication: JobApplicationCreateManyWithoutUserInput
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+}
+
+input UserFilter {
+  every: UserWhereInput
+  none: UserWhereInput
+  some: UserWhereInput
+}
+
+input UserScalarWhereInput {
+  AND: [UserScalarWhereInput!]
+  billing: NullableStringFilter
+  Company: CompanyFilter
+  email: StringFilter
+  emailConfirmationToken: NullableStringFilter
+  googleId: NullableStringFilter
+  hasCompletedOnboarding: BooleanFilter
+  hasVerifiedEmail: NullableBooleanFilter
+  id: StringFilter
+  JobApplication: JobApplicationFilter
+  NOT: [UserScalarWhereInput!]
+  OR: [UserScalarWhereInput!]
+  password: NullableStringFilter
+  resetToken: NullableStringFilter
+  resetTokenExpiry: NullableFloatFilter
+  Resume: ResumeFilter
+}
+
+input UserUpdateManyDataInput {
+  email: String
+  emailConfirmationToken: String
+  googleId: String
+  hasCompletedOnboarding: Boolean
+  hasVerifiedEmail: Boolean
+  id: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+}
+
+input UserUpdateManyWithoutBillingInput {
+  connect: [UserWhereUniqueInput!]
+  create: [UserCreateWithoutBillingInput!]
+  delete: [UserWhereUniqueInput!]
+  deleteMany: [UserScalarWhereInput!]
+  disconnect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutBillingInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutBillingInput!]
+}
+
+input UserUpdateManyWithWhereNestedInput {
+  data: UserUpdateManyDataInput!
+  where: UserScalarWhereInput!
+}
+
+input UserUpdateOneWithoutCompanyInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutCompanyInput
+  delete: Boolean
+  disconnect: Boolean
+  update: UserUpdateWithoutCompanyDataInput
+  upsert: UserUpsertWithoutCompanyInput
+}
+
+input UserUpdateOneWithoutJobApplicationInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutJobApplicationInput
+  delete: Boolean
+  disconnect: Boolean
+  update: UserUpdateWithoutJobApplicationDataInput
+  upsert: UserUpsertWithoutJobApplicationInput
+}
+
+input UserUpdateOneWithoutResumeInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutResumeInput
+  delete: Boolean
+  disconnect: Boolean
+  update: UserUpdateWithoutResumeDataInput
+  upsert: UserUpsertWithoutResumeInput
+}
+
+input UserUpdateWithoutBillingDataInput {
+  Company: CompanyUpdateManyWithoutUserInput
+  email: String
+  emailConfirmationToken: String
+  googleId: String
+  hasCompletedOnboarding: Boolean
+  hasVerifiedEmail: Boolean
+  id: String
+  JobApplication: JobApplicationUpdateManyWithoutUserInput
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  Resume: ResumeUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutCompanyDataInput {
+  Billing: BillingInfoUpdateOneWithoutUserInput
+  email: String
+  emailConfirmationToken: String
+  googleId: String
+  hasCompletedOnboarding: Boolean
+  hasVerifiedEmail: Boolean
+  id: String
+  JobApplication: JobApplicationUpdateManyWithoutUserInput
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  Resume: ResumeUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutJobApplicationDataInput {
+  Billing: BillingInfoUpdateOneWithoutUserInput
+  Company: CompanyUpdateManyWithoutUserInput
+  email: String
+  emailConfirmationToken: String
+  googleId: String
+  hasCompletedOnboarding: Boolean
+  hasVerifiedEmail: Boolean
+  id: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  Resume: ResumeUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutResumeDataInput {
+  Billing: BillingInfoUpdateOneWithoutUserInput
+  Company: CompanyUpdateManyWithoutUserInput
+  email: String
+  emailConfirmationToken: String
+  googleId: String
+  hasCompletedOnboarding: Boolean
+  hasVerifiedEmail: Boolean
+  id: String
+  JobApplication: JobApplicationUpdateManyWithoutUserInput
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+}
+
+input UserUpdateWithWhereUniqueWithoutBillingInput {
+  data: UserUpdateWithoutBillingDataInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserUpsertWithoutCompanyInput {
+  create: UserCreateWithoutCompanyInput!
+  update: UserUpdateWithoutCompanyDataInput!
+}
+
+input UserUpsertWithoutJobApplicationInput {
+  create: UserCreateWithoutJobApplicationInput!
+  update: UserUpdateWithoutJobApplicationDataInput!
+}
+
+input UserUpsertWithoutResumeInput {
+  create: UserCreateWithoutResumeInput!
+  update: UserUpdateWithoutResumeDataInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutBillingInput {
+  create: UserCreateWithoutBillingInput!
+  update: UserUpdateWithoutBillingDataInput!
+  where: UserWhereUniqueInput!
 }
 
 input UserWhereInput {
   AND: [UserWhereInput!]
-  billing: BillingInfoWhereInput
-  companies_every: CompanyWhereInput
-  companies_none: CompanyWhereInput
-  companies_some: CompanyWhereInput
-  email: String
-  email_contains: String
-  email_ends_with: String
-  email_gt: String
-  email_gte: String
-  email_in: [String!]
-  email_lt: String
-  email_lte: String
-  email_not: String
-  email_not_contains: String
-  email_not_ends_with: String
-  email_not_in: [String!]
-  email_not_starts_with: String
-  email_starts_with: String
-  emailConfirmationToken: String
-  emailConfirmationToken_contains: String
-  emailConfirmationToken_ends_with: String
-  emailConfirmationToken_gt: String
-  emailConfirmationToken_gte: String
-  emailConfirmationToken_in: [String!]
-  emailConfirmationToken_lt: String
-  emailConfirmationToken_lte: String
-  emailConfirmationToken_not: String
-  emailConfirmationToken_not_contains: String
-  emailConfirmationToken_not_ends_with: String
-  emailConfirmationToken_not_in: [String!]
-  emailConfirmationToken_not_starts_with: String
-  emailConfirmationToken_starts_with: String
-  googleId: String
-  googleId_contains: String
-  googleId_ends_with: String
-  googleId_gt: String
-  googleId_gte: String
-  googleId_in: [String!]
-  googleId_lt: String
-  googleId_lte: String
-  googleId_not: String
-  googleId_not_contains: String
-  googleId_not_ends_with: String
-  googleId_not_in: [String!]
-  googleId_not_starts_with: String
-  googleId_starts_with: String
-  hasCompletedOnboarding: Boolean
-  hasCompletedOnboarding_not: Boolean
-  hasVerifiedEmail: Boolean
-  hasVerifiedEmail_not: Boolean
-  id: ID
-  id_contains: ID
-  id_ends_with: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_not: ID
-  id_not_contains: ID
-  id_not_ends_with: ID
-  id_not_in: [ID!]
-  id_not_starts_with: ID
-  id_starts_with: ID
-  jobApplications_every: JobApplicationWhereInput
-  jobApplications_none: JobApplicationWhereInput
-  jobApplications_some: JobApplicationWhereInput
+  billing: NullableStringFilter
+  Billing: BillingInfoWhereInput
+  Company: CompanyFilter
+  email: StringFilter
+  emailConfirmationToken: NullableStringFilter
+  googleId: NullableStringFilter
+  hasCompletedOnboarding: BooleanFilter
+  hasVerifiedEmail: NullableBooleanFilter
+  id: StringFilter
+  JobApplication: JobApplicationFilter
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
-  password: String
-  password_contains: String
-  password_ends_with: String
-  password_gt: String
-  password_gte: String
-  password_in: [String!]
-  password_lt: String
-  password_lte: String
-  password_not: String
-  password_not_contains: String
-  password_not_ends_with: String
-  password_not_in: [String!]
-  password_not_starts_with: String
-  password_starts_with: String
-  resetToken: String
-  resetToken_contains: String
-  resetToken_ends_with: String
-  resetToken_gt: String
-  resetToken_gte: String
-  resetToken_in: [String!]
-  resetToken_lt: String
-  resetToken_lte: String
-  resetToken_not: String
-  resetToken_not_contains: String
-  resetToken_not_ends_with: String
-  resetToken_not_in: [String!]
-  resetToken_not_starts_with: String
-  resetToken_starts_with: String
-  resetTokenExpiry: Float
-  resetTokenExpiry_gt: Float
-  resetTokenExpiry_gte: Float
-  resetTokenExpiry_in: [Float!]
-  resetTokenExpiry_lt: Float
-  resetTokenExpiry_lte: Float
-  resetTokenExpiry_not: Float
-  resetTokenExpiry_not_in: [Float!]
-  resumes_every: ResumeWhereInput
-  resumes_none: ResumeWhereInput
-  resumes_some: ResumeWhereInput
+  password: NullableStringFilter
+  resetToken: NullableStringFilter
+  resetTokenExpiry: NullableFloatFilter
+  Resume: ResumeFilter
+}
+
+input UserWhereUniqueInput {
+  email: String
+  googleId: String
+  id: String
 }

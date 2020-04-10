@@ -11,7 +11,7 @@ import { formatApplicationStatusText } from '../../utils/formatApplicationStatus
 import {
     JobApplicationsQuery,
     JobApplicationsQueryVariables,
-    JobApplicationsQuery_jobApplicationsConnection_edges_node,
+    JobApplicationsQuery_jobApplications_nodes,
 } from '../../graphql/generated/JobApplicationsQuery';
 import { ConfirmDeleteJobApplication } from '../ViewJobModal/ViewJobModal';
 import Loader from '../Loader/Loader';
@@ -20,8 +20,8 @@ import { deleteJobApplicationMutation } from '../../graphql/mutations';
 import CompanyName from '../CompanyName/CompanyName';
 import { QueryParamKeys } from '../../utils/constants';
 import { useModalQuery } from '../../utils/hooks/useModalQuery';
-import { JobApplicationOrderByInput } from '../../graphql/generated/graphql-global-types';
 import { usePaginationQuery } from '../../utils/hooks/usePaginationQuery';
+import { OrderByArg } from '../../graphql/generated/graphql-global-types';
 import TableEmptyState from './TableEmptyState';
 import Table, {
     Column,
@@ -35,14 +35,23 @@ import { ActionsTableCell } from './ActionsCell';
 
 const JobApplicationTableRow: React.FC<{
     columns: Column[];
-} & JobApplicationsQuery_jobApplicationsConnection_edges_node &
-    JobApplicationsQueryVariables> = ({ columns, ...item }) => {
+} & JobApplicationsQuery_jobApplications_nodes &
+    JobApplicationsQueryVariables> = ({
+    columns,
+    id,
+    Company,
+    updatedAt,
+    Location,
+    position,
+    isRemote,
+    applicationStatus,
+}) => {
     const actionButtons = useRef<HTMLDivElement>(null);
     const toast = useToast();
     const client = useApolloClient();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { onOpen: onOpenView } = useModalQuery(QueryParamKeys.VIEW_JOB, item.id);
+    const { onOpen: onOpenView } = useModalQuery(QueryParamKeys.VIEW_JOB, id);
 
     const [deleteJobApplication, { loading: isLoadingDeleteJobApplication }] = useMutation<
         DeleteJobApplicationMutation,
@@ -71,7 +80,7 @@ const JobApplicationTableRow: React.FC<{
                 position: 'top',
             });
         },
-        variables: { jobId: item.id },
+        variables: { jobId: id },
     });
 
     return (
@@ -88,34 +97,34 @@ const JobApplicationTableRow: React.FC<{
                 columns={columns}
             >
                 <TableCell>
-                    <Text fontWeight="medium" as="span" title={item.position}>
-                        {item.position}
+                    <Text fontWeight="medium" as="span" title={position}>
+                        {position}
                     </Text>
                 </TableCell>
                 <TableCell>
-                    <CompanyName imageUrl={item.company?.image?.cloudfrontUrl} name={item.company.name} />
+                    <CompanyName imageUrl={Company?.Image?.cloudfrontUrl} name={Company?.name ?? ''} />
                 </TableCell>
                 <TableCell>
-                    <Text as="span" title={item.updatedAt && formatDate(item.updatedAt)}>
-                        {item.updatedAt && formatDate(item.updatedAt)}
+                    <Text as="span" title={updatedAt && formatDate(updatedAt)}>
+                        {updatedAt && formatDate(updatedAt)}
                     </Text>
                 </TableCell>
                 <TableCell>
-                    <Text as="span" title={item.location?.name ?? undefined}>
-                        {item.isRemote ? 'Remote' : item.location?.name ?? ''}
+                    <Text as="span" title={Location?.name ?? undefined}>
+                        {isRemote ? 'Remote' : Location?.name ?? ''}
                     </Text>
                 </TableCell>
                 <TableCell>
-                    <Text as="span" title={item.applicationStatus}>
-                        {formatApplicationStatusText(item.applicationStatus)}
+                    <Text as="span" title={applicationStatus}>
+                        {formatApplicationStatusText(applicationStatus)}
                     </Text>
                 </TableCell>
                 <ActionsTableCell containerRef={actionButtons} onDelete={onOpen} />
             </TableRow>
             <ConfirmDeleteJobApplication
                 isOpen={isOpen}
-                jobApplicationName={item.position}
-                companyName={item.company.name}
+                jobApplicationName={position}
+                companyName={Company?.name ?? ''}
                 onDelete={deleteJobApplication}
                 isOnDeleteLoading={isLoadingDeleteJobApplication}
                 onClose={onClose}
@@ -130,8 +139,9 @@ type Props = {
 };
 
 const JobApplicationTable: React.FC<Props> = ({ isPreview }) => {
-    const { page, orderBy, pageSize, setQuery } = usePaginationQuery({
-        orderBy: JobApplicationOrderByInput.updatedAt_DESC,
+    const { page, orderBy, pageSize, setQuery, direction } = usePaginationQuery({
+        orderBy: 'updatedAt',
+        direction: OrderByArg.desc,
     });
     const { onOpen: onOpenAddNewJob } = useModalQuery(QueryParamKeys.ADD_JOB);
 
@@ -141,7 +151,13 @@ const JobApplicationTable: React.FC<Props> = ({ isPreview }) => {
     const { data: jobApplications, loading, refetch } = useQuery<JobApplicationsQuery, JobApplicationsQueryVariables>(
         jobApplicationsQuery,
         {
-            variables: { first, skip, orderBy: orderBy as JobApplicationOrderByInput },
+            variables: {
+                first,
+                skip,
+                orderBy: {
+                    [orderBy]: direction,
+                },
+            },
         }
     );
 
@@ -149,54 +165,39 @@ const JobApplicationTable: React.FC<Props> = ({ isPreview }) => {
         {
             text: 'Position',
             columnSizeFraction: 3,
-            order: {
-                columnAscendingKey: JobApplicationOrderByInput.position_ASC,
-                columnDescendingKey: JobApplicationOrderByInput.position_DESC,
-            },
+            orderBy: 'position',
         },
         {
             text: 'Company',
             columnSizeFraction: 3,
-            order: {
-                columnAscendingKey: JobApplicationOrderByInput.companyName_ASC,
-                columnDescendingKey: JobApplicationOrderByInput.companyName_DESC,
-            },
+            orderBy: 'companyName',
         },
         {
             text: 'Updated at',
             columnSizeFraction: 1.5,
-            order: {
-                columnAscendingKey: JobApplicationOrderByInput.updatedAt_ASC,
-                columnDescendingKey: JobApplicationOrderByInput.updatedAt_DESC,
-            },
+            orderBy: 'updatedAt',
         },
         {
             text: 'Location',
             columnSizeFraction: 3,
-            order: {
-                columnAscendingKey: JobApplicationOrderByInput.locationName_ASC,
-                columnDescendingKey: JobApplicationOrderByInput.locationName_DESC,
-            },
+            orderBy: 'locationName',
         },
         {
             text: 'Status',
             columnSizeFraction: 1,
             minWidth: '80px',
-            order: {
-                columnAscendingKey: JobApplicationOrderByInput.applicationStatus_ASC,
-                columnDescendingKey: JobApplicationOrderByInput.applicationStatus_DESC,
-            },
+            orderBy: 'applicationStatus',
         },
         { text: 'Actions', columnSizeFraction: 1, minWidth: '100px', isLabelHidden: true },
     ];
 
-    const totalNumberOfResults = jobApplications?.jobsTotal.aggregate.count ?? 0;
+    const totalNumberOfResults = jobApplications?.jobApplications.totalCount ?? 0;
 
     return loading ? (
         <Loader />
     ) : (
         <>
-            {jobApplications?.jobsTotal.aggregate.count === 0 ? (
+            {totalNumberOfResults === 0 ? (
                 <TableEmptyState
                     onClick={(): void => {
                         onOpenAddNewJob();
@@ -212,16 +213,13 @@ const JobApplicationTable: React.FC<Props> = ({ isPreview }) => {
                         pageSize={pageSize}
                         page={page}
                         orderBy={orderBy}
+                        direction={direction}
                         refetch={refetch}
                         totalNumberOfResults={totalNumberOfResults}
                         columns={jobApplicationColumns}
-                        rows={jobApplications?.jobApplicationsConnection.edges.map(
-                            (item: any): JSX.Element => (
-                                <JobApplicationTableRow
-                                    key={item.node.id}
-                                    columns={jobApplicationColumns}
-                                    {...item.node}
-                                />
+                        rows={jobApplications?.jobApplications.nodes?.map(
+                            (item): JSX.Element => (
+                                <JobApplicationTableRow key={item.id} columns={jobApplicationColumns} {...item} />
                             )
                         )}
                     />

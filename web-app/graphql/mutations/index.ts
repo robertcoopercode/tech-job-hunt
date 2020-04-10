@@ -4,7 +4,7 @@ export const createJobApplicationMutation = gql`
     mutation CreateJobApplicationMutation(
         $companyId: ID!
         $position: String!
-        $location: GoogleMapsLocationCreateInput
+        $location: GoogleMapsLocationUpdateInput
         $isRemote: Boolean!
     ) {
         createJobApplication(companyId: $companyId, position: $position, location: $location, isRemote: $isRemote) {
@@ -18,7 +18,7 @@ export const updateJobApplicationMutation = gql`
         $id: ID!
         $companyId: ID!
         $position: String!
-        $location: GoogleMapsLocationCreateInput
+        $location: GoogleMapsLocationUpdateInput
         $rating: Int
         $jobListingLink: String
         $jobListingNotes: String
@@ -152,7 +152,7 @@ export const cancelSubscriptionMutation = gql`
 `;
 
 export const updateCreditCardMutation = gql`
-    mutation UpdateCreditCardMutation($card: CardUpdateWithoutBillingInfoDataInput!) {
+    mutation UpdateCreditCardMutation($card: CardUpdateInput!) {
         updateCreditCard(card: $card) {
             id
         }
@@ -164,7 +164,7 @@ export const createResume = gql`
         createResume(name: $name, file: $file) {
             id
             name
-            versions {
+            Versions {
                 cloudfrontUrl
                 Key
             }

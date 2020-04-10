@@ -8,7 +8,7 @@ type Props<T> = {
     numberOfPages: number;
     currentPage: number;
     refetch: (page: number) => void;
-    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery<T>>) => void;
+    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery>) => void;
 };
 
 function Pagination<T extends TableOrderBy>({ numberOfPages, currentPage, setQuery, refetch }: Props<T>): JSX.Element {

@@ -4,7 +4,7 @@ import { Text, useDisclosure, useToast } from '@robertcooper/chakra-ui-core';
 import {
     CompaniesQuery,
     CompaniesQueryVariables,
-    CompaniesQuery_companiesConnection_edges,
+    CompaniesQuery_companies_nodes,
 } from '../../graphql/generated/CompaniesQuery';
 import { DeleteCompanyMutation, DeleteCompanyMutationVariables } from '../../graphql/generated/DeleteCompanyMutation';
 import Loader from '../Loader/Loader';
@@ -14,9 +14,9 @@ import CompanyName from '../CompanyName/CompanyName';
 import { QueryParamKeys } from '../../utils/constants';
 import { useModalQuery } from '../../utils/hooks/useModalQuery';
 import { usePaginationQuery } from '../../utils/hooks/usePaginationQuery';
-import { CompanyOrderByInput } from '../../graphql/generated/graphql-global-types';
 import { formatDate } from '../../utils/formatDate';
 import { ConfirmDeleteCompany } from '../ViewCompanyModal/ViewCompanyModal';
+import { OrderByArg } from '../../graphql/generated/graphql-global-types';
 import Table, {
     Column,
     TableRow,
@@ -30,20 +30,20 @@ import TableEmptyState from './TableEmptyState';
 
 const CompanyTableRow: React.FC<{
     columns: Column[];
-} & CompaniesQuery_companiesConnection_edges> = ({ columns, ...item }) => {
+} & CompaniesQuery_companies_nodes> = ({ columns, id, Image, name, updatedAt, jobApplicationsCount }) => {
     const actionButtons = useRef<HTMLDivElement>(null);
     const toast = useToast();
     const client = useApolloClient();
 
     const { isOpen: isOpenConfirmDelete, onOpen: onOpenConfirmDelete, onClose: onCloseConfirmDelete } = useDisclosure();
-    const { onOpen: onOpenView } = useModalQuery(QueryParamKeys.VIEW_COMPANY, item.node.id);
+    const { onOpen: onOpenView } = useModalQuery(QueryParamKeys.VIEW_COMPANY, id);
 
     const [deleteCompany, { loading: isLoadingDeleteCompany }] = useMutation<
         DeleteCompanyMutation,
         DeleteCompanyMutationVariables
     >(deleteCompanyMutation, {
         variables: {
-            id: item.node.id,
+            id,
         },
         onError: () => {
             onCloseConfirmDelete();
@@ -84,24 +84,24 @@ const CompanyTableRow: React.FC<{
                 columns={columns}
             >
                 <TableCell>
-                    <CompanyName imageUrl={item.node.image?.cloudfrontUrl} name={item.node.name} isBold />
+                    <CompanyName imageUrl={Image?.cloudfrontUrl} name={name} isBold />
                 </TableCell>
                 <TableCell>
-                    <Text as="span" title={formatDate(item.node.updatedAt)}>
-                        {formatDate(item.node.updatedAt)}
+                    <Text as="span" title={formatDate(updatedAt)}>
+                        {formatDate(updatedAt)}
                     </Text>
                 </TableCell>
                 <TableCell>
-                    <Text as="span" title={item.node.jobApplicationsCount?.toString()}>
-                        {item.node.jobApplicationsCount}
+                    <Text as="span" title={jobApplicationsCount.toString()}>
+                        {jobApplicationsCount}
                     </Text>
                 </TableCell>
                 <ActionsTableCell containerRef={actionButtons} onDelete={onOpenConfirmDelete} />
             </TableRow>
             <ConfirmDeleteCompany
                 isOpen={isOpenConfirmDelete}
-                companyName={item.node.name}
-                jobApplicationsCount={item.node.jobApplicationsCount}
+                companyName={name}
+                jobApplicationsCount={jobApplicationsCount}
                 onDelete={deleteCompany}
                 isOnDeleteLoading={isLoadingDeleteCompany}
                 onClose={onCloseConfirmDelete}
@@ -115,13 +115,20 @@ type Props = {
 };
 
 const CompaniesTable: React.FC<Props> = ({ isPreview = false }) => {
-    const { page, orderBy, pageSize, setQuery } = usePaginationQuery({
-        orderBy: CompanyOrderByInput.updatedAt_DESC,
+    const { page, orderBy, pageSize, setQuery, direction } = usePaginationQuery({
+        orderBy: 'updatedAt',
+        direction: OrderByArg.desc,
     });
     const skip = isPreview ? 0 : (page - 1) * pageSize;
     const first = isPreview ? previewPageSize : pageSize;
     const { data: companies, loading, refetch } = useQuery<CompaniesQuery, CompaniesQueryVariables>(companiesQuery, {
-        variables: { first, skip, orderBy: orderBy as CompanyOrderByInput },
+        variables: {
+            first,
+            skip,
+            orderBy: {
+                [orderBy]: direction,
+            },
+        },
     });
     const { onOpen: onOpenAddNewCompany } = useModalQuery(QueryParamKeys.ADD_COMPANY);
 
@@ -129,37 +136,28 @@ const CompaniesTable: React.FC<Props> = ({ isPreview = false }) => {
         {
             text: 'Company',
             columnSizeFraction: 4,
-            order: {
-                columnAscendingKey: CompanyOrderByInput.name_ASC,
-                columnDescendingKey: CompanyOrderByInput.name_DESC,
-            },
+            orderBy: 'name',
         },
         {
             text: 'Updated at',
             minWidth: '160px',
-            order: {
-                columnAscendingKey: CompanyOrderByInput.updatedAt_ASC,
-                columnDescendingKey: CompanyOrderByInput.updatedAt_DESC,
-            },
+            orderBy: 'updatedAt',
         },
         {
             text: 'Jobs',
             minWidth: '80px',
-            order: {
-                columnAscendingKey: CompanyOrderByInput.jobApplicationsCount_ASC,
-                columnDescendingKey: CompanyOrderByInput.jobApplicationsCount_DESC,
-            },
+            orderBy: 'jobApplicationsCount',
         },
         { text: 'Actions', columnSizeFraction: 2, minWidth: '100px', isLabelHidden: true },
     ];
 
-    const totalNumberOfResults = companies?.companiesTotal.aggregate.count ?? 0;
+    const totalNumberOfResults = companies?.companies.totalCount ?? 0;
 
     return loading ? (
         <Loader />
     ) : (
         <>
-            {companies?.companiesTotal.aggregate.count === 0 ? (
+            {totalNumberOfResults === 0 ? (
                 <TableEmptyState
                     onClick={(): void => {
                         onOpenAddNewCompany();
@@ -177,9 +175,10 @@ const CompaniesTable: React.FC<Props> = ({ isPreview = false }) => {
                     totalNumberOfResults={totalNumberOfResults}
                     columns={companyColumns}
                     setQuery={setQuery}
-                    rows={companies?.companiesConnection.edges.map(
-                        (item: any): JSX.Element => (
-                            <CompanyTableRow key={item.node.id} columns={companyColumns} {...item} />
+                    direction={direction}
+                    rows={companies?.companies.nodes.map(
+                        (item): JSX.Element => (
+                            <CompanyTableRow key={item.id} columns={companyColumns} {...item} />
                         )
                     )}
                 />

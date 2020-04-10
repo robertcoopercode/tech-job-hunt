@@ -7,7 +7,7 @@
 // GraphQL query operation: ResumeQuery
 // ====================================================
 
-export interface ResumeQuery_resume_versions {
+export interface ResumeQuery_resume_Versions {
   __typename: "AwsFileData";
   fileName: string;
   cloudfrontUrl: string;
@@ -20,11 +20,11 @@ export interface ResumeQuery_resume {
   id: string;
   name: string;
   updatedAt: any;
-  versions: ResumeQuery_resume_versions[] | null;
+  Versions: ResumeQuery_resume_Versions[];
 }
 
 export interface ResumeQuery {
-  resume: ResumeQuery_resume | null;
+  resume: ResumeQuery_resume;
 }
 
 export interface ResumeQueryVariables {

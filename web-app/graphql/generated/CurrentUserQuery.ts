@@ -9,7 +9,7 @@ import { BillingFrequency } from "./graphql-global-types";
 // GraphQL query operation: CurrentUserQuery
 // ====================================================
 
-export interface CurrentUserQuery_me_billing_card {
+export interface CurrentUserQuery_me_Billing_Card {
   __typename: "Card";
   brand: string;
   last4Digits: string;
@@ -17,7 +17,7 @@ export interface CurrentUserQuery_me_billing_card {
   expYear: number;
 }
 
-export interface CurrentUserQuery_me_billing {
+export interface CurrentUserQuery_me_Billing {
   __typename: "BillingInfo";
   billingFrequency: BillingFrequency | null;
   isPremiumActive: boolean;
@@ -25,13 +25,13 @@ export interface CurrentUserQuery_me_billing {
   endOfBillingPeriod: number | null;
   willCancelAtEndOfPeriod: boolean;
   stripeCustomerId: string | null;
-  card: CurrentUserQuery_me_billing_card | null;
+  Card: CurrentUserQuery_me_Billing_Card | null;
 }
 
 export interface CurrentUserQuery_me {
   __typename: "User";
   id: string;
-  billing: CurrentUserQuery_me_billing | null;
+  Billing: CurrentUserQuery_me_Billing | null;
   email: string;
   hasVerifiedEmail: boolean | null;
   hasCompletedOnboarding: boolean;

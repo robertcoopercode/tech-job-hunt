@@ -240,19 +240,19 @@ const ViewResumeModal: React.FC<Props> = ({ onClose, isOpen, resume }) => {
                                         error={touched.name ? errors.name : undefined}
                                         isRequired
                                     />
-                                    {resume.versions && (
+                                    {resume.Versions && (
                                         <Box>
                                             <Heading>Latest version</Heading>
                                             <ResumeVersion
-                                                url={resume.versions[0].cloudfrontUrl}
-                                                date={resume.versions[0].createdAt}
+                                                url={resume.Versions[0].cloudfrontUrl}
+                                                date={resume.Versions[0].createdAt}
                                             />
                                         </Box>
                                     )}
-                                    {resume.versions && resume.versions.slice(1).length > 0 && (
+                                    {resume.Versions && resume.Versions.slice(1).length > 0 && (
                                         <Box>
                                             <Heading>Previous versions</Heading>
-                                            {resume.versions.slice(1).map(version => (
+                                            {resume.Versions.slice(1).map(version => (
                                                 <ResumeVersion
                                                     key={version.VersionId}
                                                     url={version.cloudfrontUrl}

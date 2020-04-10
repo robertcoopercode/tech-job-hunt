@@ -1,4 +1,10 @@
-// Used to seed the database with data
+if (require.main === module) {
+    // Only import the environment variables if executing this file directly: https://stackoverflow.com/a/6090287/8360496
+    // The schema file gets executed directly when running the generate command: yarn generate
+    // Without this check, we would be trying to load the environment variables twice and that causes warnings to be thrown in the console
+    require('dotenv-flow').config();
+}
+
 import cuid from 'cuid';
 import bcrypt from 'bcrypt';
 import faker from 'faker';
@@ -6,15 +12,17 @@ import knex from 'knex';
 import subDays from 'date-fns/subDays';
 import format from 'date-fns/format';
 import {
-    prisma,
     JobApplicationCreateWithoutCompanyInput,
     CompanyContactCreateWithoutCompanyInput,
     ApplicationStatus,
-} from '../src/generated/prisma-client';
+    PrismaClient,
+} from '@prisma/client';
 import { companies } from './companies';
 import { locations } from './locations';
 import { createFileObject } from './utils';
 import { resumes } from './resumes';
+
+const prisma = new PrismaClient();
 
 const knexInstance = knex({
     client: 'mysql',
@@ -26,8 +34,11 @@ const knexInstance = knex({
     },
 });
 
-const userEmail = 'richard@piedpiper.com';
+const userEmail = `${faker.name.firstName().toLowerCase()}@piedpiper.com`;
 const userPassword = 'tech';
+
+// eslint-disable-next-line no-console
+console.log(`Creating user '${userEmail}' with password '${userPassword}'`);
 
 const ratingOptions = [3, 4, 5];
 const contactJobTitles = [
@@ -73,7 +84,7 @@ const createJobApplications = ({
     locationName,
     locationId,
 }): JobApplicationCreateWithoutCompanyInput[] => {
-    const jobApplications = [];
+    const jobApplications: JobApplicationCreateWithoutCompanyInput[] = [];
     for (let i = 0; i < faker.random.arrayElement([0, 1, 2, 3, 4]); i++) {
         const aRandomResume = faker.random.arrayElement(resumes);
         jobApplications.push({
@@ -81,43 +92,43 @@ const createJobApplications = ({
             companyName,
             rating: faker.random.arrayElement(ratingOptions),
             applicationStatus: faker.random.arrayElement(applicationStatuses),
-            user: {
+            User: {
                 connect: {
                     email: userEmail,
                 },
             },
             notes: faker.lorem.paragraphs(2),
-            locationName,
-            contacts: {
+            Contacts: {
                 create: createContacts({ domainName }),
             },
             isRemote: locationName === undefined,
+            locationName: locationName,
             isApplicationActive: true,
             jobListingNotes: faker.lorem.paragraphs(2),
             jobListingLink: `https://${domainName}/careers?job=${cuid()}`,
-            location: locationName
+            Location: locationName
                 ? {
                       connect: { id: locationId },
                   }
                 : undefined,
-            coverLetterFile: {
+            CoverLetterFile: {
                 create: createFileObject({
                     fileName: `${companyName}-cover-letter.pdf`,
                     key: 'seeds/robert-cooper-resume-2019.pdf',
                     versionId: 'qFn8Baoadz5811HZMj1diLSmHQHFQzhZ',
                 }),
             },
-            resume: {
+            Resume: {
                 create: {
                     selectedVersionId: aRandomResume.versionId,
-                    resume: {
+                    Resume: {
                         connect: {
                             id: aRandomResume.id,
                         },
                     },
                 },
             },
-        } as JobApplicationCreateWithoutCompanyInput);
+        });
     }
     return jobApplications;
 };
@@ -129,25 +140,29 @@ async function main(): Promise<void> {
     // Create all locations in DB
     Object.entries(locations).forEach(async ([_key, value]) => {
         if (value.locationId) {
-            await prisma.createGoogleMapsLocation({
-                name: value.locationName,
-                googlePlacesId: value.locationId,
-                id: value.locationId,
+            await prisma.googleMapsLocation.create({
+                data: {
+                    name: value.locationName,
+                    googlePlacesId: value.locationId,
+                    id: value.locationId,
+                },
             });
         }
     });
 
     // Create user
-    await prisma.createUser({
-        email: userEmail,
-        password: hashedPassword,
-        id: userCuid,
-        billing: {
-            create: {
-                isPremiumActive: true,
+    await prisma.user.create({
+        data: {
+            email: userEmail,
+            password: hashedPassword,
+            id: userCuid,
+            Billing: {
+                create: {
+                    isPremiumActive: true,
+                },
             },
+            hasVerifiedEmail: true,
         },
-        hasVerifiedEmail: true,
     });
     // eslint-disable-next-line no-console
     console.log(`Seeded user: ${userEmail}`);
@@ -155,70 +170,70 @@ async function main(): Promise<void> {
     // Create companies
     for (let i = 0; i < companies.length; i++) {
         const { name, domainName, imageFile, id } = companies[i];
-        await prisma.createCompany({
-            id,
-            name,
-            user: {
-                connect: {
-                    email: userEmail,
+        await prisma.company.create({
+            data: {
+                id,
+                name,
+                User: {
+                    connect: {
+                        email: userEmail,
+                    },
                 },
-            },
-            website: `https://www.${domainName}`,
-            rating: faker.random.arrayElement(ratingOptions),
-            jobApplicationsCount: faker.random.number({ min: 1, max: 5 }),
-            notes: faker.lorem.paragraphs(2),
-            image: {
-                create: imageFile,
-            },
-            contacts: {
-                create: createContacts({
-                    domainName,
-                }),
+                website: `https://www.${domainName}`,
+                rating: faker.random.arrayElement(ratingOptions),
+                jobApplicationsCount: faker.random.number({ min: 1, max: 5 }),
+                notes: faker.lorem.paragraphs(2),
+                Image: {
+                    create: imageFile,
+                },
+                Contacts: {
+                    create: createContacts({
+                        domainName,
+                    }),
+                },
             },
         });
         const dayDate = subDays(new Date(), faker.random.number({ min: 1, max: 31 }));
         const formattedDate = format(dayDate, 'yyyy-MM-dd 00:00:00.000');
-        await knexInstance
-            .from('Company')
-            .where({ id })
-            .update({ createdAt: formattedDate, updatedAt: formattedDate });
+        await knexInstance.from('Company').where({ id }).update({ createdAt: formattedDate, updatedAt: formattedDate });
     }
     // eslint-disable-next-line no-console
     console.log(`Seeded ${companies.length} companies`);
     // Create resumes
     for (let i = 0; i < resumes.length; i++) {
         const { name, id, versionId } = resumes[i];
-        await prisma.createResume({
-            id,
-            name,
-            user: {
-                connect: {
-                    email: userEmail,
-                },
-            },
-            versions: {
-                create: [
-                    {
-                        ...createFileObject({
-                            fileName: '2020-resume.pdf',
-                            key: 'seeds/robert-cooper-resume-2019.pdf',
-                            versionId: 'qFn8Baoadz5811HZMj1diLSmHQHFQzhZ',
-                        }),
-                        id: versionId,
+        await prisma.resume.create({
+            data: {
+                id,
+                name,
+                User: {
+                    connect: {
+                        email: userEmail,
                     },
-                ],
+                },
+                Versions: {
+                    create: [
+                        {
+                            ...createFileObject({
+                                fileName: '2020-resume.pdf',
+                                key: 'seeds/robert-cooper-resume-2019.pdf',
+                                versionId: 'qFn8Baoadz5811HZMj1diLSmHQHFQzhZ',
+                            }),
+                            id: versionId,
+                        },
+                    ],
+                },
             },
         });
         const dayDate = subDays(new Date(), faker.random.number({ min: 1, max: 31 }));
         const formattedDate = format(dayDate, 'yyyy-MM-dd 00:00:00.000');
-        await knexInstance
-            .from('Resume')
-            .where({ id })
-            .update({ createdAt: formattedDate, updatedAt: formattedDate });
+        await knexInstance.from('Resume').where({ id }).update({ createdAt: formattedDate, updatedAt: formattedDate });
     }
     // eslint-disable-next-line no-console
     console.log(`Seeded ${resumes.length} resumes`);
+
     // Create jobs
+    let jobApplicationCount = 0;
     for (let i = 0; i < 31; i++) {
         const dayDate = subDays(new Date(), i);
         const formattedDate = format(dayDate, 'yyyy-MM-dd 00:00:00.000');
@@ -230,20 +245,23 @@ async function main(): Promise<void> {
             locationId,
         });
         for (let k = 0; k < jobApplications.length; k++) {
+            jobApplicationCount++;
             const jobId = cuid();
-            await prisma.createJobApplication({
-                id: jobId,
-                user: {
-                    connect: {
-                        email: userEmail,
+            await prisma.jobApplication.create({
+                data: {
+                    id: jobId,
+                    User: {
+                        connect: {
+                            email: userEmail,
+                        },
                     },
-                },
-                company: {
-                    connect: {
-                        id,
+                    Company: {
+                        connect: {
+                            id,
+                        },
                     },
+                    ...jobApplications[k],
                 },
-                ...jobApplications[k],
             });
             await knexInstance
                 .from('JobApplication')
@@ -252,9 +270,9 @@ async function main(): Promise<void> {
         }
     }
     // eslint-disable-next-line no-console
-    console.log(`Seeded a shit ton of jobs`);
+    console.log(`Seeded a ${jobApplicationCount} jobs`);
     process.exit(0);
 }
 
 // eslint-disable-next-line no-console
-main().catch(e => console.error(e));
+main().catch((e) => console.error(e));

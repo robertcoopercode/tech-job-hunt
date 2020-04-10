@@ -206,23 +206,23 @@ const convertToFormData = (jobApplication: JobApplicationQuery['jobApplication']
     return {
         isApplicationActive: jobApplication?.isApplicationActive ?? false,
         company: {
-            id: jobApplication?.company.id ?? '',
-            name: jobApplication?.company.name ?? '',
-            imageUrl: jobApplication?.company.image?.cloudfrontUrl,
+            id: jobApplication?.Company?.id ?? '',
+            name: jobApplication?.Company?.name ?? '',
+            imageUrl: jobApplication?.Company?.Image?.cloudfrontUrl,
         },
         position: jobApplication?.position ?? '',
-        location: jobApplication?.location,
+        location: jobApplication?.Location,
         isRemote: jobApplication?.isRemote ?? false,
         rating: jobApplication?.rating ?? null,
         jobListingLink: jobApplication?.jobListingLink ?? null,
         jobListingNotes: jobApplication?.jobListingNotes ?? null,
-        resume: jobApplication?.resume?.resume?.id
+        resume: jobApplication?.Resume?.Resume?.id
             ? {
-                  resumeId: jobApplication?.resume.resume.id,
-                  name: jobApplication?.resume.resume.name,
-                  selectedVersionId: jobApplication.resume.selectedVersionId,
+                  resumeId: jobApplication?.Resume.Resume.id,
+                  name: jobApplication?.Resume.Resume.name,
+                  selectedVersionId: jobApplication.Resume.selectedVersionId,
                   versions:
-                      jobApplication.resume.resume.versions?.map((v): {
+                      jobApplication.Resume.Resume.Versions?.map((v): {
                           id: string;
                           url: string;
                           createdAt: string;
@@ -234,14 +234,16 @@ const convertToFormData = (jobApplication: JobApplicationQuery['jobApplication']
               }
             : undefined,
         coverLetterFile: undefined,
-        contacts: jobApplication?.contacts ?? null,
+        contacts: jobApplication?.Contacts ?? null,
         applicationStatus: jobApplication?.applicationStatus ?? ApplicationStatus.INTERESTED,
         jobDecision: jobApplication?.jobDecision,
         dateApplied: formatDateForInput(jobApplication?.dateApplied),
         dateDecided: formatDateForInput(jobApplication?.dateDecided),
         dateInterviewing:
-            jobApplication?.dateInterviewing.length !== 0
-                ? jobApplication?.dateInterviewing.map((date): string => formatDateForInput(date)) ?? ['']
+            jobApplication?.JobApplication_dateInterviewing.length !== 0
+                ? jobApplication?.JobApplication_dateInterviewing.map((date): string =>
+                      formatDateForInput(date.value)
+                  ) ?? ['']
                 : [''],
         dateOffered: formatDateForInput(jobApplication?.dateOffered),
         notes: jobApplication?.notes ?? null,
@@ -368,10 +370,9 @@ const ViewJobModalContents: React.FC<Props & {
         });
     };
 
-    const companyOptions: DropdownSearchOption[] =
-        suggestedCompanies && suggestedCompanies.me && suggestedCompanies.me.companies
-            ? suggestedCompanies.me.companies.map(company => convertToOption(company))
-            : [];
+    const companyOptions: DropdownSearchOption[] = suggestedCompanies?.companies.nodes
+        ? suggestedCompanies?.companies.nodes.map((company): DropdownSearchOption => convertToOption(company))
+        : [];
 
     const handleAddContact = (arrayHelpers: ArrayHelpers, order: number): void => {
         arrayHelpers.push(createNewContact(order));
@@ -385,11 +386,11 @@ const ViewJobModalContents: React.FC<Props & {
         }
     };
 
-    const isFreeUser = !currentUserData?.me?.billing?.isPremiumActive;
+    const isFreeUser = !currentUserData?.me?.Billing?.isPremiumActive;
     const hasReachedFreeTierLimit =
         isFreeUser &&
-        jobApplicationsCount?.jobApplicationsConnection.aggregate.count !== undefined &&
-        jobApplicationsCount?.jobApplicationsConnection.aggregate.count > freeTierJobLimit;
+        jobApplicationsCount?.jobApplications.totalCount !== undefined &&
+        jobApplicationsCount?.jobApplications.totalCount > freeTierJobLimit;
 
     return (
         <>
@@ -602,9 +603,9 @@ const ViewJobModalContents: React.FC<Props & {
                                             existingFile={
                                                 hasFormBeenUpdated
                                                     ? undefined
-                                                    : jobApplication.coverLetterFile && {
-                                                          name: jobApplication.coverLetterFile.fileName,
-                                                          url: jobApplication.coverLetterFile.cloudfrontUrl,
+                                                    : jobApplication.CoverLetterFile && {
+                                                          name: jobApplication.CoverLetterFile.fileName,
+                                                          url: jobApplication.CoverLetterFile.cloudfrontUrl,
                                                       }
                                             }
                                             label="Cover letter"
@@ -672,7 +673,7 @@ const ViewJobModalContents: React.FC<Props & {
             <ConfirmDeleteJobApplication
                 isOpen={isOpenConfirmDelete}
                 jobApplicationName={jobApplication?.position}
-                companyName={jobApplication?.company.name}
+                companyName={jobApplication?.Company?.name ?? ''}
                 onDelete={deleteJobApplication}
                 isOnDeleteLoading={isLoadingDeleteJobApplication}
                 onClose={onCloseConfirmDelete}
@@ -765,7 +766,6 @@ const ViewJobModal: React.FC<Props> = props => {
             })
             .finally(() => setSubmitting(false));
     };
-
     return (
         <Formik
             initialValues={convertToFormData(props.jobApplication)}
