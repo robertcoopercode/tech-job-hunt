@@ -9,44 +9,52 @@ import { ApplicationStatus } from "./graphql-global-types";
 // GraphQL query operation: AnalyticsQuery
 // ====================================================
 
-export interface AnalyticsQuery_me_addedJobs_location {
+export interface AnalyticsQuery_addedJobs_nodes_JobApplication_dateInterviewing {
+  __typename: "JobApplication_dateInterviewing";
+  value: any;
+}
+
+export interface AnalyticsQuery_addedJobs_nodes_Location {
   __typename: "GoogleMapsLocation";
   name: string;
   googlePlacesId: string;
 }
 
-export interface AnalyticsQuery_me_addedJobs_company_image {
+export interface AnalyticsQuery_addedJobs_nodes_Company_Image {
   __typename: "AwsFileData";
   cloudfrontUrl: string;
 }
 
-export interface AnalyticsQuery_me_addedJobs_company {
+export interface AnalyticsQuery_addedJobs_nodes_Company {
   __typename: "Company";
   id: string;
-  image: AnalyticsQuery_me_addedJobs_company_image | null;
+  Image: AnalyticsQuery_addedJobs_nodes_Company_Image | null;
   name: string;
 }
 
-export interface AnalyticsQuery_me_addedJobs {
+export interface AnalyticsQuery_addedJobs_nodes {
   __typename: "JobApplication";
   applicationStatus: ApplicationStatus;
   createdAt: any;
   dateApplied: any | null;
   dateDecided: any | null;
-  dateInterviewing: any[];
+  JobApplication_dateInterviewing: AnalyticsQuery_addedJobs_nodes_JobApplication_dateInterviewing[];
   dateOffered: any | null;
   isRemote: boolean;
-  location: AnalyticsQuery_me_addedJobs_location | null;
-  company: AnalyticsQuery_me_addedJobs_company;
+  Location: AnalyticsQuery_addedJobs_nodes_Location | null;
+  Company: AnalyticsQuery_addedJobs_nodes_Company | null;
 }
 
-export interface AnalyticsQuery_me {
-  __typename: "User";
-  addedJobs: AnalyticsQuery_me_addedJobs[] | null;
+export interface AnalyticsQuery_addedJobs {
+  __typename: "QueryJobApplications_Connection";
+  /**
+   * Flattened list of JobApplication type
+   */
+  nodes: AnalyticsQuery_addedJobs_nodes[];
 }
 
 export interface AnalyticsQuery {
-  me: AnalyticsQuery_me | null;
+  addedJobs: AnalyticsQuery_addedJobs;
 }
 
 export interface AnalyticsQueryVariables {

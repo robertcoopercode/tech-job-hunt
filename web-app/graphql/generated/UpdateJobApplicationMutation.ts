@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GoogleMapsLocationCreateInput, JobApplicationContactCreateWithoutJobApplicationInput, ApplicationStatus, JobDecision } from "./graphql-global-types";
+import { GoogleMapsLocationUpdateInput, JobApplicationContactCreateWithoutJobApplicationInput, ApplicationStatus, JobDecision } from "./graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: UpdateJobApplicationMutation
@@ -22,7 +22,7 @@ export interface UpdateJobApplicationMutationVariables {
   id: string;
   companyId: string;
   position: string;
-  location?: GoogleMapsLocationCreateInput | null;
+  location?: GoogleMapsLocationUpdateInput | null;
   rating?: number | null;
   jobListingLink?: string | null;
   jobListingNotes?: string | null;

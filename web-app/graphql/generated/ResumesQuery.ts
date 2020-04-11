@@ -3,55 +3,43 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ResumeOrderByInput } from "./graphql-global-types";
+import { QueryResumesOrderByInput } from "./graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: ResumesQuery
 // ====================================================
 
-export interface ResumesQuery_resumesConnection_edges_node_versions {
+export interface ResumesQuery_resumes_nodes_Versions {
   __typename: "AwsFileData";
   cloudfrontUrl: string;
+  fileName: string;
   VersionId: string;
   createdAt: any;
-  fileName: string;
 }
 
-export interface ResumesQuery_resumesConnection_edges_node {
+export interface ResumesQuery_resumes_nodes {
   __typename: "Resume";
   id: string;
   name: string;
   updatedAt: any;
-  versions: ResumesQuery_resumesConnection_edges_node_versions[] | null;
+  Versions: ResumesQuery_resumes_nodes_Versions[];
 }
 
-export interface ResumesQuery_resumesConnection_edges {
-  __typename: "ResumeEdge";
-  node: ResumesQuery_resumesConnection_edges_node;
-}
-
-export interface ResumesQuery_resumesConnection {
-  __typename: "ResumeConnection";
-  edges: ResumesQuery_resumesConnection_edges[];
-}
-
-export interface ResumesQuery_resumesTotal_aggregate {
-  __typename: "AggregateResume";
-  count: number;
-}
-
-export interface ResumesQuery_resumesTotal {
-  __typename: "ResumeConnection";
-  aggregate: ResumesQuery_resumesTotal_aggregate;
+export interface ResumesQuery_resumes {
+  __typename: "QueryResumes_Connection";
+  /**
+   * Flattened list of Resume type
+   */
+  nodes: ResumesQuery_resumes_nodes[];
+  totalCount: number;
 }
 
 export interface ResumesQuery {
-  resumesConnection: ResumesQuery_resumesConnection;
-  resumesTotal: ResumesQuery_resumesTotal;
+  resumes: ResumesQuery_resumes;
 }
 
 export interface ResumesQueryVariables {
-  orderBy?: ResumeOrderByInput | null;
   first?: number | null;
   skip?: number | null;
+  orderBy?: QueryResumesOrderByInput | null;
 }

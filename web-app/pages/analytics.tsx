@@ -105,7 +105,7 @@ const Analytics: React.FC<Props> = () => {
     });
     const { onOpen: onOpenAddNewJob } = useModalQuery(QueryParamKeys.ADD_JOB);
 
-    const jobApplicationsUpdatedByStatus = analyticsData?.me?.addedJobs?.reduce(
+    const jobApplicationsUpdatedByStatus = analyticsData?.addedJobs.nodes.reduce(
         (
             prev: {
                 [key in ApplicationStatus]?: {
@@ -140,18 +140,18 @@ const Analytics: React.FC<Props> = () => {
 
     const jobApplicationsStatusDoughnutChartData = {
         labels: Object.keys(jobApplicationsUpdatedByStatus ?? {}).map(
-            key => applicationStatusDetails[key as ApplicationStatus].label
+            (key) => applicationStatusDetails[key as ApplicationStatus].label
         ),
         datasets: [
             {
-                data: Object.values(jobApplicationsUpdatedByStatus ?? {}).map(v => v?.count),
+                data: Object.values(jobApplicationsUpdatedByStatus ?? {}).map((v) => v?.count),
                 borderColor: Object.keys(jobApplicationsUpdatedByStatus ?? {}).map(
-                    key => applicationStatusDetails[key as ApplicationStatus].color
+                    (key) => applicationStatusDetails[key as ApplicationStatus].color
                 ),
-                backgroundColor: Object.keys(jobApplicationsUpdatedByStatus ?? {}).map(key =>
+                backgroundColor: Object.keys(jobApplicationsUpdatedByStatus ?? {}).map((key) =>
                     rgba(applicationStatusDetails[key as ApplicationStatus].color, 0.8)
                 ),
-                hoverBackgroundColor: Object.keys(jobApplicationsUpdatedByStatus ?? {}).map(key =>
+                hoverBackgroundColor: Object.keys(jobApplicationsUpdatedByStatus ?? {}).map((key) =>
                     rgba(applicationStatusDetails[key as ApplicationStatus].color, 0.6)
                 ),
             },
@@ -160,20 +160,22 @@ const Analytics: React.FC<Props> = () => {
 
     const weeks = eachWeekOfInterval({ start: subMonths(now.current, 1), end: now.current });
 
+    const weeklyJobdsAddedData = analyticsData?.addedJobs.nodes.reduce((prev, curr): number[] => {
+        weeks.some((week, index) => {
+            if (isSameWeek(week, parseISO(curr.createdAt))) {
+                prev[index] += 1;
+                return true;
+            }
+            return false;
+        });
+        return prev;
+    }, new Array(weeks.length).fill(0));
+
     const weeklyJobsAddedData = {
-        labels: weeks.map(date => `Week of ${format(date, 'LLL do')}`),
+        labels: weeks.map((date) => `Week of ${format(date, 'LLL do')}`),
         datasets: [
             {
-                data: analyticsData?.me?.addedJobs?.reduce((prev, curr): number[] => {
-                    weeks.some((week, index) => {
-                        if (isSameWeek(week, parseISO(curr.createdAt))) {
-                            prev[index] += 1;
-                            return true;
-                        }
-                        return false;
-                    });
-                    return prev;
-                }, new Array(weeks.length).fill(0)),
+                data: weeklyJobdsAddedData,
                 minBarLength: 5,
                 maxBarThickness: 40,
                 borderWidth: 2,
@@ -183,16 +185,16 @@ const Analytics: React.FC<Props> = () => {
                 backgroundColor: new Array(weeks.length)
                     .fill(null)
                     .map((_v, i) => backgroundColors[i % backgroundColors.length])
-                    .map(v => rgba(v, 0.8)),
+                    .map((v) => rgba(v, 0.8)),
                 hoverBackgroundColor: new Array(weeks.length)
                     .fill(null)
                     .map((_v, i) => backgroundColors[i % backgroundColors.length])
-                    .map(v => rgba(v, 0.6)),
+                    .map((v) => rgba(v, 0.6)),
             },
         ],
     };
 
-    const companies = analyticsData?.me?.addedJobs?.reduce(
+    const companies = analyticsData?.addedJobs.nodes.reduce(
         (
             prev: {
                 [id: string]: { name: string; count: number };
@@ -201,15 +203,18 @@ const Analytics: React.FC<Props> = () => {
         ): {
             [id: string]: { name: string; count: number };
         } => {
-            const companyId = curr.company.id;
-            if (companyId in prev) {
-                prev[companyId].count = prev[companyId].count + 1;
-                return prev;
+            const companyId = curr.Company?.id;
+            const companyName = curr.Company?.name;
+            if (companyId && companyName) {
+                if (companyId in prev) {
+                    prev[companyId].count = prev[companyId].count + 1;
+                    return prev;
+                }
+                prev[companyId] = {
+                    name: companyName,
+                    count: 1,
+                };
             }
-            prev[companyId] = {
-                name: curr.company.name,
-                count: 1,
-            };
 
             return prev;
         },
@@ -217,10 +222,10 @@ const Analytics: React.FC<Props> = () => {
     );
 
     const jobsPerCompanyData = {
-        labels: Object.values(companies ?? {}).map(c => c.name),
+        labels: Object.values(companies ?? {}).map((c) => c.name),
         datasets: [
             {
-                data: Object.values(companies ?? {}).map(c => c.count),
+                data: Object.values(companies ?? {}).map((c) => c.count),
                 minBarLength: 5,
                 maxBarThickness: 40,
                 borderWidth: 2,
@@ -231,7 +236,7 @@ const Analytics: React.FC<Props> = () => {
         ],
     };
 
-    const locations = analyticsData?.me?.addedJobs?.reduce(
+    const locations = analyticsData?.addedJobs.nodes.reduce(
         (
             prev: {
                 [googlePlacesId: string]: {
@@ -258,8 +263,8 @@ const Analytics: React.FC<Props> = () => {
                 };
                 return prev;
             }
-            const googlePlacesId = curr.location?.googlePlacesId;
-            const locationName = curr.location?.name;
+            const googlePlacesId = curr.Location?.googlePlacesId;
+            const locationName = curr.Location?.name;
             if (locationName && googlePlacesId) {
                 if (googlePlacesId in prev) {
                     prev[googlePlacesId].count = prev[googlePlacesId].count + 1;
@@ -276,10 +281,10 @@ const Analytics: React.FC<Props> = () => {
     );
 
     const jobsPerLocationData = {
-        labels: Object.values(locations ?? {}).map(c => c.name),
+        labels: Object.values(locations ?? {}).map((c) => c.name),
         datasets: [
             {
-                data: Object.values(locations ?? {}).map(c => c.count),
+                data: Object.values(locations ?? {}).map((c) => c.count),
                 minBarLength: 5,
                 maxBarThickness: 40,
                 borderWidth: 2,
@@ -300,15 +305,15 @@ const Analytics: React.FC<Props> = () => {
         return p;
     }, {});
 
-    const jobApplicationsByStatuses = Object.values(ApplicationStatus).map(status => {
+    const jobApplicationsByStatuses = Object.values(ApplicationStatus).map((status) => {
         return {
             name: status,
-            dates: analyticsData?.me?.addedJobs?.reduce((prev: { [date: string]: { count: number } }, curr): {
+            dates: analyticsData?.addedJobs.nodes.reduce((prev: { [date: string]: { count: number } }, curr): {
                 [date: string]: {
                     count: number;
                 };
             } => {
-                return produce(prev, draft => {
+                return produce(prev, (draft) => {
                     if (curr?.applicationStatus === status) {
                         const formatttedDate = format(parseISO(curr.createdAt), 'yyyy-MM-dd');
                         if (formatttedDate in draft) {
@@ -323,7 +328,7 @@ const Analytics: React.FC<Props> = () => {
     });
 
     const jobApplicationsByStatusesData = {
-        datasets: jobApplicationsByStatuses.map(set => ({
+        datasets: jobApplicationsByStatuses.map((set) => ({
             label: applicationStatusDetails[set.name].label,
             backgroundColor: rgba(applicationStatusDetails[set.name].color, 0.2),
             borderColor: applicationStatusDetails[set.name].color,
@@ -345,7 +350,7 @@ const Analytics: React.FC<Props> = () => {
         })),
     };
 
-    const hasAnyAnalyticsToDisplay = analyticsData?.me?.addedJobs && analyticsData?.me?.addedJobs?.length > 0;
+    const hasAnyAnalyticsToDisplay = analyticsData?.addedJobs.nodes && analyticsData?.addedJobs.nodes.length > 0;
 
     const pageSubtitle = `For the last month (${format(subMonths(now.current, 1), 'LLL do')} to ${format(
         now.current,
@@ -439,7 +444,13 @@ const Analytics: React.FC<Props> = () => {
                                                         ticks: { fontStyle: 'bold' },
                                                     },
                                                 ],
-                                                yAxes: [{ gridLines: { display: false }, display: false }],
+                                                yAxes: [
+                                                    {
+                                                        gridLines: { display: false },
+                                                        ticks: { beginAtZero: true },
+                                                        display: false,
+                                                    },
+                                                ],
                                             },
                                         }}
                                     />

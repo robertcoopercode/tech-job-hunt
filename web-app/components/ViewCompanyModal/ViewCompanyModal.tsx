@@ -103,7 +103,7 @@ const convertToFormData = (companyData: CompanyQuery_company): FormSchema => {
     return {
         name: companyData.name,
         website: companyData.website ?? '',
-        contacts: companyData.contacts ?? [],
+        contacts: companyData.Contacts ?? [],
         rating: companyData.rating,
         notes: companyData.notes,
     };
@@ -296,9 +296,9 @@ const ViewCompanyModal: React.FC<Props> = ({ isOpen, onClose, company }) => {
                                         existingFile={
                                             hasFormBeenUpdated
                                                 ? undefined
-                                                : company?.image && {
-                                                      name: company?.image.fileName,
-                                                      url: company?.image.cloudfrontUrl,
+                                                : company?.Image && {
+                                                      name: company?.Image.fileName,
+                                                      url: company?.Image.cloudfrontUrl,
                                                   }
                                         }
                                         isImage

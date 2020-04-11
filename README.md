@@ -3,8 +3,8 @@
 Monorepo for Tech Job Hunt services. It includes:
 
 - Apollo GraphQL API
-- Prisma 1 server
-- NextJS web app
+- Prisma 2
+- Next.js web app
 - Lambda functions for image resizing
 - S3 Bucket + CloudFront CDN described in CloudFormation template
 

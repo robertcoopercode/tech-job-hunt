@@ -23,6 +23,7 @@ export enum QueryParamKeys {
     ADD_RESUME = 'addResume',
     PAGE = 'page',
     ORDER_BY = 'orderBy',
+    DIRECTION = 'direction',
     PAGE_SIZE = 'pageSize',
     COMPANY_NAME = 'name',
     SELECTED_COMPANY_ID = 'selectedCompany',

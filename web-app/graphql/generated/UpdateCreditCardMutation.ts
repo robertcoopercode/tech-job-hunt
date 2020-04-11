@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CardUpdateWithoutBillingInfoDataInput } from "./graphql-global-types";
+import { CardUpdateInput } from "./graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: UpdateCreditCardMutation
@@ -19,5 +19,5 @@ export interface UpdateCreditCardMutation {
 }
 
 export interface UpdateCreditCardMutationVariables {
-  card: CardUpdateWithoutBillingInfoDataInput;
+  card: CardUpdateInput;
 }

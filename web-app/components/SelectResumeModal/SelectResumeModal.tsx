@@ -88,12 +88,12 @@ const SelectResumeModal: React.FC<Props> = ({
     };
 
     const resumeOptions =
-        suggestedResumes?.me?.resumes?.map(
+        suggestedResumes?.resumes.nodes.map(
             (resume): ResumeOption => ({
                 name: resume.name,
                 id: resume.id,
                 versions:
-                    resume.versions?.map(
+                    resume.Versions?.map(
                         (v): Version => ({
                             id: v.id,
                             url: v.cloudfrontUrl,

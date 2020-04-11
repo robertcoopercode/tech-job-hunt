@@ -9,33 +9,33 @@ import { ApplicationStatus, JobDecision } from "./graphql-global-types";
 // GraphQL query operation: JobApplicationQuery
 // ====================================================
 
-export interface JobApplicationQuery_jobApplication_company_image {
+export interface JobApplicationQuery_jobApplication_Company_Image {
   __typename: "AwsFileData";
   cloudfrontUrl: string;
   fileName: string;
 }
 
-export interface JobApplicationQuery_jobApplication_company {
+export interface JobApplicationQuery_jobApplication_Company {
   __typename: "Company";
   name: string;
   id: string;
-  image: JobApplicationQuery_jobApplication_company_image | null;
+  Image: JobApplicationQuery_jobApplication_Company_Image | null;
 }
 
-export interface JobApplicationQuery_jobApplication_location {
+export interface JobApplicationQuery_jobApplication_Location {
   __typename: "GoogleMapsLocation";
   googlePlacesId: string;
   id: string;
   name: string;
 }
 
-export interface JobApplicationQuery_jobApplication_coverLetterFile {
+export interface JobApplicationQuery_jobApplication_CoverLetterFile {
   __typename: "AwsFileData";
   cloudfrontUrl: string;
   fileName: string;
 }
 
-export interface JobApplicationQuery_jobApplication_contacts {
+export interface JobApplicationQuery_jobApplication_Contacts {
   __typename: "JobApplicationContact";
   id: string;
   name: string;
@@ -46,45 +46,50 @@ export interface JobApplicationQuery_jobApplication_contacts {
   order: number;
 }
 
-export interface JobApplicationQuery_jobApplication_resume_resume_versions {
+export interface JobApplicationQuery_jobApplication_Resume_Resume_Versions {
   __typename: "AwsFileData";
   id: string;
   cloudfrontUrl: string;
   createdAt: any;
 }
 
-export interface JobApplicationQuery_jobApplication_resume_resume {
+export interface JobApplicationQuery_jobApplication_Resume_Resume {
   __typename: "Resume";
   id: string;
   name: string;
-  versions: JobApplicationQuery_jobApplication_resume_resume_versions[] | null;
+  Versions: JobApplicationQuery_jobApplication_Resume_Resume_Versions[];
 }
 
-export interface JobApplicationQuery_jobApplication_resume {
+export interface JobApplicationQuery_jobApplication_Resume {
   __typename: "JobApplicationResume";
   id: string;
-  resume: JobApplicationQuery_jobApplication_resume_resume | null;
+  Resume: JobApplicationQuery_jobApplication_Resume_Resume | null;
   selectedVersionId: string;
+}
+
+export interface JobApplicationQuery_jobApplication_JobApplication_dateInterviewing {
+  __typename: "JobApplication_dateInterviewing";
+  value: any;
 }
 
 export interface JobApplicationQuery_jobApplication {
   __typename: "JobApplication";
   id: string;
-  company: JobApplicationQuery_jobApplication_company;
+  Company: JobApplicationQuery_jobApplication_Company | null;
   position: string;
-  location: JobApplicationQuery_jobApplication_location | null;
+  Location: JobApplicationQuery_jobApplication_Location | null;
   rating: number | null;
   jobListingLink: string | null;
   jobListingNotes: string | null;
-  coverLetterFile: JobApplicationQuery_jobApplication_coverLetterFile | null;
-  contacts: JobApplicationQuery_jobApplication_contacts[] | null;
-  resume: JobApplicationQuery_jobApplication_resume | null;
+  CoverLetterFile: JobApplicationQuery_jobApplication_CoverLetterFile | null;
+  Contacts: JobApplicationQuery_jobApplication_Contacts[];
+  Resume: JobApplicationQuery_jobApplication_Resume | null;
   isApplicationActive: boolean;
   applicationStatus: ApplicationStatus;
   createdAt: any;
   dateApplied: any | null;
   dateDecided: any | null;
-  dateInterviewing: any[];
+  JobApplication_dateInterviewing: JobApplicationQuery_jobApplication_JobApplication_dateInterviewing[];
   dateOffered: any | null;
   isRemote: boolean;
   notes: string | null;
@@ -92,7 +97,7 @@ export interface JobApplicationQuery_jobApplication {
 }
 
 export interface JobApplicationQuery {
-  jobApplication: JobApplicationQuery_jobApplication | null;
+  jobApplication: JobApplicationQuery_jobApplication;
 }
 
 export interface JobApplicationQueryVariables {

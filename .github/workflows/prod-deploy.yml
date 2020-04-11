@@ -4,30 +4,9 @@ on:
       - v*
 
 jobs:
-  prisma-updated:
-    runs-on: ubuntu-latest
-    name: Verify prisma prod server is up-to-date
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install dependencies
-        run: yarn
-        working-directory: ./api
-      - name: Verify prisma prod server is up-to-date
-        run: yarn prisma:deploy --dry-run --skip-hooks > output.txt
-        working-directory: ./api
-        env:
-          PRISMA_MANAGEMENT_API_SECRET: ${{ secrets.PROD_PRISMA_MANAGEMENT_API_SECRET }}
-          PRISMA_ENDPOINT: ${{ secrets.PROD_PRISMA_ENDPOINT }}
-          PRISMA_SECRET: ${{ secrets.PROD_PRISMA_SECRET }}
-      - name: Verify the prisma prod server is up-to-date
-        run: cat output.txt| grep "There are no changes."
-        working-directory: ./api
   publish-backend:
     runs-on: ubuntu-latest
     name: Publish back-end image to prod
-    needs:
-      - prisma-updated
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -46,9 +25,6 @@ jobs:
           COMMON_BACKEND_URL: ${{ secrets.PROD_COMMON_BACKEND_URL }}
           COMMON_STRIPE_YEARLY_PLAN_ID: ${{ secrets.PROD_COMMON_STRIPE_YEARLY_PLAN_ID }}
           COMMON_STRIPE_MONTHLY_PLAN_ID: ${{ secrets.PROD_COMMON_STRIPE_MONTHLY_PLAN_ID }}
-          PRISMA_ENDPOINT: ${{ secrets.PROD_PRISMA_ENDPOINT }}
-          PRISMA_SECRET: ${{ secrets.PROD_PRISMA_SECRET }}
-          PRISMA_MANAGEMENT_API_SECRET: ${{ secrets.PROD_PRISMA_MANAGEMENT_API_SECRET }}
           API_AWS_ACCESS_KEY_ID: ${{ secrets.PROD_API_AWS_ACCESS_KEY_ID }}
           API_AWS_ACCESS_KEY: ${{ secrets.PROD_API_AWS_ACCESS_KEY }}
           API_AWS_BUCKET_NAME: ${{ secrets.PROD_API_AWS_BUCKET_NAME }}

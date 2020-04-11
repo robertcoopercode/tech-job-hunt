@@ -8,21 +8,22 @@ import { customTheme, typography, mediaQueries } from '../../utils/styles/theme'
 import { JobApplicationsQuery } from '../../graphql/generated/JobApplicationsQuery';
 import { PaginationQuery } from '../../utils/hooks/usePaginationQuery';
 import {
-    JobApplicationOrderByInput,
-    CompanyOrderByInput,
-    ResumeOrderByInput,
+    QueryCompaniesOrderByInput,
+    QueryJobApplicationsOrderByInput,
+    QueryResumesOrderByInput,
+    OrderByArg,
 } from '../../graphql/generated/graphql-global-types';
 import { CompaniesQuery } from '../../graphql/generated/CompaniesQuery';
 import { ResumesQuery } from '../../graphql/generated/ResumesQuery';
 import { pageSizes } from '../../utils/constants';
 import Pagination from './Pagination';
 
-export enum SortDirection {
-    Ascending = 'ascending',
-    Descending = 'descending',
-}
+export type TableOrderBy = QueryCompaniesOrderByInput | QueryJobApplicationsOrderByInput | QueryResumesOrderByInput;
 
-export type TableOrderBy = CompanyOrderByInput | JobApplicationOrderByInput | ResumeOrderByInput;
+// Converts a union type to an intersectino type: https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+
+export type OrderByQueryParamKeys = keyof UnionToIntersection<TableOrderBy>;
 
 export type ApolloQueries = CompaniesQuery | JobApplicationsQuery | ResumesQuery;
 
@@ -139,34 +140,25 @@ function getColumnSizes<T extends TableOrderBy>(columns: Column[]): string {
     }, '');
 }
 
-export function getSortDetails({
-    columnAscendingKey,
-    columnDescendingKey,
+function getSortDetails({
+    orderBy,
     currentOrderBy,
+    currentDirection,
     setQuery,
 }: {
-    columnAscendingKey?: TableOrderBy;
-    columnDescendingKey?: TableOrderBy;
-    currentOrderBy?: TableOrderBy;
-    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery<TableOrderBy>>) => void;
+    orderBy: OrderByQueryParamKeys | undefined;
+    currentOrderBy: OrderByQueryParamKeys;
+    currentDirection: OrderByArg;
+    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery>) => void;
 }): {
-    sortDirection?: SortDirection;
     toggleSort: () => void;
 } {
-    let sortDirection;
-    // Default to an order of descending when clicking on a table sort column
-    let toggledSortValue = columnDescendingKey;
-    if (currentOrderBy !== undefined) {
-        if (columnAscendingKey === currentOrderBy) {
-            sortDirection = SortDirection.Ascending;
-        } else if (columnDescendingKey === currentOrderBy) {
-            sortDirection = SortDirection.Descending;
-            toggledSortValue = columnAscendingKey;
-        }
+    let direction = OrderByArg.desc;
+    if (orderBy === currentOrderBy) {
+        direction = currentDirection === OrderByArg.desc ? OrderByArg.asc : OrderByArg.desc;
     }
     return {
-        sortDirection,
-        toggleSort: (): void => setQuery({ orderBy: toggledSortValue }),
+        toggleSort: (): void => setQuery({ orderBy, direction }),
     };
 }
 
@@ -196,33 +188,36 @@ const ConditionalWrapper: React.FC<{ condition: boolean; wrapper: (children: Rea
 }) => <>{condition ? wrapper(children) : children}</>;
 
 type TableHeadingProps = {
+    /** Used to disable the sorting on the table for the dashboard page where there are multiple tables on the same page */
     isPreview: boolean;
-    currentOrder: TableOrderBy;
-    order: Column['order'];
-    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery<TableOrderBy>>) => void;
+    orderBy?: OrderByQueryParamKeys;
+    currentOrderBy: OrderByQueryParamKeys;
+    currentDirection: OrderByArg;
+    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery>) => void;
     children: React.ReactNode;
 };
 
-export function TableHeading({ children, order, currentOrder, setQuery, isPreview }: TableHeadingProps): JSX.Element {
-    let SortIcon;
+export function TableHeading({
+    children,
+    setQuery,
+    isPreview,
+    orderBy,
+    currentOrderBy,
+    currentDirection,
+}: TableHeadingProps): JSX.Element {
+    const SortIcon = currentDirection === OrderByArg.desc ? MdArrowDownward : MdArrowUpward;
 
-    const { sortDirection, toggleSort } = getSortDetails({
-        columnAscendingKey: order?.columnAscendingKey,
-        columnDescendingKey: order?.columnDescendingKey,
-        currentOrderBy: currentOrder,
+    const { toggleSort } = getSortDetails({
+        orderBy,
+        currentOrderBy,
+        currentDirection,
         setQuery,
     });
 
-    if (sortDirection === SortDirection.Descending) {
-        SortIcon = MdArrowDownward;
-    }
-    if (sortDirection === SortDirection.Ascending) {
-        SortIcon = MdArrowUpward;
-    }
     return (
         <StyledTableHeading>
             <ConditionalWrapper
-                condition={Boolean(order) && !isPreview}
+                condition={orderBy !== undefined && !isPreview}
                 wrapper={(childElements: React.ReactNode): JSX.Element => (
                     <ButtonHeading onClick={toggleSort} variant="unstyled">
                         {childElements}
@@ -230,7 +225,7 @@ export function TableHeading({ children, order, currentOrder, setQuery, isPrevie
                 )}
             >
                 {children}
-                {SortIcon && <SortIcon />}
+                {currentOrderBy === orderBy && <SortIcon />}
             </ConditionalWrapper>
         </StyledTableHeading>
     );
@@ -242,12 +237,8 @@ export type Column = {
     /** The CSS grid fraction used to determine the columns size in proportion to other columns */
     columnSizeFraction?: number;
     minWidth?: string;
-    order?: {
-        columnAscendingKey: TableOrderBy;
-        columnDescendingKey: TableOrderBy;
-    };
-    sortDirection?: SortDirection;
-    toggleSort?: () => void;
+    // The orderBy key used to determine if the column is the actively sorted column
+    orderBy?: OrderByQueryParamKeys;
 };
 
 type TableProps = {
@@ -257,9 +248,10 @@ type TableProps = {
     pageSize: number;
     page: number;
     totalNumberOfResults: number;
-    orderBy: TableOrderBy;
+    orderBy: OrderByQueryParamKeys;
+    direction: OrderByArg;
     refetch: (variables?: any | undefined) => Promise<ApolloQueryResult<ApolloQueries>>;
-    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery<TableOrderBy>>) => void;
+    setQuery: ({ page, pageSize, orderBy }: Partial<PaginationQuery>) => void;
 };
 
 function Table({
@@ -272,6 +264,7 @@ function Table({
     setQuery,
     refetch,
     orderBy,
+    direction,
 }: TableProps): JSX.Element {
     const startingItemNumber = totalNumberOfResults > 0 ? pageSize * (page - 1) + 1 : 0;
     let endingItemNumber = pageSize * (page - 1) + (rows?.length ?? 0);
@@ -282,11 +275,12 @@ function Table({
             <StyledTable>
                 <StyledHead>
                     <StyledHeadRow style={{ gridTemplateColumns: getColumnSizes(columns) }}>
-                        {columns.map(({ text, isLabelHidden = false, order }, index) => (
+                        {columns.map(({ text, isLabelHidden = false, orderBy: columnOrderBy }, index) => (
                             <TableHeading
                                 key={index}
-                                order={order}
-                                currentOrder={orderBy}
+                                orderBy={columnOrderBy}
+                                currentOrderBy={orderBy}
+                                currentDirection={direction}
                                 setQuery={setQuery}
                                 isPreview={isPreview}
                             >
@@ -312,7 +306,7 @@ function Table({
                             size="sm"
                             width="100px"
                         >
-                            {Object.values(pageSizes).map(size => (
+                            {Object.values(pageSizes).map((size) => (
                                 <option key={size} value={size}>
                                     {size}
                                 </option>

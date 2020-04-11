@@ -3,55 +3,43 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CompanyOrderByInput } from "./graphql-global-types";
+import { QueryCompaniesOrderByInput } from "./graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: CompaniesQuery
 // ====================================================
 
-export interface CompaniesQuery_companiesConnection_edges_node_image {
+export interface CompaniesQuery_companies_nodes_Image {
   __typename: "AwsFileData";
   cloudfrontUrl: string;
   Key: string;
 }
 
-export interface CompaniesQuery_companiesConnection_edges_node {
+export interface CompaniesQuery_companies_nodes {
   __typename: "Company";
   id: string;
   name: string;
   rating: number | null;
-  image: CompaniesQuery_companiesConnection_edges_node_image | null;
+  Image: CompaniesQuery_companies_nodes_Image | null;
   jobApplicationsCount: number;
   updatedAt: any;
 }
 
-export interface CompaniesQuery_companiesConnection_edges {
-  __typename: "CompanyEdge";
-  node: CompaniesQuery_companiesConnection_edges_node;
-}
-
-export interface CompaniesQuery_companiesConnection {
-  __typename: "CompanyConnection";
-  edges: CompaniesQuery_companiesConnection_edges[];
-}
-
-export interface CompaniesQuery_companiesTotal_aggregate {
-  __typename: "AggregateCompany";
-  count: number;
-}
-
-export interface CompaniesQuery_companiesTotal {
-  __typename: "CompanyConnection";
-  aggregate: CompaniesQuery_companiesTotal_aggregate;
+export interface CompaniesQuery_companies {
+  __typename: "QueryCompanies_Connection";
+  /**
+   * Flattened list of Company type
+   */
+  nodes: CompaniesQuery_companies_nodes[];
+  totalCount: number;
 }
 
 export interface CompaniesQuery {
-  companiesConnection: CompaniesQuery_companiesConnection;
-  companiesTotal: CompaniesQuery_companiesTotal;
+  companies: CompaniesQuery_companies;
 }
 
 export interface CompaniesQueryVariables {
-  orderBy?: CompanyOrderByInput | null;
+  orderBy?: QueryCompaniesOrderByInput | null;
   first?: number | null;
   skip?: number | null;
 }

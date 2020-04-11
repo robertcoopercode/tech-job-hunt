@@ -7,16 +7,11 @@
 // GraphQL query operation: JobApplicationsCountQuery
 // ====================================================
 
-export interface JobApplicationsCountQuery_jobApplicationsConnection_aggregate {
-  __typename: "AggregateJobApplication";
-  count: number;
-}
-
-export interface JobApplicationsCountQuery_jobApplicationsConnection {
-  __typename: "JobApplicationConnection";
-  aggregate: JobApplicationsCountQuery_jobApplicationsConnection_aggregate;
+export interface JobApplicationsCountQuery_jobApplications {
+  __typename: "QueryJobApplications_Connection";
+  totalCount: number;
 }
 
 export interface JobApplicationsCountQuery {
-  jobApplicationsConnection: JobApplicationsCountQuery_jobApplicationsConnection;
+  jobApplications: JobApplicationsCountQuery_jobApplications;
 }

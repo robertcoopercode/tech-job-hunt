@@ -51,7 +51,7 @@ export const convertToOption = (company: {
     name: string;
     id: string;
     image?: { cloudfrontUrl: string } | null;
-}): { name: string; id: string; imageUrl: string | undefined } => ({
+}): DropdownSearchOption => ({
     name: company.name,
     id: company.id,
     imageUrl: company.image?.cloudfrontUrl,
@@ -165,15 +165,13 @@ const AddJobModalContents: React.FC<Props> = ({ onClose, isOpen }) => {
     };
 
     const companyOptions: DropdownSearchOption[] =
-        suggestedCompanies && suggestedCompanies.me && suggestedCompanies.me.companies
-            ? suggestedCompanies.me.companies.map(company => convertToOption(company))
-            : [];
+        suggestedCompanies?.companies.nodes.map((company): DropdownSearchOption => convertToOption(company)) ?? [];
 
-    const isFreeUser = !currentUserData?.me?.billing?.isPremiumActive;
+    const isFreeUser = !currentUserData?.me?.Billing?.isPremiumActive;
     const hasReachedFreeTierLimit =
         isFreeUser &&
-        jobApplicationsCount?.jobApplicationsConnection.aggregate.count !== undefined &&
-        jobApplicationsCount?.jobApplicationsConnection.aggregate.count >= freeTierJobLimit;
+        jobApplicationsCount?.jobApplications.totalCount !== undefined &&
+        jobApplicationsCount?.jobApplications.totalCount >= freeTierJobLimit;
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Add job" size="md">

@@ -8,9 +8,6 @@ services:
         - COMMON_BACKEND_URL=${COMMON_BACKEND_URL}
         - COMMON_STRIPE_YEARLY_PLAN_ID=${COMMON_STRIPE_YEARLY_PLAN_ID}
         - COMMON_STRIPE_MONTHLY_PLAN_ID=${COMMON_STRIPE_MONTHLY_PLAN_ID}
-        - PRISMA_ENDPOINT=${PRISMA_ENDPOINT}
-        - PRISMA_SECRET=${PRISMA_SECRET}
-        - PRISMA_MANAGEMENT_API_SECRET=${PRISMA_MANAGEMENT_API_SECRET}
         - API_AWS_ACCESS_KEY_ID=${API_AWS_ACCESS_KEY_ID}
         - API_AWS_ACCESS_KEY=${API_AWS_ACCESS_KEY}
         - API_AWS_BUCKET_NAME=${API_AWS_BUCKET_NAME}
@@ -29,28 +26,6 @@ services:
       - '4000:4000'
     volumes:
       - ./api/src/:/usr/src/app/src/
-  prisma:
-    depends_on:
-      - db
-      - s3
-    build:
-      context: ./prisma
-      args:
-        PRISMA_CONFIG: |
-          managementApiSecret: ${PRISMA_MANAGEMENT_API_SECRET}
-          port: 4466
-          databases:
-            default:
-              connector: mysql
-              migrations: true
-              host: ${PRISMA_DB_HOST}
-              port: 3306
-              user: root
-              password: ${PRISMA_DB_PASSWORD}
-    image: tech-job-hunt/prisma
-    ports:
-      - '4466:4466'
-    restart: always
   db:
     image: mysql:5.7
     restart: always
