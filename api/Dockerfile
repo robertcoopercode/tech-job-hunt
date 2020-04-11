@@ -1,5 +1,18 @@
 FROM node:12.16.1-alpine3.11
 
+# Need to install glib for Prisma 2: https://github.com/prisma/prisma/issues/702#issuecomment-569778198
+ENV GLIBC_VERSION 2.30-r0
+# Download and install glibc
+RUN apk add --update curl && \
+  curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+  curl -Lo glibc.apk "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk" && \
+  curl -Lo glibc-bin.apk "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk" && \
+  apk add glibc-bin.apk glibc.apk && \
+  /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib && \
+  echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf && \
+  apk del curl && \
+  rm -rf glibc.apk glibc-bin.apk /var/cache/apk/*
+
 RUN apk add --no-cache python make g++
 
 ARG API_AWS_ACCESS_KEY_ID
@@ -21,6 +34,7 @@ ARG COMMON_STRIPE_MONTHLY_PLAN_ID
 ARG API_STRIPE_WEBHOOK_SECRET
 ARG API_CLOUDFRONT_DOMAIN
 ARG API_AMPLITUDE_API_KEY
+ARG API_DATABASE_URL
 
 EXPOSE $API_PORT
 
@@ -41,16 +55,16 @@ ENV COMMON_STRIPE_MONTHLY_PLAN_ID $COMMON_STRIPE_MONTHLY_PLAN_ID
 ENV API_STRIPE_WEBHOOK_SECRET $API_STRIPE_WEBHOOK_SECRET
 ENV API_CLOUDFRONT_DOMAIN $API_CLOUDFRONT_DOMAIN
 ENV API_AMPLITUDE_API_KEY $API_AMPLITUDE_API_KEY
+ENV API_DATABASE_URL $API_DATABASE_URL
 
 # Setup working directory. All the paths will be relative to WORKDIR
 WORKDIR /usr/src/app
 
-# Install dependencies
-COPY package.json yarn.lock ./
-RUN yarn
-
 # Copy all source files into docker container
 COPY . .
+
+# Install dependencies and generate prisma client
+RUN yarn
 
 # Run the app
 CMD [ "yarn", "start" ]
