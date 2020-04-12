@@ -20,6 +20,7 @@ services:
         - API_STRIPE_WEBHOOK_SECRET=${API_STRIPE_WEBHOOK_SECRET}
         - API_CLOUDFRONT_DOMAIN=${API_CLOUDFRONT_DOMAIN}
         - API_AMPLITUDE_API_KEY=${API_AMPLITUDE_API_KEY}
+        - API_DATABASE_URL=${API_DATABASE_URL}
     image: tech-job-hunt/api
     container_name: tech-job-hunt-api
     ports:
