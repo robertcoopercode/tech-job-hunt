@@ -1861,9 +1861,9 @@ type Mutation {
   signup(confirmPassword: String, email: String, password: String): User!
   updateCompany(contacts: [CompanyContactCreateWithoutCompanyInput!]!, file: Upload, id: ID!, isCompanyImageUpdated: Boolean!, name: String, notes: String, rating: Int, website: String): Company!
   updateCreditCard(card: CardUpdateInput!): User!
-  updateJobApplication(applicationStatus: ApplicationStatus, companyId: ID, contacts: [JobApplicationContactCreateWithoutJobApplicationInput!], coverLetterFile: Upload, dateApplied: DateTime, dateDecided: DateTime, dateInterviewing: [DateTime!], dateOffered: DateTime, id: ID!, isApplicationActive: Boolean, isCoverLetterUpdated: Boolean!, isRemote: Boolean, jobDecision: JobDecision, jobListingLink: String, jobListingNotes: String, location: GoogleMapsLocationUpdateInput, notes: String, position: String, rating: Int, resumeId: String, resumeVersionId: String): JobApplication!
-  updateResume(id: ID, name: String, newFileVersion: Upload): Resume!
-  upgradeUser(card: CardUpdateWithoutBillingInfoDataInput!, email: String, paymentMethodId: String, planId: String): StripeSubscription!
+  updateJobApplication(applicationStatus: ApplicationStatus, companyId: ID, contacts: [JobApplicationContactCreateWithoutJobApplicationInput!]!, coverLetterFile: Upload, dateApplied: DateTime, dateDecided: DateTime, dateInterviewing: [DateTime!], dateOffered: DateTime, id: ID!, isApplicationActive: Boolean, isCoverLetterUpdated: Boolean!, isRemote: Boolean, jobDecision: JobDecision, jobListingLink: String, jobListingNotes: String, location: GoogleMapsLocationUpdateInput, notes: String, position: String, rating: Int, resumeId: String, resumeVersionId: String): JobApplication!
+  updateResume(id: ID!, name: String, newFileVersion: Upload): Resume!
+  upgradeUser(card: CardUpdateWithoutBillingInfoDataInput!, email: String!, paymentMethodId: String!, planId: String!): StripeSubscription!
   verifyEmail(emailToken: String): Boolean!
 }
 

@@ -8,7 +8,7 @@
         "noEmit": true,
         "noFallthroughCasesInSwitch": true,
         "skipLibCheck": true,
-        "strict": false
+        "strict": true
     },
     "exclude": ["node_modules"],
     "include": ["src/typeDefs.ts", "**/*.ts"]

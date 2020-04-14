@@ -27,7 +27,7 @@ export interface UpdateJobApplicationMutationVariables {
   jobListingLink?: string | null;
   jobListingNotes?: string | null;
   isApplicationActive?: boolean | null;
-  contacts?: JobApplicationContactCreateWithoutJobApplicationInput[] | null;
+  contacts: JobApplicationContactCreateWithoutJobApplicationInput[];
   resumeId?: string | null;
   resumeVersionId?: string | null;
   coverLetterFile?: any | null;

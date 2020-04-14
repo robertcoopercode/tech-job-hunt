@@ -3,6 +3,7 @@ import { freeTierJobLimit } from '../../utils/constants';
 import { deleteS3Files } from '../../utils/deleteS3File';
 import { fileUpload } from '../../utils/fileUpload';
 import analytics from '../../utils/analytics';
+import { verifyUserIsAuthenticated } from '../../utils/verifyUserIsAuthenticated';
 
 export const updateJobApplicationMutationField = mutationField('updateJobApplication', {
     type: 'JobApplication',
@@ -30,6 +31,7 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
         contacts: arg({
             type: 'JobApplicationContactCreateWithoutJobApplicationInput',
             list: true,
+            required: true,
         }),
         applicationStatus: arg({ type: 'ApplicationStatus', required: false }),
         dateApplied: arg({
@@ -83,14 +85,15 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
         },
         ctx
     ) => {
-        const { Billing } = await ctx.prisma.user.findOne({
+        verifyUserIsAuthenticated(ctx.user);
+        const user = await ctx.prisma.user.findOne({
             where: { id: ctx.user.id },
             select: { Billing: { select: { isPremiumActive: true } } },
         });
 
-        const isPremium = Billing?.isPremiumActive;
+        const isPremium = user?.Billing?.isPremiumActive;
 
-        if (!isPremium) {
+        if (isPremium !== true) {
             const jobApplications = await ctx.prisma.jobApplication.findMany({
                 where: { User: { id: ctx.user.id } },
             });
@@ -101,25 +104,28 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
         }
 
         // Verify user is associated with the company they are trying to update
-        const { User: jobApplicationUser } = await ctx.prisma.jobApplication.findOne({
+        const jobApplication = await ctx.prisma.jobApplication.findOne({
             where: { id },
-            select: { User: true },
+            select: { User: true, CoverLetterFile: true, Company: { select: { id: true } } },
         });
-        if (jobApplicationUser.id !== ctx.user.id) {
-            throw Error('Job application is not associated with current user');
+        if (jobApplication === null) {
+            throw Error('Job application not found');
+        }
+        if (jobApplication.User === null) {
+            throw Error('User not found');
+        }
+        if (jobApplication.User.id !== ctx.user.id) {
+            throw Error('User not authorized');
         }
 
         // Variable that will hold new cover letter AWS info if there is a new cover letter updated by the user
         let coverLetterAwsFileData;
 
-        const { CoverLetterFile: existingCoverLetter } = await ctx.prisma.jobApplication.findOne({
-            where: { id },
-            select: { CoverLetterFile: true },
-        });
+        const existingCoverLetter = jobApplication.CoverLetterFile;
 
         // If there is already an existing cover letter and it has been updated in the front-end,
         // make sure to delete the existing cover letter from S3 before uploading a new one
-        if (existingCoverLetter && isCoverLetterUpdated) {
+        if (existingCoverLetter !== null && isCoverLetterUpdated) {
             await deleteS3Files({
                 key: existingCoverLetter.Key,
                 versionIds: [existingCoverLetter.VersionId],
@@ -140,13 +146,15 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
             where: { JobApplication: { id } },
         });
         const contactIdsToDelete = currentContacts.reduce((prev: string[], curr) => {
-            if (curr.id && contacts.every((contact) => contact.id !== curr.id)) {
+            if (curr.id && (contacts ?? []).every((contact) => contact.id !== curr.id)) {
                 prev.push(curr.id);
             }
             return prev;
         }, []);
-        const contactsToUpdate = contacts.filter((contact) => currentContacts.some((c) => c.id === contact.id));
-        const contactsToCreate = contacts.filter((contact) => currentContacts.every((c) => c.id !== contact.id));
+        const contactsToUpdate = (contacts ?? []).filter((contact) => currentContacts.some((c) => c.id === contact.id));
+        const contactsToCreate = (contacts ?? []).filter((contact) =>
+            currentContacts.every((c) => c.id !== contact.id)
+        );
 
         let existingLocation;
 
@@ -154,17 +162,24 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
             existingLocation = await ctx.prisma.googleMapsLocation.findOne({ where: { id: location.id } });
         }
 
-        const { name: companyName } = await ctx.prisma.company.findOne({
+        const company = await ctx.prisma.company.findOne({
             where: { id: companyId },
             select: { name: true },
         });
 
-        const {
-            Company: { id: existingCompanyId },
-        } = await ctx.prisma.jobApplication.findOne({
-            where: { id },
-            select: { Company: { select: { id: true } } },
-        });
+        const companyName = company?.name;
+        const existingCompanyId = jobApplication.Company?.id;
+
+        if (companyName === undefined) {
+            throw Error('Company name does not exist');
+        }
+
+        if (existingCompanyId === undefined) {
+            throw Error('Current company associated with the job application does not exist');
+        }
+
+        const googlePlacesId = location?.googlePlacesId;
+        const locationName = location?.name;
 
         const updateJobApplication = await ctx.prisma.jobApplication.update({
             where: {
@@ -174,11 +189,16 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
                 Company: { connect: { id: companyId } },
                 position,
                 Location: {
+                    // TODO: Need to figure out a better way to update a job application's location
                     create:
-                        existingLocation || !location
-                            ? undefined
-                            : { googlePlacesId: location.googlePlacesId, name: location.name },
-                    delete: existingLocation ? location === null : undefined,
+                        existingLocation?.googlePlacesId !== googlePlacesId &&
+                        locationName !== null &&
+                        locationName !== undefined &&
+                        googlePlacesId !== undefined &&
+                        googlePlacesId !== null
+                            ? { googlePlacesId, name: locationName }
+                            : undefined,
+                    delete: existingLocation !== null && existingLocation !== undefined ? location === null : undefined,
                 },
                 locationName: location && location.name,
                 rating,
@@ -189,7 +209,7 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
                 dateApplied,
                 dateDecided,
                 JobApplication_dateInterviewing: {
-                    set: dateInterviewing.filter((date) => date !== ''),
+                    set: (dateInterviewing ?? []).filter((date) => date !== ''),
                 },
                 dateOffered,
                 isRemote,
@@ -219,7 +239,7 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
                         : {}),
                 },
                 Resume: {
-                    ...(resumeId
+                    ...(resumeId && resumeVersionId
                         ? {
                               upsert: {
                                   create: {
@@ -241,7 +261,6 @@ export const updateJobApplicationMutationField = mutationField('updateJobApplica
                               },
                           }
                         : {}),
-                    // disconnect: resumeId === null,
                 },
                 CoverLetterFile: {
                     ...(coverLetterAwsFileData

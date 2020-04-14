@@ -8716,10 +8716,10 @@ normalize.css@^8.0.1:
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
   integrity sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==
 
-now@^17.1.1:
-  version "17.1.1"
-  resolved "https://registry.yarnpkg.com/now/-/now-17.1.1.tgz#5e5fade17c3f9c3b7e3900be3febf7c21c7d6935"
-  integrity sha512-Hmh8eMSt4FxS1YBwaLrdJuzEVm6ZtS4JCY0AZE+JTnTtDGHVaQMUI85FaPvasSIhKLa+7xf6v7lmTgM39VW/8w==
+now@^18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/now/-/now-18.0.0.tgz#e6689205346e354f822b1f5feb2c0d7d570c172f"
+  integrity sha512-MVskFV3xH1hMkpTewPCb3p0SQ17hL7EI1Zb+Ij2wYiRV3X0a6G91GdE2vvFlhsK6rhRHKHZnDQkZ0AnkpnfzHA==
 
 npm-bundled@^1.0.1:
   version "1.0.6"

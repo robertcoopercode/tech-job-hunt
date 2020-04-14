@@ -11,8 +11,8 @@
         "apollo:codegen": "rm -rf graphql/generated/ && yarn run apollo client:codegen --globalTypesFile=graphql/generated/graphql-global-types.ts --target=typescript --outputFlat graphql/generated/",
         "apollo:watch": "yarn apollo:codegen --watch",
         "build": "next build",
-        "deploy:dev": "dotenv -e now.env.dev -- now --prod --local-config ./now.json",
-        "deploy:prod": "dotenv -e now.env.prod -- now --prod --local-config ./now.prod.json",
+        "deploy:dev": "dotenv -e now.env.dev -- now --prod",
+        "deploy:prod": "dotenv -e now.env.prod -- now --prod",
         "ci:deploy:dev": "now --prod --local-config ./now.json",
         "ci:deploy:prod": "now --prod --local-config ./now.prod.json"
     },
@@ -111,7 +111,7 @@
         "jest": "^25.2.6",
         "jest-svg-transformer": "^1.0.0",
         "jest-transform-css": "^2.0.0",
-        "now": "^17.1.1",
+        "now": "^18.0.0",
         "typescript": "^3.8.3"
     },
     "resolutions": {

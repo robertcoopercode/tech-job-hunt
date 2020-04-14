@@ -1970,7 +1970,7 @@ type Mutation {
   updateJobApplication(
     applicationStatus: ApplicationStatus
     companyId: ID
-    contacts: [JobApplicationContactCreateWithoutJobApplicationInput!]
+    contacts: [JobApplicationContactCreateWithoutJobApplicationInput!]!
     coverLetterFile: Upload
     dateApplied: DateTime
     dateDecided: DateTime
@@ -1990,12 +1990,12 @@ type Mutation {
     resumeId: String
     resumeVersionId: String
   ): JobApplication!
-  updateResume(id: ID, name: String, newFileVersion: Upload): Resume!
+  updateResume(id: ID!, name: String, newFileVersion: Upload): Resume!
   upgradeUser(
     card: CardUpdateWithoutBillingInfoDataInput!
-    email: String
-    paymentMethodId: String
-    planId: String
+    email: String!
+    paymentMethodId: String!
+    planId: String!
   ): StripeSubscription!
   verifyEmail(emailToken: String): Boolean!
 }
