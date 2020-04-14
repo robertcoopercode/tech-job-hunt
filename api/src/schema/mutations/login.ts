@@ -3,10 +3,11 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { cookieDuration } from '../../utils/constants';
 import analytics from '../../utils/analytics';
+import { verifyEnvironmentVariables } from '../../utils/verifyEnvironmentVariables';
 
 export const loginMutationField = mutationField('login', {
     type: 'User',
-    args: { email: stringArg(), password: stringArg() },
+    args: { email: stringArg({ required: true }), password: stringArg({ required: true }) },
     resolve: async (_, { email, password }, ctx) => {
         email = email.toLowerCase();
         const user = await ctx.prisma.user.findOne({ where: { email } });
@@ -21,7 +22,7 @@ export const loginMutationField = mutationField('login', {
         if (!isValid) {
             throw new Error('Invalid Password!');
         }
-
+        verifyEnvironmentVariables(process.env.API_APP_SECRET, 'API_APP_SECRET');
         const token = jwt.sign({ userId: user.id }, process.env.API_APP_SECRET);
 
         ctx.response.cookie('token', token, {

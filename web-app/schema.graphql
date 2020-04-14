@@ -1256,6 +1256,33 @@ input JobApplicationContactWhereUniqueInput {
   id: String
 }
 
+input JobApplicationCreateInput {
+  applicationStatus: ApplicationStatus
+  Company: CompanyCreateOneWithoutJobApplicationInput
+  companyName: String!
+  Contacts: JobApplicationContactCreateManyWithoutJobApplicationInput
+  CoverLetterFile: AwsFileDataCreateOneWithoutJobApplicationInput
+  createdAt: DateTime
+  dateApplied: DateTime
+  dateDecided: DateTime
+  dateOffered: DateTime
+  id: String
+  isApplicationActive: Boolean
+  isRemote: Boolean!
+  JobApplication_dateInterviewing: JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput
+  jobDecision: JobDecision
+  jobListingLink: String
+  jobListingNotes: String
+  Location: GoogleMapsLocationCreateOneWithoutJobApplicationInput
+  locationName: String
+  notes: String
+  position: String!
+  rating: Int
+  Resume: JobApplicationResumeCreateOneWithoutJobApplicationInput
+  updatedAt: DateTime
+  User: UserCreateOneWithoutJobApplicationInput
+}
+
 input JobApplicationCreateManyWithoutCompanyInput {
   connect: [JobApplicationWhereUniqueInput!]
   create: [JobApplicationCreateWithoutCompanyInput!]
@@ -1430,6 +1457,10 @@ input JobApplicationFilter {
 }
 
 input JobApplicationOrderByInput {
+  applicationStatus: OrderByArg
+  companyName: OrderByArg
+  locationName: OrderByArg
+  position: OrderByArg
   updatedAt: OrderByArg
 }
 
@@ -1904,35 +1935,29 @@ enum JobDecision {
 }
 
 type Mutation {
-  _createOneGoogleMapsLocation(data: GoogleMapsLocationCreateInput!): GoogleMapsLocation!
-  _updateOneCard(data: CardUpdateInput!, where: CardWhereUniqueInput!): Card
-  _updateOneGoogleMapsLocation(
-    data: GoogleMapsLocationUpdateInput!
-    where: GoogleMapsLocationWhereUniqueInput!
-  ): GoogleMapsLocation
   cancelSubscription: User!
   checkSubscriptionPaymentHasSucceeded: Boolean!
   completeOnboarding: Boolean!
-  createCompany(file: Upload, name: String): Company!
+  createCompany(file: Upload, name: String!): Company!
   createJobApplication(
-    companyId: ID
-    isRemote: Boolean
+    companyId: ID!
+    isRemote: Boolean!
     location: GoogleMapsLocationUpdateInput
-    position: String
+    position: String!
   ): JobApplication!
-  createResume(file: Upload, name: String): Resume!
+  createResume(file: Upload, name: String!): Resume!
   deleteAccount: User!
-  deleteCompany(id: ID): Company!
-  deleteJobApplication(jobId: ID): JobApplication!
-  deleteResume(id: ID): Resume!
-  login(email: String, password: String): User!
+  deleteCompany(id: ID!): Company!
+  deleteJobApplication(jobId: ID!): JobApplication!
+  deleteResume(id: ID!): Resume!
+  login(email: String!, password: String!): User!
   logout: Boolean!
   requestPasswordReset(email: String): Boolean!
   requestVerifyEmail: Boolean!
   resetPassword(confirmPassword: String, password: String, resetToken: String): User!
   signup(confirmPassword: String, email: String, password: String): User!
   updateCompany(
-    contacts: [CompanyContactCreateWithoutCompanyInput!]
+    contacts: [CompanyContactCreateWithoutCompanyInput!]!
     file: Upload
     id: ID!
     isCompanyImageUpdated: Boolean!
@@ -2058,30 +2083,6 @@ type PageInfo {
 }
 
 type Query {
-  _companies(
-    after: CompanyWhereUniqueInput
-    before: CompanyWhereUniqueInput
-    first: Int
-    last: Int
-    orderBy: QueryCompaniesOrderByInput
-    skip: Int
-  ): [Company!]!
-  _jobApplications(
-    after: JobApplicationWhereUniqueInput
-    before: JobApplicationWhereUniqueInput
-    first: Int
-    last: Int
-    orderBy: QueryJobApplicationsOrderByInput
-    skip: Int
-  ): [JobApplication!]!
-  _resumes(
-    after: ResumeWhereUniqueInput
-    before: ResumeWhereUniqueInput
-    first: Int
-    last: Int
-    orderBy: QueryResumesOrderByInput
-    skip: Int
-  ): [Resume!]!
   companies(
     """
     Returns the elements in the list that come after the specified cursor

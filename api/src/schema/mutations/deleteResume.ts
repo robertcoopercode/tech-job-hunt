@@ -1,30 +1,31 @@
 import { mutationField, idArg } from '@nexus/schema';
 import { deleteS3Files } from '../../utils/deleteS3File';
 import analytics from '../../utils/analytics';
+import { verifyUserIsAuthenticated } from '../../utils/verifyUserIsAuthenticated';
 
 export const deleteResumeMutationField = mutationField('deleteResume', {
     type: 'Resume',
     args: {
-        id: idArg(),
+        id: idArg({ required: true }),
     },
     resolve: async (_, { id }, ctx) => {
-        if (!ctx.user.id) {
-            return;
+        verifyUserIsAuthenticated(ctx.user);
+        const resume = await ctx.prisma.resume.findOne({ where: { id }, select: { User: true, Versions: true } });
+        if (resume === null) {
+            throw Error('Resume not found');
         }
-        const { User: resumeUser } = await ctx.prisma.resume.findOne({ where: { id }, select: { User: true } });
-        if (resumeUser.id !== ctx.user.id) {
-            return;
+        if (resume.User === null) {
+            throw Error('User not found');
         }
-        const { Versions: awsFileVersions } = await ctx.prisma.resume.findOne({
-            where: { id },
-            select: { Versions: true },
-        });
+        if (resume.User.id !== ctx.user.id) {
+            throw Error('User not authorized');
+        }
         const deletedResume = await ctx.prisma.resume.delete({ where: { id } });
 
         // Delete file from S3
         await deleteS3Files({
-            key: awsFileVersions[0].Key,
-            versionIds: awsFileVersions.map(resume => resume.VersionId),
+            key: resume.Versions[0].Key,
+            versionIds: resume.Versions.map((resume) => resume.VersionId),
         });
 
         analytics.track({

@@ -62,7 +62,7 @@ export type Context = {
 };
 
 export const createContext = async ({ request, response }: ContextParameters): Promise<Context> => {
-    let user: PrismaClientUser = null;
+    let user: PrismaClientUser | null = null;
     // If user isn't logged in, keep user as null
     if (request.userId) {
         user = await prisma.user.findOne({ where: { id: request.userId } });

@@ -134,9 +134,11 @@ export const ErrorMessage = styled.span`
     margin-top: 0.5rem;
 `;
 
-export const FormInputLabel: React.FC<Pick<Props, 'label' | 'id' | 'helpText' | 'isRequired' | 'isTextEditor'> & {
-    onClick?: () => void;
-}> = ({ label, helpText, id, isRequired, isTextEditor, onClick }) => (
+export const FormInputLabel: React.FC<
+    Pick<Props, 'label' | 'id' | 'helpText' | 'isRequired' | 'isTextEditor'> & {
+        onClick?: () => void;
+    }
+> = ({ label, helpText, id, isRequired, isTextEditor, onClick }) => (
     <LabelWrapper>
         <StyledFormInputLabel
             htmlFor={id}
@@ -193,7 +195,7 @@ export const FormInput: React.FC<Partial<InputHTMLAttributes<HTMLInputElement> &
     </InputWrapper>
 );
 
-const InputField: React.FC<Props> = props => {
+const InputField: React.FC<Props> = (props) => {
     const { label, className, helpText, id, isRequired, error, isTextEditor } = props;
 
     const renderTextInput = (): JSX.Element => {

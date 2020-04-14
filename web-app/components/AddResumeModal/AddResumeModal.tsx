@@ -36,9 +36,7 @@ const initialFormikValues: FormSchema = { name: '', resume: null };
 
 const formSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    resume: Yup.mixed()
-        .nullable()
-        .required('Resume file is required'), // Note, we can use the .test() method for custom validation of the file: https://github.com/
+    resume: Yup.mixed().nullable().required('Resume file is required'), // Note, we can use the .test() method for custom validation of the file: https://github.com/
 });
 
 type FormSchema = Yup.InferType<typeof formSchema>;
@@ -58,7 +56,7 @@ const AddResumeModal: React.FC<AddResumeModalProps> = ({ onClose, isOpen, onComp
                 position: 'top',
             });
         },
-        onCompleted: data => {
+        onCompleted: (data) => {
             client.resetStore();
             onCompleted(data);
         },

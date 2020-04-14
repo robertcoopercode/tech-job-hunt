@@ -80,9 +80,7 @@ const formSchema = Yup.object().shape({
             id: Yup.string().required(),
             name: Yup.string().required('Name is required'),
             position: Yup.string().nullable(),
-            email: Yup.string()
-                .email('Invalid email')
-                .nullable(),
+            email: Yup.string().email('Invalid email').nullable(),
             phone: Yup.string().nullable(),
             notes: Yup.string().nullable(),
             order: Yup.number().required(),

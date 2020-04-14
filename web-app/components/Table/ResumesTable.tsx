@@ -27,9 +27,11 @@ type Props = {
     isPreview?: boolean;
 };
 
-const ResumeTableRow: React.FC<{
-    columns: Column[];
-} & ResumesQuery_resumes_nodes> = ({ columns, id, name, updatedAt }) => {
+const ResumeTableRow: React.FC<
+    {
+        columns: Column[];
+    } & ResumesQuery_resumes_nodes
+> = ({ columns, id, name, updatedAt }) => {
     const actionButtons = useRef<HTMLDivElement>(null);
     const toast = useToast();
     const client = useApolloClient();

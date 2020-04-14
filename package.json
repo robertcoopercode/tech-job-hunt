@@ -18,7 +18,8 @@
         "typescript": "^3.8.3"
     },
     "scripts": {
-        "lint": "eslint '**/*.{ts,tsx}' --quiet --fix",
+        "lint": "eslint '**/*.{ts,tsx}' --quiet",
+        "lint:fix": "yarn lint --fix",
         "format": "prettier --write \"**/*.{json,md,js,yaml,yml,graphql}\"",
         "publish:api:dev": "docker-compose -f docker-compose.prod.yml --env-file .env.dev build --no-cache api && docker tag tech-job-hunt/api:latest 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest && docker push 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest",
         "publish:api:prod": "docker-compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache api && docker tag tech-job-hunt/api:latest 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-prod/api:latest && docker push 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-prod/api:latest"

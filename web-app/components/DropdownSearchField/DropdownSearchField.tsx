@@ -320,7 +320,7 @@ const DropdownSearchInput = <T extends DropdownSearchOption>({
                         <PlaceholderOption>Loading...</PlaceholderOption>
                     ) : (
                         <>
-                            {options.map(option => (
+                            {options.map((option) => (
                                 <DropdownOption
                                     type="button"
                                     key={option.id}

@@ -2,6 +2,7 @@ import { mutationField, stringArg } from '@nexus/schema';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import analytics from '../../utils/analytics';
+import { verifyEnvironmentVariables } from '../../utils/verifyEnvironmentVariables';
 
 export const resetPasswordMutationField = mutationField('resetPassword', {
     type: 'User',
@@ -34,7 +35,7 @@ export const resetPasswordMutationField = mutationField('resetPassword', {
                 resetTokenExpiry: null,
             },
         });
-
+        verifyEnvironmentVariables(process.env.API_APP_SECRET, 'API_APP_SECRET');
         const token = jwt.sign({ userId: updatedUser.id }, process.env.API_APP_SECRET);
 
         ctx.response.cookie('token', token, {

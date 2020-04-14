@@ -20,10 +20,10 @@ export default withApollo(({ initialState, headers }) => {
 
     const requestLink = new ApolloLink(
         (operation, forward) =>
-            new Observable(observer => {
+            new Observable((observer) => {
                 let handle: any;
                 Promise.resolve(operation)
-                    .then(oper => request(oper))
+                    .then((oper) => request(oper))
                     .then(() => {
                         handle = forward(operation).subscribe({
                             next: observer.next.bind(observer),

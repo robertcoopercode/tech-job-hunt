@@ -252,7 +252,7 @@ const ViewResumeModal: React.FC<Props> = ({ onClose, isOpen, resume }) => {
                                     {resume.Versions && resume.Versions.slice(1).length > 0 && (
                                         <Box>
                                             <Heading>Previous versions</Heading>
-                                            {resume.Versions.slice(1).map(version => (
+                                            {resume.Versions.slice(1).map((version) => (
                                                 <ResumeVersion
                                                     key={version.VersionId}
                                                     url={version.cloudfrontUrl}

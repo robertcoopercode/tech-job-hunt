@@ -38,9 +38,7 @@ const AuthLink = styled(Button)`
 `;
 
 const loginFormSchema = Yup.object().shape({
-    email: Yup.string()
-        .email('Email is invalid')
-        .required('Email is required'),
+    email: Yup.string().email('Email is invalid').required('Email is required'),
     password: Yup.string().required('Password is required'),
 });
 
@@ -50,8 +48,10 @@ const initialLoginFormikValues: LoginFormSchema = { email: '', password: '' };
 
 export const signupPasswordValidationSchema = Yup.object().shape({
     password: Yup.string()
-        .test('passwordTooShort', 'Password must be at least 8 characters long', value => /^.{8,}$/.test(value))
-        .test('passwordTooLong', 'Password must be less than 50 characters in length', value => /^.{0,50}$/.test(value))
+        .test('passwordTooShort', 'Password must be at least 8 characters long', (value) => /^.{8,}$/.test(value))
+        .test('passwordTooLong', 'Password must be less than 50 characters in length', (value) =>
+            /^.{0,50}$/.test(value)
+        )
         .required('Password is required'),
     // Validation code taken from here: https://github.com/jaredpalmer/formik/issues/90#issuecomment-444476296
     confirmPassword: Yup.string()
@@ -61,9 +61,7 @@ export const signupPasswordValidationSchema = Yup.object().shape({
 
 const signupFormSchema = Yup.object()
     .shape({
-        email: Yup.string()
-            .email('Email is invalid')
-            .required('Email is required'),
+        email: Yup.string().email('Email is invalid').required('Email is required'),
     })
     .concat(signupPasswordValidationSchema);
 
@@ -84,7 +82,7 @@ const LoginOrSignup: React.FC<Props> = ({ query, isAuthenticationError, pathname
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isErrorDisplayed, setIsErrorDisplayed] = useState(isAuthenticationError);
     const [login, { loading: isLoadingLogin }] = useMutation<LoginMutation, LoginMutationVariables>(loginMutation, {
-        onError: error => {
+        onError: (error) => {
             toast({
                 title: 'Error',
                 description: error.graphQLErrors[0].message,
@@ -102,7 +100,7 @@ const LoginOrSignup: React.FC<Props> = ({ query, isAuthenticationError, pathname
     const [signup, { loading: isLoadingSignup }] = useMutation<SignupMutation, SignupMutationVariables>(
         signupMutation,
         {
-            onError: error => {
+            onError: (error) => {
                 toast({
                     title: 'Error',
                     description: error.graphQLErrors[0].message,

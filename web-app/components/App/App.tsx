@@ -33,7 +33,7 @@ const App = ({ component: Component, query, pathname, ...props }: Props): JSX.El
         VerifyEmailMutation,
         VerifyEmailMutationVariables
     >(verifyEmailMutation, {
-        onError: error => {
+        onError: (error) => {
             toast({
                 title: 'Error',
                 description: error.graphQLErrors[0].message,

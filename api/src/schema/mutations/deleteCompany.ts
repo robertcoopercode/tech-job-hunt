@@ -1,32 +1,38 @@
 import { mutationField, idArg } from '@nexus/schema';
 import { emptyS3Directory } from '../../utils/emptyS3Directory';
 import analytics from '../../utils/analytics';
+import { verifyUserIsAuthenticated } from '../../utils/verifyUserIsAuthenticated';
 
 export const deleteCompanyMutationField = mutationField('deleteCompany', {
     type: 'Company',
     args: {
-        id: idArg(),
+        id: idArg({ required: true }),
     },
     resolve: async (_, { id }, ctx) => {
-        if (!ctx.user.id) {
-            return;
+        verifyUserIsAuthenticated(ctx.user);
+
+        const company = await ctx.prisma.company.findOne({
+            where: { id },
+            select: { User: true, Image: true },
+        });
+        if (company === null) {
+            throw Error('Company not found');
+        }
+        const companyUser = company.User;
+
+        if (companyUser === null) {
+            throw Error('User not found');
         }
 
-        const { User: companyUser } = await ctx.prisma.company.findOne({
-            where: { id },
-            select: { User: true },
-        });
         if (companyUser.id !== ctx.user.id) {
-            return;
+            throw Error('Company does not belong to user');
         }
 
-        const { Image: companyImage } = await ctx.prisma.company.findOne({
-            where: { id },
-            select: { Image: true },
-        });
+        const companyImage = company.Image;
+
         const deletedCompany = await ctx.prisma.company.delete({ where: { id } });
 
-        if (companyImage) {
+        if (companyImage !== null) {
             // Delete all company images from S3, including all resized images
             const match = companyImage.s3Url.match(/.*\.amazonaws.com\/(.*\/companies\/[^\/]*)\/.*/);
             if (match) {

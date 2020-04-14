@@ -1,9 +1,15 @@
 {
     "compilerOptions": {
-        "lib": ["es2016", "esnext.asynciterable"],
+        "allowJs": true,
+        "alwaysStrict": true,
         "esModuleInterop": true,
-        "skipLibCheck": true
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["es2016", "esnext.asynciterable"],
+        "noEmit": true,
+        "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true,
+        "strict": false
     },
     "exclude": ["node_modules"],
-    "include": ["**/*.ts"]
+    "include": ["src/typeDefs.ts", "**/*.ts"]
 }

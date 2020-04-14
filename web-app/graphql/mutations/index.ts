@@ -102,7 +102,7 @@ export const updateCompanyMutation = gql`
         $name: String!
         $website: String
         $rating: Int
-        $contacts: [CompanyContactCreateWithoutCompanyInput!]
+        $contacts: [CompanyContactCreateWithoutCompanyInput!]!
         $file: Upload
         $notes: String
         $id: ID!

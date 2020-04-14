@@ -30,6 +30,7 @@ const handleAuthentication = ({
     next: NextFunction;
 }): void | { newUser: typeof newUser } => {
     let redirectUrl = process.env.COMMON_FRONTEND_URL;
+
     // Attempt to set the redirectUrl to the value provide by the `redirectUrl` query in
     // the initial call to /auth/google
     try {
@@ -44,6 +45,10 @@ const handleAuthentication = ({
         res.locals.errorType = 'AuthenticationError';
         return next(error);
     }
+    if (process.env.API_APP_SECRET === undefined) {
+        throw Error('Missing API_APP_SECRET environment variable');
+    }
+
     const token = jwt.sign({ userId: newUser.id }, process.env.API_APP_SECRET);
     // We set the jwt as a cookie on the response
     res.cookie('token', token, {
@@ -51,18 +56,33 @@ const handleAuthentication = ({
         maxAge: cookieDuration,
         domain: process.env.API_COOKIE_DOMAIN,
     });
+    if (redirectUrl === undefined) {
+        throw Error('Invalid redirect URL');
+    }
     res.redirect(redirectUrl);
     return { newUser };
 };
 
-export const authenticationStrategy = (prisma: PrismaClient): GoogleStrategy =>
-    new GoogleStrategy(
+export const authenticationStrategy = (prisma: PrismaClient): GoogleStrategy => {
+    if (process.env.API_GOOGLE_CLIENT_ID === undefined) {
+        throw Error('Missing API_GOOGLE_CLIENT_ID environment variable');
+    }
+
+    if (process.env.API_GOOGLE_CLIENT_SECRET === undefined) {
+        throw Error('Missing API_GOOGLE_CLIENT_SECRET environment variable');
+    }
+
+    if (process.env.COMMON_BACKEND_URL === undefined) {
+        throw Error('Missing COMMON_BACKEND_URL environment variable');
+    }
+
+    return new GoogleStrategy(
         {
             clientID: process.env.API_GOOGLE_CLIENT_ID,
             clientSecret: process.env.API_GOOGLE_CLIENT_SECRET,
             callbackURL: `${process.env.COMMON_BACKEND_URL}/auth/google/callback`,
         },
-        async function(accessToken, refreshToken, profile, done) {
+        async function (accessToken, refreshToken, profile, done) {
             try {
                 // Check if user already exists
                 const existingUser = await prisma.user.findOne({ where: { email: profile._json.email } });
@@ -83,9 +103,9 @@ export const authenticationStrategy = (prisma: PrismaClient): GoogleStrategy =>
                                 hasVerifiedEmail: true,
                             },
                         });
-                        return done(null, updatedUser);
+                        return done(undefined, updatedUser);
                     }
-                    return done(null, existingUser);
+                    return done(undefined, existingUser);
                 }
 
                 // If the user doesn't exist, create a new user
@@ -109,12 +129,13 @@ export const authenticationStrategy = (prisma: PrismaClient): GoogleStrategy =>
                 });
 
                 // If a new user was created, call done with the new user and no error
-                return done(null, newUser);
+                return done(undefined, newUser);
             } catch (e) {
                 return done(e, null);
             }
         }
     );
+};
 
 export const passportAuthenticationCallback = (passport: PassportStatic): RequestHandler => (
     req,
