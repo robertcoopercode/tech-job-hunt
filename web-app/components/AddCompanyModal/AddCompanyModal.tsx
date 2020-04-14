@@ -52,7 +52,7 @@ const AddCompanyModal: React.FC<Props> = ({ onClose, isOpen, onCompleted }) => {
     const { onOpen: onOpenViewCompany } = useModalQuery(QueryParamKeys.VIEW_COMPANY);
 
     const [addCompany] = useMutation<CreateCompanyMutation, CreateCompanyMutationVariables>(createCompanyMutation, {
-        onError: error => {
+        onError: (error) => {
             let errorMessage = `We were unable to add the company`;
             if (/A unique constraint would be violated on Company/.test(error.message)) {
                 errorMessage = `There is already a company with that name`;
@@ -66,7 +66,7 @@ const AddCompanyModal: React.FC<Props> = ({ onClose, isOpen, onCompleted }) => {
                 position: 'top',
             });
         },
-        onCompleted: data => {
+        onCompleted: (data) => {
             client.resetStore();
             toast({
                 title: 'Company added',
@@ -111,13 +111,18 @@ const AddCompanyModal: React.FC<Props> = ({ onClose, isOpen, onCompleted }) => {
         return errors;
     };
 
-    const handleSubmit: FormikConfig<FormSchema>['onSubmit'] = (values, { setSubmitting }) => {
-        addCompany({
-            variables: {
-                name: values.name,
-                image: values.image,
-            },
-        }).finally(() => setSubmitting(false));
+    const handleSubmit: FormikConfig<FormSchema>['onSubmit'] = (values, { setSubmitting, resetForm }) => {
+        try {
+            addCompany({
+                variables: {
+                    name: values.name,
+                    image: values.image,
+                },
+            });
+        } finally {
+            resetForm();
+            setSubmitting(false);
+        }
     };
 
     const initialFormikValues: FormSchema = { name: companyNameInQuery !== undefined ? companyNameInQuery : '' };

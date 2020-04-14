@@ -1,6 +1,6 @@
 const __importDefault =
     (this && this.__importDefault) ||
-    function(mod) {
+    function (mod) {
         return mod && mod.__esModule ? mod : { default: mod };
     };
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -46,14 +46,8 @@ exports.handler = (event, _context, callback) => {
         S3.getObject({ Bucket: BUCKET, Key: originalKey })
             .promise()
             // Perform the resize operation
-            .then(data =>
-                sharp_1
-                    .default(data.Body)
-                    .resize(width, height)
-                    .toFormat(requiredFormat)
-                    .toBuffer()
-            )
-            .then(buffer => {
+            .then((data) => sharp_1.default(data.Body).resize(width, height).toFormat(requiredFormat).toBuffer())
+            .then((buffer) => {
                 // Save the resized object to S3 bucket with appropriate object key.
                 S3.putObject({
                     Body: buffer,
@@ -76,7 +70,7 @@ exports.handler = (event, _context, callback) => {
                 response.headers['content-type'] = [{ key: 'Content-Type', value: `image/${requiredFormat}` }];
                 callback(null, response);
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log('Exception while reading source image :%j', err);
             });
     } // End of if block checking response statusCode

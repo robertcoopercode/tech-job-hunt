@@ -131,14 +131,14 @@ const Checkout = injectStripe<{ onClose: () => void }>(({ stripe, onClose }) => 
                         },
                     },
                 })
-                    .then(data => {
+                    .then((data) => {
                         try {
                             if (
                                 data.data?.upgradeUser.status === 'requires_action' &&
                                 data.data?.upgradeUser.clientSecret
                             ) {
                                 setIsValidatingStripePayment(true);
-                                stripe.handleCardPayment(data.data?.upgradeUser.clientSecret).then(async result => {
+                                stripe.handleCardPayment(data.data?.upgradeUser.clientSecret).then(async (result) => {
                                     if (result.error) {
                                         setIsValidatingStripePayment(false);
                                         displayErrorToast();

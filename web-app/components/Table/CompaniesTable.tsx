@@ -28,9 +28,11 @@ import Table, {
 import { ActionsTableCell } from './ActionsCell';
 import TableEmptyState from './TableEmptyState';
 
-const CompanyTableRow: React.FC<{
-    columns: Column[];
-} & CompaniesQuery_companies_nodes> = ({ columns, id, Image, name, updatedAt, jobApplicationsCount }) => {
+const CompanyTableRow: React.FC<
+    {
+        columns: Column[];
+    } & CompaniesQuery_companies_nodes
+> = ({ columns, id, Image, name, updatedAt, jobApplicationsCount }) => {
     const actionButtons = useRef<HTMLDivElement>(null);
     const toast = useToast();
     const client = useApolloClient();

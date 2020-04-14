@@ -1,13 +1,12 @@
 import { mutationField } from '@nexus/schema';
 import { emptyS3Directory } from '../../utils/emptyS3Directory';
 import analytics from '../../utils/analytics';
+import { verifyUserIsAuthenticated } from '../../utils/verifyUserIsAuthenticated';
 
 export const deleteAccountMutationField = mutationField('deleteAccount', {
     type: 'User',
     resolve: async (_, _args, ctx) => {
-        if (!ctx.user.id) {
-            return;
-        }
+        verifyUserIsAuthenticated(ctx.user);
         // Delete all data for the user in S3
         await emptyS3Directory(`users/${ctx.user.id}`);
 

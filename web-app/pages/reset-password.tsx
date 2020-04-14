@@ -13,9 +13,7 @@ type ResetPasswordFormSchema = Yup.InferType<typeof signupPasswordValidationSche
 const initialResetPasswordFormValues: ResetPasswordFormSchema = { password: '', confirmPassword: '' };
 
 const requestPasswordResetFormSchema = Yup.object().shape({
-    email: Yup.string()
-        .email('Email is invalid')
-        .required('Email is required'),
+    email: Yup.string().email('Email is invalid').required('Email is required'),
 });
 
 type RequestPasswordResetFormSchema = Yup.InferType<typeof requestPasswordResetFormSchema>;
@@ -32,7 +30,7 @@ const ResetPassword: React.FC<Props> = ({ query }) => {
     const shouldDisplayResetPassword = query && query.resetToken !== undefined;
 
     const [requestResetPassword, { loading: loadingRequestResetPassword }] = useMutation(requestResetPasswordMutation, {
-        onError: error => {
+        onError: (error) => {
             toast({
                 title: 'Error',
                 description: error.graphQLErrors[0].message,
@@ -54,7 +52,7 @@ const ResetPassword: React.FC<Props> = ({ query }) => {
         },
     });
     const [resetPassword, { loading: loadingResetPassword }] = useMutation(resetPasswordMutation, {
-        onError: error => {
+        onError: (error) => {
             toast({
                 title: 'Error',
                 description: error.graphQLErrors[0].message,

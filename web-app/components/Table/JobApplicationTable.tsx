@@ -33,19 +33,12 @@ import Table, {
 } from './Table';
 import { ActionsTableCell } from './ActionsCell';
 
-const JobApplicationTableRow: React.FC<{
-    columns: Column[];
-} & JobApplicationsQuery_jobApplications_nodes &
-    JobApplicationsQueryVariables> = ({
-    columns,
-    id,
-    Company,
-    updatedAt,
-    Location,
-    position,
-    isRemote,
-    applicationStatus,
-}) => {
+const JobApplicationTableRow: React.FC<
+    {
+        columns: Column[];
+    } & JobApplicationsQuery_jobApplications_nodes &
+        JobApplicationsQueryVariables
+> = ({ columns, id, Company, updatedAt, Location, position, isRemote, applicationStatus }) => {
     const actionButtons = useRef<HTMLDivElement>(null);
     const toast = useToast();
     const client = useApolloClient();

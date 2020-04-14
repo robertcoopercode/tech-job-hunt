@@ -22,7 +22,7 @@ const TextEditor: React.FC<Props> = ({ id, ...props }) => {
             // existing
             ReactQuill = require('react-quill');
             if (containerRef.current) {
-                containerRef.current.addEventListener('click', e => {
+                containerRef.current.addEventListener('click', (e) => {
                     e.stopPropagation();
                 });
             }

@@ -98,14 +98,14 @@ const FileUploadField: React.FC<Props> = ({
     const [isImage, setIsImage] = useState(isImageProp);
 
     const onDrop = useCallback(
-        files => {
+        (files) => {
             if (files.length === 1) {
                 const imgSrc = URL.createObjectURL(files[0]);
                 setFileSrc(imgSrc);
                 setFile(files[0]);
                 // Check if file type is an image
                 if (
-                    supportedImageUploadTypes.some(type => {
+                    supportedImageUploadTypes.some((type) => {
                         return `image/${type}` === (files && files[0].type);
                     })
                 ) {
@@ -119,7 +119,7 @@ const FileUploadField: React.FC<Props> = ({
     );
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: supportedImageUploadTypes.map(type => `.${type}`).join(','),
+        accept: supportedImageUploadTypes.map((type) => `.${type}`).join(','),
         maxSize: 10000000, // 10 MB
         ...props,
     });

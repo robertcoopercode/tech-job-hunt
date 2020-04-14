@@ -2,6 +2,11 @@ import AWS from 'aws-sdk';
 import uuid from 'uuid/v4';
 import { ManagedUpload } from 'aws-sdk/clients/s3';
 import { FileUpload } from 'graphql-upload';
+import { verifyEnvironmentVariables } from './verifyEnvironmentVariables';
+
+verifyEnvironmentVariables(process.env.API_AWS_ACCESS_KEY_ID, 'API_AWS_ACCESS_KEY_ID');
+verifyEnvironmentVariables(process.env.API_AWS_ACCESS_KEY, 'API_AWS_ACCESS_KEY');
+verifyEnvironmentVariables(process.env.API_AWS_BUCKET_NAME, 'API_AWS_BUCKET_NAME');
 
 export const credentials = new AWS.Credentials({
     accessKeyId: process.env.API_AWS_ACCESS_KEY_ID,
@@ -88,7 +93,7 @@ export const fileUpload = async ({
         }
 
         return new Promise((resolve, reject) => {
-            s3.upload(uploadParams, function(err, data) {
+            s3.upload(uploadParams, function (err, data) {
                 if (err) {
                     // eslint-disable-next-line no-console
                     console.log('Error', err);

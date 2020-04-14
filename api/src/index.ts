@@ -7,50 +7,51 @@ import jwt from 'jsonwebtoken';
 import session from 'express-session';
 import { GraphQLServer } from 'graphql-yoga';
 import passport from 'passport';
-import { events, invoices, customers } from 'stripe';
+import { RequestHandler } from 'express-serve-static-core';
+import { invoices, customers } from 'stripe';
 import { PrismaClient } from '@prisma/client';
-import { shield, deny } from 'graphql-shield';
 import { passportAuthentication, passportAuthenticationCallback, authenticationStrategy } from './utils/auth';
 import analytics from './utils/analytics';
 import { schema, createContext } from './schema';
 import { stripe } from './utils/stripe';
 
+const apiAppSecret = process.env.API_APP_SECRET;
+const commonFrontendUrl = process.env.COMMON_FRONTEND_URL;
+const commonBackenddUrl = process.env.COMMON_BACKEND_URL;
+
+if (apiAppSecret === undefined) {
+    throw Error('Missing API_APP_SECRET environment variable');
+}
+
+if (commonFrontendUrl === undefined) {
+    throw Error('Missing COMMON_FRONTEND_URL environment variable');
+}
+
+if (commonBackenddUrl === undefined) {
+    throw Error('Missing COMMON_BACKEND_URL environment variable');
+}
+
 const prisma = new PrismaClient();
-// Makes sure that it's truly Stripe making the API calls the the /stripe endpoint
+// Used to sure that it's truly Stripe making the API calls the the /stripe endpoint
 const stripeWebhookSecret = process.env.API_STRIPE_WEBHOOK_SECRET;
 
-// Prevent access to private mutations that have only been generated in order to get generated types
-// for certain inputs
-const permissions = shield({
-    Mutation: {
-        _updateOneCard: deny,
-        _updateOneGoogleMapsLocation: deny,
-        _createOneGoogleMapsLocation: deny,
-    },
-    Query: {
-        _companies: deny,
-        _jobApplications: deny,
-        _resumes: deny,
-    },
-});
+if (stripeWebhookSecret === undefined) {
+    throw Error('Missing API_STRIPE_WEBHOOK_SECRET environment variable');
+}
 
 const server = new GraphQLServer({
     schema,
-    middlewares: [permissions],
     context: createContext,
 });
 
-const handleStripeWebhook = async (request, response): Promise<void> => {
+const handleStripeWebhook: RequestHandler = async (request, response) => {
     const sig = request.headers['stripe-signature'];
 
-    let event: events.IEvent;
-
-    // Verify that stripe made the API call
-    try {
-        event = stripe.webhooks.constructEvent(request.body, sig, stripeWebhookSecret);
-    } catch (err) {
-        response.status(400).send(`Webhook Error: ${err.message}`);
+    if (sig === undefined) {
+        throw Error('Missing stripe signature from request headers');
     }
+
+    const event = stripe.webhooks.constructEvent(request.body, sig, stripeWebhookSecret);
 
     // Handle the event
     switch (event.type) {
@@ -140,7 +141,7 @@ const handleStripeWebhook = async (request, response): Promise<void> => {
 server.express.use(cookieParser());
 server.express.use(
     session({
-        secret: process.env.API_APP_SECRET,
+        secret: apiAppSecret,
         resave: false,
         saveUninitialized: false,
     })
@@ -167,7 +168,7 @@ server.express.use((req, res, next) => {
     const { token } = req.cookies;
     if (token) {
         try {
-            const { userId } = jwt.verify(token, process.env.API_APP_SECRET) as { userId?: string };
+            const { userId } = jwt.verify(token, apiAppSecret) as { userId?: string };
             // put the userId onto the req for future requests to access
             req.userId = userId;
         } catch (e) {
@@ -189,7 +190,7 @@ server.express.use((err, req, res, _next) => {
         // eslint-disable-next-line no-console
         console.log('Authentication error', err);
         const queryString = `authError=true`;
-        res.redirect(`${process.env.COMMON_FRONTEND_URL}/login?${queryString}`);
+        res.redirect(`${commonFrontendUrl}/login?${queryString}`);
     } else {
         // eslint-disable-next-line no-console
         console.log('Unhandled server error', err);
@@ -202,10 +203,10 @@ server.start(
     {
         cors: {
             credentials: true,
-            origin: ['http://local.app.techjobhunt.com:3000', process.env.COMMON_FRONTEND_URL],
+            origin: ['http://local.app.techjobhunt.com:3000', commonFrontendUrl],
         },
         port: process.env.API_PORT,
     },
     // eslint-disable-next-line no-console
-    () => console.log(`Server running at ${process.env.COMMON_BACKEND_URL}`)
+    () => console.log(`Server running at ${commonBackenddUrl}`)
 );

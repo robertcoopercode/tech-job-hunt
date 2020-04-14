@@ -1,11 +1,12 @@
 import { queryType, idArg, arg, stringArg } from '@nexus/schema';
+import { verifyUserIsAuthenticated } from '../utils/verifyUserIsAuthenticated';
 
 export const Query = queryType({
     definition(t) {
-        // The following aliased queries are only used in order to generate and use types for the custom connection queries below
-        // The queries will not be accessible since they are explicitly blocked by graphql-shield in the index.ts file
+        // The following aliased queries are only used in order to generate types. Their alias lines up with another query name in order
+        // to define our own resolvers: https://github.com/graphql-nexus/nexus-schema-plugin-prisma/issues/381#issuecomment-575357444
         t.crud.jobApplications({
-            alias: '_jobApplications',
+            alias: 'jobApplications',
             ordering: {
                 position: true,
                 companyName: true,
@@ -15,10 +16,10 @@ export const Query = queryType({
             },
         });
         t.crud.companies({
-            alias: '_companies',
+            alias: 'companies',
             ordering: { updatedAt: true, name: true, jobApplicationsCount: true },
         });
-        t.crud.resumes({ alias: '_resumes', ordering: { updatedAt: true, name: true } });
+        t.crud.resumes({ alias: 'resumes', ordering: { updatedAt: true, name: true } });
 
         t.field('me', {
             type: 'User',
@@ -36,8 +37,12 @@ export const Query = queryType({
                 id: idArg({ required: true }),
             },
             resolve: async (_root, args, ctx) => {
+                verifyUserIsAuthenticated(ctx.user);
                 const jobApplication = await ctx.prisma.jobApplication.findOne({ where: { id: args.id } });
-                const jobApplicationUserId = await jobApplication.user;
+                const jobApplicationUserId = jobApplication?.user;
+                if (jobApplication === null) {
+                    throw Error('Job application does not exist');
+                }
                 if (jobApplicationUserId !== ctx.user.id) {
                     throw Error('Job application does not belong to user');
                 }
@@ -51,9 +56,13 @@ export const Query = queryType({
                 id: idArg({ required: true }),
             },
             resolve: async (_root, args, ctx) => {
+                verifyUserIsAuthenticated(ctx.user);
                 const company = await ctx.prisma.company.findOne({ where: { id: args.id } });
-                const companyUserId = company.user;
+                const companyUserId = company?.user;
 
+                if (company === null) {
+                    throw Error('Company does not exist');
+                }
                 if (companyUserId !== ctx.user.id) {
                     throw Error('Company does not belong to user');
                 }
@@ -67,7 +76,12 @@ export const Query = queryType({
                 id: idArg({ required: true }),
             },
             resolve: async (_root, args, ctx) => {
+                verifyUserIsAuthenticated(ctx.user);
                 const resume = await ctx.prisma.resume.findOne({ where: { id: args.id } });
+
+                if (resume === null) {
+                    throw Error('Resume does not exist');
+                }
                 const resumeUserId = resume.user;
 
                 if (resumeUserId !== ctx.user.id) {
@@ -89,6 +103,7 @@ export const Query = queryType({
             },
             inheritAdditionalArgs: true,
             nodes(root, args, ctx, _info) {
+                verifyUserIsAuthenticated(ctx.user);
                 const { skip, orderBy, first, where } = args;
                 return ctx.prisma.jobApplication.findMany({
                     where: { ...where, user: ctx.user.id },
@@ -100,6 +115,7 @@ export const Query = queryType({
             extendConnection(t) {
                 t.int('totalCount', {
                     resolve: async (root, args, ctx) => {
+                        verifyUserIsAuthenticated(ctx.user);
                         const jobApplications = await ctx.prisma.jobApplication.findMany({
                             where: { user: ctx.user.id },
                         });
@@ -122,6 +138,7 @@ export const Query = queryType({
             inheritAdditionalArgs: true,
             nodes(root, args, ctx, _info) {
                 const { skip, orderBy, first, where } = args;
+                verifyUserIsAuthenticated(ctx.user);
                 return ctx.prisma.company.findMany({
                     where: { ...where, user: ctx.user.id, name: { contains: args.nameQuery } },
                     skip,
@@ -132,6 +149,7 @@ export const Query = queryType({
             extendConnection(t) {
                 t.int('totalCount', {
                     resolve: async (root, args, ctx) => {
+                        verifyUserIsAuthenticated(ctx.user);
                         const companies = await ctx.prisma.company.findMany({
                             where: { user: ctx.user.id },
                         });
@@ -154,6 +172,7 @@ export const Query = queryType({
             },
             inheritAdditionalArgs: true,
             nodes(root, args, ctx, _info) {
+                verifyUserIsAuthenticated(ctx.user);
                 const { skip, orderBy, first, where } = args;
                 return ctx.prisma.resume.findMany({
                     where: { ...where, user: ctx.user.id, name: { contains: args.nameQuery } },
@@ -165,6 +184,7 @@ export const Query = queryType({
             extendConnection(t) {
                 t.int('totalCount', {
                     resolve: async (root, args, ctx) => {
+                        verifyUserIsAuthenticated(ctx.user);
                         const resumes = await ctx.prisma.resume.findMany({
                             where: { user: ctx.user.id },
                         });

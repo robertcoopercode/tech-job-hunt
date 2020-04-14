@@ -24,7 +24,7 @@ export function useGooglePlacesService(): [
     const debouncedGoogleMapsCall = useCallback(
         debounce<(searchQuery: string) => Promise<void>>(async (searchQuery): Promise<void> => {
             if (service && searchQuery) {
-                await new Promise(resolve => {
+                await new Promise((resolve) => {
                     service.getQueryPredictions(
                         {
                             input: searchQuery,
@@ -46,7 +46,7 @@ export function useGooglePlacesService(): [
     );
 
     const locationOptions: GooglePlacesOption[] = googleMapsAutocompleteResults
-        ? googleMapsAutocompleteResults.map(location => ({
+        ? googleMapsAutocompleteResults.map((location) => ({
               id: location.place_id,
               googlePlacesId: location.place_id,
               name: location.description,

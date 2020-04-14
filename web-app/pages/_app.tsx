@@ -101,7 +101,7 @@ class MyApp extends NextApp<WithApolloProps<{}>> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-        Sentry.withScope(scope => {
+        Sentry.withScope((scope) => {
             (Object.keys(errorInfo) as any).forEach((key: keyof typeof errorInfo): void => {
                 scope.setExtra(key, errorInfo[key]);
             });

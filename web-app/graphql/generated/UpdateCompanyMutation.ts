@@ -22,7 +22,7 @@ export interface UpdateCompanyMutationVariables {
   name: string;
   website?: string | null;
   rating?: number | null;
-  contacts?: CompanyContactCreateWithoutCompanyInput[] | null;
+  contacts: CompanyContactCreateWithoutCompanyInput[];
   file?: any | null;
   notes?: string | null;
   id: string;

@@ -129,9 +129,7 @@ const formSchema = Yup.object().shape({
         .shape({
             name: Yup.string().required('Company is invalid'),
             id: Yup.string().required('Company is invalid'),
-            imageUrl: Yup.string()
-                .notRequired()
-                .nullable(),
+            imageUrl: Yup.string().notRequired().nullable(),
         })
         .typeError('Please select a company')
         .required('Please select a company'),
@@ -147,9 +145,7 @@ const formSchema = Yup.object().shape({
         .notRequired(),
     rating: Yup.number().nullable(),
     isRemote: Yup.boolean(),
-    jobListingLink: Yup.string()
-        .url('Invalid URL')
-        .nullable(),
+    jobListingLink: Yup.string().url('Invalid URL').nullable(),
     jobListingNotes: Yup.string().nullable(),
     contacts: Yup.array()
         .of(
@@ -157,9 +153,7 @@ const formSchema = Yup.object().shape({
                 id: Yup.string().required(),
                 name: Yup.string().required('Name is required'),
                 position: Yup.string().nullable(),
-                email: Yup.string()
-                    .email('Invalid email')
-                    .nullable(),
+                email: Yup.string().email('Invalid email').nullable(),
                 phone: Yup.string().nullable(),
                 notes: Yup.string().nullable(),
                 order: Yup.number().required(),
@@ -188,9 +182,7 @@ const formSchema = Yup.object().shape({
     jobDecision: Yup.mixed().oneOf([...Object.values(JobDecision), null]),
     applicationStatus: Yup.mixed().oneOf(Object.values(ApplicationStatus)),
     dateApplied: Yup.string().nullable(),
-    dateInterviewing: Yup.array()
-        .of(Yup.string())
-        .nullable(),
+    dateInterviewing: Yup.array().of(Yup.string()).nullable(),
     dateOffered: Yup.string().nullable(),
     dateDecided: Yup.string().nullable(),
     notes: Yup.string().nullable(),
@@ -256,10 +248,12 @@ type Props = {
     jobApplication: JobApplicationQuery_jobApplication;
 };
 
-const ViewJobModalContents: React.FC<Props & {
-    hasFormBeenUpdated: boolean;
-    setIsCoverLetterUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ isOpen, onClose, jobApplication, hasFormBeenUpdated, setIsCoverLetterUpdated }) => {
+const ViewJobModalContents: React.FC<
+    Props & {
+        hasFormBeenUpdated: boolean;
+        setIsCoverLetterUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+    }
+> = ({ isOpen, onClose, jobApplication, hasFormBeenUpdated, setIsCoverLetterUpdated }) => {
     const toast = useToast();
     const client = useApolloClient();
     const router = useRouter();
@@ -295,7 +289,7 @@ const ViewJobModalContents: React.FC<Props & {
     );
 
     const [getCompany] = useLazyQuery<CompanyQuery, CompanyQueryVariables>(companyQuery, {
-        onCompleted: data => {
+        onCompleted: (data) => {
             if (data.company !== null) {
                 setFieldValue('company', convertToOption(data.company));
             }
@@ -575,7 +569,7 @@ const ViewJobModalContents: React.FC<Props & {
                                                 <UploadedFileDetails
                                                     url={
                                                         values.resume.versions.find(
-                                                            v => v.id === values.resume?.selectedVersionId
+                                                            (v) => v.id === values.resume?.selectedVersionId
                                                         )?.url as string
                                                     }
                                                     fileName={values.resume.name}
@@ -701,7 +695,7 @@ const ViewJobModalContents: React.FC<Props & {
     );
 };
 
-const ViewJobModal: React.FC<Props> = props => {
+const ViewJobModal: React.FC<Props> = (props) => {
     const toast = useToast();
     const client = useApolloClient();
     const [isCoverLetterUpdated, setIsCoverLetterUpdated] = useState(false);

@@ -5,6 +5,7 @@ import { sendEmailConfirmationEmail } from '../../utils/mail';
 import { generateToken } from '../../utils/generateToken';
 import { cookieDuration } from '../../utils/constants';
 import analytics from '../../utils/analytics';
+import { verifyEnvironmentVariables } from '../../utils/verifyEnvironmentVariables';
 
 export const signupMutationField = mutationField('signup', {
     type: 'User',
@@ -17,7 +18,10 @@ export const signupMutationField = mutationField('signup', {
         if (password !== confirmPassword) {
             throw new Error("Passwords don't match!");
         }
-        email = email.toLowerCase();
+        email = email?.toLowerCase();
+        if (email === null || email === undefined) {
+            throw Error('Email is not defined');
+        }
         // Check if user already exists with that email
         const existingUser = await ctx.prisma.user.findOne({ where: { email } });
         if (existingUser) {
@@ -40,6 +44,7 @@ export const signupMutationField = mutationField('signup', {
         });
 
         await sendEmailConfirmationEmail(email, emailConfirmationToken);
+        verifyEnvironmentVariables(process.env.API_APP_SECRET, 'API_APP_SECRET');
         const token = jwt.sign({ userId: user.id }, process.env.API_APP_SECRET);
 
         // NOTE: Need to specify domain in order for front-end to see cookie: https://github.com/apollographql/apollo-client/issues/4193#issuecomment-573195699

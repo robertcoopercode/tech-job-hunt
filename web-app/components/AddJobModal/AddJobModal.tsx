@@ -75,9 +75,7 @@ const formSchema = Yup.object().shape({
         .shape({
             name: Yup.string().required('Company is invalid'),
             id: Yup.string().required('Company is invalid'),
-            imageUrl: Yup.string()
-                .notRequired()
-                .nullable(),
+            imageUrl: Yup.string().notRequired().nullable(),
         })
         .nullable()
         .required('Please select a company'),
@@ -116,7 +114,7 @@ const AddJobModalContents: React.FC<Props> = ({ onClose, isOpen }) => {
     const selectedCompanyQuery = router.query[QueryParamKeys.SELECTED_COMPANY_ID] as string | undefined;
     const [companySearchQuery, setCompanySearchQuery] = useState('');
     const [getCompany] = useLazyQuery<CompanyQuery, CompanyQueryVariables>(companyQuery, {
-        onCompleted: data => {
+        onCompleted: (data) => {
             if (data.company !== null) {
                 setFieldValue('company', convertToOption(data.company));
             }
@@ -268,7 +266,7 @@ const AddJobModalContents: React.FC<Props> = ({ onClose, isOpen }) => {
     );
 };
 
-const AddJobModal: React.FC<Props> = props => {
+const AddJobModal: React.FC<Props> = (props) => {
     const client = useApolloClient();
     const toast = useToast();
     const [addJobApplication] = useMutation<CreateJobApplicationMutation, CreateJobApplicationMutationVariables>(
@@ -284,7 +282,7 @@ const AddJobModal: React.FC<Props> = props => {
                     position: 'top',
                 });
             },
-            onCompleted: data => {
+            onCompleted: (data) => {
                 client.resetStore();
                 props.onCompleted(data);
             },
