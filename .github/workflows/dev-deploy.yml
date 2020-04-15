@@ -61,8 +61,8 @@ jobs:
             aws ecr get-login-password | docker login --username AWS --password-stdin 233737578294.dkr.ecr.us-east-1.amazonaws.com
             docker pull 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest
             docker tag 233737578294.dkr.ecr.us-east-1.amazonaws.com/tech-job-hunt-dev/api:latest dokku/backend:latest
-            docker image prune --force
             dokku tags:deploy backend latest
+            docker image prune --force
   deploy-web-app-dev:
     runs-on: ubuntu-latest
     name: Deploy web app

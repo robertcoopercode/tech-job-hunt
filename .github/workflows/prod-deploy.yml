@@ -37,6 +37,7 @@ jobs:
           API_STRIPE_WEBHOOK_SECRET: ${{ secrets.PROD_API_STRIPE_WEBHOOK_SECRET }}
           API_CLOUDFRONT_DOMAIN: ${{ secrets.PROD_API_CLOUDFRONT_DOMAIN }}
           API_AMPLITUDE_API_KEY: ${{ secrets.PROD_API_AMPLITUDE_API_KEY }}
+          API_DATABASE_URL: ${{ secrets.PROD_API_DATABASE_URL }}
         run: |
           yarn publish:api:prod
       - name: Logout of Amazon ECR

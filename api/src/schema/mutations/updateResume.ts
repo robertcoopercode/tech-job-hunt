@@ -40,7 +40,7 @@ export const updateResumeMutationField = mutationField('updateResume', {
             },
             data: {
                 Versions: {
-                    create: awsFileData,
+                    create: awsFileData === null ? undefined : awsFileData,
                 },
                 name,
             },
