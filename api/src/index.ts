@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
 import session from 'express-session';
+import { ErrorRequestHandler } from 'express-serve-static-core';
 import { GraphQLServer } from 'graphql-yoga';
 import passport from 'passport';
 import { RequestHandler } from 'express-serve-static-core';
@@ -185,7 +186,7 @@ server.express.use((req, res, next) => {
 });
 
 // Express error handler
-server.express.use((err, req, res, _next) => {
+server.express.use(((err, req, res, _next) => {
     if (res.locals.errorType === 'AuthenticationError') {
         // eslint-disable-next-line no-console
         console.log('Authentication error', err);
@@ -196,7 +197,7 @@ server.express.use((err, req, res, _next) => {
         console.log('Unhandled server error', err);
         res.status(400).json({ error: err });
     }
-});
+}) as ErrorRequestHandler);
 
 // Start the server
 server.start(

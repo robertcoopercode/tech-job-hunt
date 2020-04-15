@@ -23,7 +23,7 @@ export const updateJobApplicationMutation = gql`
         $jobListingLink: String
         $jobListingNotes: String
         $isApplicationActive: Boolean
-        $contacts: [JobApplicationContactCreateWithoutJobApplicationInput!]
+        $contacts: [JobApplicationContactCreateWithoutJobApplicationInput!]!
         $resumeId: String
         $resumeVersionId: String
         $coverLetterFile: Upload

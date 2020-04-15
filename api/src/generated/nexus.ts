@@ -2679,7 +2679,7 @@ export interface NexusGenArgTypes {
     updateJobApplication: { // args
       applicationStatus?: NexusGenEnums['ApplicationStatus'] | null; // ApplicationStatus
       companyId?: string | null; // ID
-      contacts?: NexusGenInputs['JobApplicationContactCreateWithoutJobApplicationInput'][] | null; // [JobApplicationContactCreateWithoutJobApplicationInput!]
+      contacts: NexusGenInputs['JobApplicationContactCreateWithoutJobApplicationInput'][]; // [JobApplicationContactCreateWithoutJobApplicationInput!]!
       coverLetterFile?: any | null; // Upload
       dateApplied?: any | null; // DateTime
       dateDecided?: any | null; // DateTime
@@ -2700,15 +2700,15 @@ export interface NexusGenArgTypes {
       resumeVersionId?: string | null; // String
     }
     updateResume: { // args
-      id?: string | null; // ID
+      id: string; // ID!
       name?: string | null; // String
       newFileVersion?: any | null; // Upload
     }
     upgradeUser: { // args
       card: NexusGenInputs['CardUpdateWithoutBillingInfoDataInput']; // CardUpdateWithoutBillingInfoDataInput!
-      email?: string | null; // String
-      paymentMethodId?: string | null; // String
-      planId?: string | null; // String
+      email: string; // String!
+      paymentMethodId: string; // String!
+      planId: string; // String!
     }
     verifyEmail: { // args
       emailToken?: string | null; // String

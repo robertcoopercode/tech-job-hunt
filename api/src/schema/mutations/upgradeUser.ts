@@ -2,19 +2,21 @@ import { mutationField, stringArg, arg } from '@nexus/schema';
 import analytics from '../../utils/analytics';
 import { stripe } from '../../utils/stripe';
 import { billingFrequencyByPlanId } from '../../utils/constants';
+import { verifyUserIsAuthenticated } from '../../utils/verifyUserIsAuthenticated';
 
 export const upgradeUserMutationField = mutationField('upgradeUser', {
     type: 'StripeSubscription',
     args: {
-        paymentMethodId: stringArg(),
-        email: stringArg(),
-        planId: stringArg(),
+        paymentMethodId: stringArg({ required: true }),
+        email: stringArg({ required: true }),
+        planId: stringArg({ required: true }),
         card: arg({
             type: 'CardUpdateWithoutBillingInfoDataInput',
             required: true,
         }),
     },
     resolve: async (_, { paymentMethodId, email, planId, card }, ctx) => {
+        verifyUserIsAuthenticated(ctx.user);
         // Make sure the plan ID is valid
         if (
             planId !== process.env.COMMON_STRIPE_YEARLY_PLAN_ID &&
@@ -99,8 +101,21 @@ export const upgradeUserMutationField = mutationField('upgradeUser', {
 
         const isSubscriptionPaymentConfirmed =
             typeof subscription.latest_invoice === 'object' &&
-            typeof subscription.latest_invoice.payment_intent === 'object' &&
-            subscription.latest_invoice.payment_intent.status === 'succeeded';
+            typeof subscription.latest_invoice?.payment_intent === 'object' &&
+            subscription.latest_invoice?.payment_intent?.status === 'succeeded';
+
+        if (expMonth === undefined || expMonth === null) {
+            throw Error('Missing expiration month');
+        }
+        if (expYear === undefined || expYear === null) {
+            throw Error('Missing expiration year');
+        }
+        if (last4Digits === undefined || last4Digits === null) {
+            throw Error('Missing last 4 digits of credit card');
+        }
+        if (brand === undefined || brand === null) {
+            throw Error('Missing credit card brand');
+        }
 
         // Store stripe subscription details in database
         await ctx.prisma.user.update({
@@ -170,11 +185,12 @@ export const upgradeUserMutationField = mutationField('upgradeUser', {
 
         if (
             typeof subscription.latest_invoice === 'object' &&
-            typeof subscription.latest_invoice.payment_intent === 'object'
+            typeof subscription.latest_invoice?.payment_intent === 'object' &&
+            subscription.latest_invoice?.payment_intent?.client_secret !== undefined
         ) {
             return {
-                status: subscription.latest_invoice.payment_intent.status,
-                clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+                status: subscription.latest_invoice?.payment_intent?.status,
+                clientSecret: subscription.latest_invoice?.payment_intent?.client_secret,
             };
         }
 

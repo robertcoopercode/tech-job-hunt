@@ -737,7 +737,7 @@ const ViewJobModal: React.FC<Props> = (props) => {
                 jobListingLink: values.jobListingLink,
                 jobListingNotes: values.jobListingNotes,
                 isApplicationActive: values.isApplicationActive,
-                contacts: values.contacts,
+                contacts: values.contacts ?? [],
                 resumeId: values.resume?.resumeId ?? (values.resume === null ? null : undefined),
                 resumeVersionId: values.resume?.selectedVersionId ?? (values.resume === null ? null : undefined),
                 coverLetterFile: values.coverLetterFile,

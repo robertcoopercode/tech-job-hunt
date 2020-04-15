@@ -83,6 +83,11 @@ const createJobApplications = ({
     domainName,
     locationName,
     locationId,
+}: {
+    companyName: string;
+    domainName: string;
+    locationName: string | undefined;
+    locationId: string | undefined;
 }): JobApplicationCreateWithoutCompanyInput[] => {
     const jobApplications: JobApplicationCreateWithoutCompanyInput[] = [];
     for (let i = 0; i < faker.random.arrayElement([0, 1, 2, 3, 4]); i++) {
