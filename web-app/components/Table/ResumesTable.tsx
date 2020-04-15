@@ -55,6 +55,7 @@ const ResumeTableRow: React.FC<
             });
         },
         onCompleted: () => {
+            client.resetStore();
             onClose();
             toast({
                 title: 'Deleted',
@@ -64,7 +65,6 @@ const ResumeTableRow: React.FC<
                 isClosable: true,
                 position: 'top',
             });
-            client.resetStore();
         },
         variables: { id },
     });

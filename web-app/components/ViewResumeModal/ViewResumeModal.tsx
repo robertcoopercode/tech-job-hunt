@@ -194,20 +194,21 @@ const ViewResumeModal: React.FC<Props> = ({ onClose, isOpen, resume }) => {
         }
     };
 
-    const handleSubmit: FormikConfig<FormSchema>['onSubmit'] = (values, { setSubmitting, resetForm }) => {
-        updateResume({
-            variables: {
-                id: resume.id,
-                name: values.name,
-                file: values.resume,
-            },
-        })
-            .then(() => {
-                resetForm({
-                    values,
-                });
-            })
-            .finally(() => setSubmitting(false));
+    const handleSubmit: FormikConfig<FormSchema>['onSubmit'] = async (values, { setSubmitting, resetForm }) => {
+        try {
+            await updateResume({
+                variables: {
+                    id: resume.id,
+                    name: values.name,
+                    file: values.resume,
+                },
+            });
+            resetForm({
+                values,
+            });
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
