@@ -12,9 +12,7 @@
         "apollo:watch": "yarn apollo:codegen --watch",
         "build": "next build",
         "deploy:dev": "dotenv -e now.env.dev -- now --prod",
-        "deploy:prod": "dotenv -e now.env.prod -- now --prod",
-        "ci:deploy:dev": "now --prod --local-config ./now.json",
-        "ci:deploy:prod": "now --prod --local-config ./now.prod.json"
+        "deploy:prod": "dotenv -e now.env.prod -- now --prod"
     },
     "author": "Robert Cooper",
     "license": "MIT",

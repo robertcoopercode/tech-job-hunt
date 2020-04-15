@@ -78,5 +78,5 @@ jobs:
         run: yarn
         working-directory: ./web-app
       - name: Deploy
-        run: yarn ci:deploy:dev --token ${{ secrets.CI_ZEIT_NOW_TOKEN }}
+        run: yarn now --prod --token ${{ secrets.CI_ZEIT_NOW_TOKEN }}
         working-directory: ./web-app
