@@ -298,34 +298,9 @@ enum BillingFrequency {
   YEARLY
 }
 
-type BillingInfo {
-  billingFrequency: BillingFrequency
-  Card: Card
-  endOfBillingPeriod: Int
-  id: String!
-  isPremiumActive: Boolean!
-  startOfBillingPeriod: Int
-  stripeCustomerId: String
-  stripeSubscriptionId: String
-  User(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int, skip: Int): [User!]!
-  willCancelAtEndOfPeriod: Boolean!
-}
-
 input BillingInfoCreateOneWithoutUserInput {
   connect: BillingInfoWhereUniqueInput
   create: BillingInfoCreateWithoutUserInput
-}
-
-input BillingInfoCreateWithoutCardInput {
-  billingFrequency: BillingFrequency
-  endOfBillingPeriod: Int
-  id: String
-  isPremiumActive: Boolean
-  startOfBillingPeriod: Int
-  stripeCustomerId: String
-  stripeSubscriptionId: String
-  User: UserCreateManyWithoutBillingInput
-  willCancelAtEndOfPeriod: Boolean
 }
 
 input BillingInfoCreateWithoutUserInput {
@@ -346,50 +321,6 @@ input BillingInfoFilter {
   some: BillingInfoWhereInput
 }
 
-input BillingInfoScalarWhereInput {
-  AND: [BillingInfoScalarWhereInput!]
-  billingFrequency: BillingFrequency
-  card: NullableStringFilter
-  endOfBillingPeriod: NullableIntFilter
-  id: StringFilter
-  isPremiumActive: BooleanFilter
-  NOT: [BillingInfoScalarWhereInput!]
-  OR: [BillingInfoScalarWhereInput!]
-  startOfBillingPeriod: NullableIntFilter
-  stripeCustomerId: NullableStringFilter
-  stripeSubscriptionId: NullableStringFilter
-  User: UserFilter
-  willCancelAtEndOfPeriod: BooleanFilter
-}
-
-input BillingInfoUpdateManyDataInput {
-  billingFrequency: BillingFrequency
-  endOfBillingPeriod: Int
-  id: String
-  isPremiumActive: Boolean
-  startOfBillingPeriod: Int
-  stripeCustomerId: String
-  stripeSubscriptionId: String
-  willCancelAtEndOfPeriod: Boolean
-}
-
-input BillingInfoUpdateManyWithoutCardInput {
-  connect: [BillingInfoWhereUniqueInput!]
-  create: [BillingInfoCreateWithoutCardInput!]
-  delete: [BillingInfoWhereUniqueInput!]
-  deleteMany: [BillingInfoScalarWhereInput!]
-  disconnect: [BillingInfoWhereUniqueInput!]
-  set: [BillingInfoWhereUniqueInput!]
-  update: [BillingInfoUpdateWithWhereUniqueWithoutCardInput!]
-  updateMany: [BillingInfoUpdateManyWithWhereNestedInput!]
-  upsert: [BillingInfoUpsertWithWhereUniqueWithoutCardInput!]
-}
-
-input BillingInfoUpdateManyWithWhereNestedInput {
-  data: BillingInfoUpdateManyDataInput!
-  where: BillingInfoScalarWhereInput!
-}
-
 input BillingInfoUpdateOneWithoutUserInput {
   connect: BillingInfoWhereUniqueInput
   create: BillingInfoCreateWithoutUserInput
@@ -397,18 +328,6 @@ input BillingInfoUpdateOneWithoutUserInput {
   disconnect: Boolean
   update: BillingInfoUpdateWithoutUserDataInput
   upsert: BillingInfoUpsertWithoutUserInput
-}
-
-input BillingInfoUpdateWithoutCardDataInput {
-  billingFrequency: BillingFrequency
-  endOfBillingPeriod: Int
-  id: String
-  isPremiumActive: Boolean
-  startOfBillingPeriod: Int
-  stripeCustomerId: String
-  stripeSubscriptionId: String
-  User: UserUpdateManyWithoutBillingInput
-  willCancelAtEndOfPeriod: Boolean
 }
 
 input BillingInfoUpdateWithoutUserDataInput {
@@ -423,20 +342,9 @@ input BillingInfoUpdateWithoutUserDataInput {
   willCancelAtEndOfPeriod: Boolean
 }
 
-input BillingInfoUpdateWithWhereUniqueWithoutCardInput {
-  data: BillingInfoUpdateWithoutCardDataInput!
-  where: BillingInfoWhereUniqueInput!
-}
-
 input BillingInfoUpsertWithoutUserInput {
   create: BillingInfoCreateWithoutUserInput!
   update: BillingInfoUpdateWithoutUserDataInput!
-}
-
-input BillingInfoUpsertWithWhereUniqueWithoutCardInput {
-  create: BillingInfoCreateWithoutCardInput!
-  update: BillingInfoUpdateWithoutCardDataInput!
-  where: BillingInfoWhereUniqueInput!
 }
 
 input BillingInfoWhereInput {
@@ -466,15 +374,6 @@ input BooleanFilter {
   not: Boolean
 }
 
-type Card {
-  brand: String!
-  expMonth: Int!
-  expYear: Int!
-  id: String!
-  last4Digits: String!
-  stripePaymentMethodId: String!
-}
-
 input CardCreateOneWithoutBillingInfoInput {
   connect: CardWhereUniqueInput
   create: CardCreateWithoutBillingInfoInput
@@ -487,16 +386,6 @@ input CardCreateWithoutBillingInfoInput {
   id: String
   last4Digits: String!
   stripePaymentMethodId: String!
-}
-
-input CardUpdateInput {
-  BillingInfo: BillingInfoUpdateManyWithoutCardInput
-  brand: String
-  expMonth: Int
-  expYear: Int
-  id: String
-  last4Digits: String
-  stripePaymentMethodId: String
 }
 
 input CardUpdateOneWithoutBillingInfoInput {
@@ -1935,8 +1824,6 @@ enum JobDecision {
 }
 
 type Mutation {
-  cancelSubscription: User!
-  checkSubscriptionPaymentHasSucceeded: Boolean!
   completeOnboarding: Boolean!
   createCompany(file: Upload, name: String!): Company!
   createJobApplication(
@@ -1953,7 +1840,6 @@ type Mutation {
   login(email: String!, password: String!): User!
   logout: Boolean!
   requestPasswordReset(email: String): Boolean!
-  requestVerifyEmail: Boolean!
   resetPassword(confirmPassword: String, password: String, resetToken: String): User!
   signup(confirmPassword: String, email: String, password: String): User!
   updateCompany(
@@ -1966,7 +1852,6 @@ type Mutation {
     rating: Int
     website: String
   ): Company!
-  updateCreditCard(card: CardUpdateInput!): User!
   updateJobApplication(
     applicationStatus: ApplicationStatus
     companyId: ID
@@ -1991,13 +1876,6 @@ type Mutation {
     resumeVersionId: String
   ): JobApplication!
   updateResume(id: ID!, name: String, newFileVersion: Upload): Resume!
-  upgradeUser(
-    card: CardUpdateWithoutBillingInfoDataInput!
-    email: String!
-    paymentMethodId: String!
-    planId: String!
-  ): StripeSubscription!
-  verifyEmail(emailToken: String): Boolean!
 }
 
 input NullableBooleanFilter {
@@ -2437,18 +2315,12 @@ input StringFilter {
   startsWith: String
 }
 
-type StripeSubscription {
-  clientSecret: String!
-  status: String!
-}
-
 """
 The `Upload` scalar type represents a file upload.
 """
 scalar Upload
 
 type User {
-  Billing: BillingInfo
   Company(
     after: CompanyWhereUniqueInput
     before: CompanyWhereUniqueInput
@@ -2470,11 +2342,6 @@ type User {
   Resume(after: ResumeWhereUniqueInput, before: ResumeWhereUniqueInput, first: Int, last: Int, skip: Int): [Resume!]!
 }
 
-input UserCreateManyWithoutBillingInput {
-  connect: [UserWhereUniqueInput!]
-  create: [UserCreateWithoutBillingInput!]
-}
-
 input UserCreateOneWithoutCompanyInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutCompanyInput
@@ -2488,21 +2355,6 @@ input UserCreateOneWithoutJobApplicationInput {
 input UserCreateOneWithoutResumeInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutResumeInput
-}
-
-input UserCreateWithoutBillingInput {
-  Company: CompanyCreateManyWithoutUserInput
-  email: String!
-  emailConfirmationToken: String
-  googleId: String
-  hasCompletedOnboarding: Boolean
-  hasVerifiedEmail: Boolean
-  id: String
-  JobApplication: JobApplicationCreateManyWithoutUserInput
-  password: String
-  resetToken: String
-  resetTokenExpiry: Float
-  Resume: ResumeCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutCompanyInput {
@@ -2556,54 +2408,6 @@ input UserFilter {
   some: UserWhereInput
 }
 
-input UserScalarWhereInput {
-  AND: [UserScalarWhereInput!]
-  billing: NullableStringFilter
-  Company: CompanyFilter
-  email: StringFilter
-  emailConfirmationToken: NullableStringFilter
-  googleId: NullableStringFilter
-  hasCompletedOnboarding: BooleanFilter
-  hasVerifiedEmail: NullableBooleanFilter
-  id: StringFilter
-  JobApplication: JobApplicationFilter
-  NOT: [UserScalarWhereInput!]
-  OR: [UserScalarWhereInput!]
-  password: NullableStringFilter
-  resetToken: NullableStringFilter
-  resetTokenExpiry: NullableFloatFilter
-  Resume: ResumeFilter
-}
-
-input UserUpdateManyDataInput {
-  email: String
-  emailConfirmationToken: String
-  googleId: String
-  hasCompletedOnboarding: Boolean
-  hasVerifiedEmail: Boolean
-  id: String
-  password: String
-  resetToken: String
-  resetTokenExpiry: Float
-}
-
-input UserUpdateManyWithoutBillingInput {
-  connect: [UserWhereUniqueInput!]
-  create: [UserCreateWithoutBillingInput!]
-  delete: [UserWhereUniqueInput!]
-  deleteMany: [UserScalarWhereInput!]
-  disconnect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueWithoutBillingInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-  upsert: [UserUpsertWithWhereUniqueWithoutBillingInput!]
-}
-
-input UserUpdateManyWithWhereNestedInput {
-  data: UserUpdateManyDataInput!
-  where: UserScalarWhereInput!
-}
-
 input UserUpdateOneWithoutCompanyInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutCompanyInput
@@ -2629,21 +2433,6 @@ input UserUpdateOneWithoutResumeInput {
   disconnect: Boolean
   update: UserUpdateWithoutResumeDataInput
   upsert: UserUpsertWithoutResumeInput
-}
-
-input UserUpdateWithoutBillingDataInput {
-  Company: CompanyUpdateManyWithoutUserInput
-  email: String
-  emailConfirmationToken: String
-  googleId: String
-  hasCompletedOnboarding: Boolean
-  hasVerifiedEmail: Boolean
-  id: String
-  JobApplication: JobApplicationUpdateManyWithoutUserInput
-  password: String
-  resetToken: String
-  resetTokenExpiry: Float
-  Resume: ResumeUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutCompanyDataInput {
@@ -2691,11 +2480,6 @@ input UserUpdateWithoutResumeDataInput {
   resetTokenExpiry: Float
 }
 
-input UserUpdateWithWhereUniqueWithoutBillingInput {
-  data: UserUpdateWithoutBillingDataInput!
-  where: UserWhereUniqueInput!
-}
-
 input UserUpsertWithoutCompanyInput {
   create: UserCreateWithoutCompanyInput!
   update: UserUpdateWithoutCompanyDataInput!
@@ -2709,12 +2493,6 @@ input UserUpsertWithoutJobApplicationInput {
 input UserUpsertWithoutResumeInput {
   create: UserCreateWithoutResumeInput!
   update: UserUpdateWithoutResumeDataInput!
-}
-
-input UserUpsertWithWhereUniqueWithoutBillingInput {
-  create: UserCreateWithoutBillingInput!
-  update: UserUpdateWithoutBillingDataInput!
-  where: UserWhereUniqueInput!
 }
 
 input UserWhereInput {

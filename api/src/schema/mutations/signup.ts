@@ -1,7 +1,6 @@
 import { stringArg, mutationField } from '@nexus/schema';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { sendEmailConfirmationEmail } from '../../utils/mail';
 import { generateToken } from '../../utils/generateToken';
 import { cookieDuration } from '../../utils/constants';
 import analytics from '../../utils/analytics';
@@ -43,7 +42,6 @@ export const signupMutationField = mutationField('signup', {
             },
         });
 
-        await sendEmailConfirmationEmail(email, emailConfirmationToken);
         verifyEnvironmentVariables(process.env.API_APP_SECRET, 'API_APP_SECRET');
         const token = jwt.sign({ userId: user.id }, process.env.API_APP_SECRET);
 

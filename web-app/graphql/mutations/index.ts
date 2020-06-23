@@ -123,42 +123,6 @@ export const updateCompanyMutation = gql`
     }
 `;
 
-export const upgradeUserMutation = gql`
-    mutation UpgradeUserMutation(
-        $paymentMethodId: String!
-        $email: String!
-        $planId: String!
-        $card: CardUpdateWithoutBillingInfoDataInput!
-    ) {
-        upgradeUser(paymentMethodId: $paymentMethodId, email: $email, planId: $planId, card: $card) {
-            status
-            clientSecret
-        }
-    }
-`;
-
-export const checkSubscriptionPaymentHasSucceededMutation = gql`
-    mutation CheckSubscriptionPaymentHasSucceededMutation {
-        checkSubscriptionPaymentHasSucceeded
-    }
-`;
-
-export const cancelSubscriptionMutation = gql`
-    mutation CancelSubscriptionMutation {
-        cancelSubscription {
-            id
-        }
-    }
-`;
-
-export const updateCreditCardMutation = gql`
-    mutation UpdateCreditCardMutation($card: CardUpdateInput!) {
-        updateCreditCard(card: $card) {
-            id
-        }
-    }
-`;
-
 export const createResume = gql`
     mutation CreateResumeMutation($name: String!, $file: Upload) {
         createResume(name: $name, file: $file) {
@@ -222,18 +186,6 @@ export const resetPasswordMutation = gql`
         resetPassword(resetToken: $resetToken, password: $password, confirmPassword: $confirmPassword) {
             email
         }
-    }
-`;
-
-export const verifyEmailMutation = gql`
-    mutation VerifyEmailMutation($emailToken: String!) {
-        verifyEmail(emailToken: $emailToken)
-    }
-`;
-
-export const requestVerifyEmailMutation = gql`
-    mutation RequestVerifyEmailMutation {
-        requestVerifyEmail
     }
 `;
 

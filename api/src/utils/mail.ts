@@ -53,13 +53,3 @@ export const sendEmail = async ({
         throw e;
     }
 };
-
-export const sendEmailConfirmationEmail = async (email: string, token: string): Promise<void> => {
-    await sendEmail({
-        subject: 'Verify Email Address - Tech Job Hunt',
-        toAddress: [email],
-        text: `Click the following link to verify you email address!
-    \n\n
-    <a href="${process.env.COMMON_FRONTEND_URL}?emailToken=${token}">Click Here to Confirm</a>`,
-    });
-};

@@ -16,10 +16,7 @@ import {
     JobApplication,
     Company,
     Resume,
-    BillingInfo,
     User,
-    StripeSubscription,
-    Card,
     AwsFileData,
     GoogleMapsLocation,
     JobApplicationResume,
@@ -33,18 +30,12 @@ import { logoutMutationField } from './mutations/logout';
 import { completeOnboardingMutationField } from './mutations/completeOnboarding';
 import { requestPasswordResetMutationField } from './mutations/requestPasswordReset';
 import { resetPasswordMutationField } from './mutations/resetPassword';
-import { checkSubscriptionPaymentHasSucceededMutationField } from './mutations/checkSubscriptionPaymentHasSucceeded';
-import { cancelSubscriptionMutationField } from './mutations/cancelSubscription';
 import { deleteAccountMutationField } from './mutations/deleteAccount';
 import { deleteCompanyMutationField } from './mutations/deleteCompany';
 import { deleteJobApplicationMutationField } from './mutations/deleteJobApplication';
 import { deleteResumeMutationField } from './mutations/deleteResume';
 import { JobApplicationOrderByInput } from './inputTypes';
 import { OrderByArg } from './enumTypes';
-import { upgradeUserMutationField } from './mutations/upgradeUser';
-import { updateCreditCardMutationField } from './mutations/updateCreditCard';
-import { verifyEmailMutationField } from './mutations/verifyEmail';
-import { requestVerifyEmailMutationField } from './mutations/requestVerifyEmail';
 import { createCompanyMutationField } from './mutations/createCompany';
 import { createResumeMutationField } from './mutations/createResume';
 import { updateCompanyMutationField } from './mutations/updateCompany';
@@ -82,8 +73,6 @@ export const schema = makeSchema({
     types: [
         // Object Types
         AwsFileData,
-        BillingInfo,
-        Card,
         Company,
         CompanyContact,
         GoogleMapsLocation,
@@ -92,7 +81,6 @@ export const schema = makeSchema({
         JobApplicationContact,
         JobApplicationResume,
         Resume,
-        StripeSubscription,
         Upload,
         User,
 
@@ -107,8 +95,6 @@ export const schema = makeSchema({
 
         // Mutations
         Mutation,
-        cancelSubscriptionMutationField,
-        checkSubscriptionPaymentHasSucceededMutationField,
         completeOnboardingMutationField,
         createCompanyMutationField,
         createJobApplicationMutationField,
@@ -120,15 +106,11 @@ export const schema = makeSchema({
         loginMutationField,
         logoutMutationField,
         requestPasswordResetMutationField,
-        requestVerifyEmailMutationField,
         resetPasswordMutationField,
         signupMutationField,
         updateCompanyMutationField,
-        updateCreditCardMutationField,
         updateJobApplicationMutationField,
         updateResumeMutationField,
-        upgradeUserMutationField,
-        verifyEmailMutationField,
     ],
     plugins: [
         nexusPrismaPlugin(),

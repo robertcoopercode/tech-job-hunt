@@ -236,17 +236,6 @@ export interface NexusGenInputs {
     connect?: NexusGenInputs['BillingInfoWhereUniqueInput'] | null; // BillingInfoWhereUniqueInput
     create?: NexusGenInputs['BillingInfoCreateWithoutUserInput'] | null; // BillingInfoCreateWithoutUserInput
   }
-  BillingInfoCreateWithoutCardInput: { // input type
-    billingFrequency?: NexusGenEnums['BillingFrequency'] | null; // BillingFrequency
-    endOfBillingPeriod?: number | null; // Int
-    id?: string | null; // String
-    isPremiumActive?: boolean | null; // Boolean
-    startOfBillingPeriod?: number | null; // Int
-    stripeCustomerId?: string | null; // String
-    stripeSubscriptionId?: string | null; // String
-    User?: NexusGenInputs['UserCreateManyWithoutBillingInput'] | null; // UserCreateManyWithoutBillingInput
-    willCancelAtEndOfPeriod?: boolean | null; // Boolean
-  }
   BillingInfoCreateWithoutUserInput: { // input type
     billingFrequency?: NexusGenEnums['BillingFrequency'] | null; // BillingFrequency
     Card?: NexusGenInputs['CardCreateOneWithoutBillingInfoInput'] | null; // CardCreateOneWithoutBillingInfoInput
@@ -263,46 +252,6 @@ export interface NexusGenInputs {
     none?: NexusGenInputs['BillingInfoWhereInput'] | null; // BillingInfoWhereInput
     some?: NexusGenInputs['BillingInfoWhereInput'] | null; // BillingInfoWhereInput
   }
-  BillingInfoScalarWhereInput: { // input type
-    AND?: NexusGenInputs['BillingInfoScalarWhereInput'][] | null; // [BillingInfoScalarWhereInput!]
-    billingFrequency?: NexusGenEnums['BillingFrequency'] | null; // BillingFrequency
-    card?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
-    endOfBillingPeriod?: NexusGenInputs['NullableIntFilter'] | null; // NullableIntFilter
-    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    isPremiumActive?: NexusGenInputs['BooleanFilter'] | null; // BooleanFilter
-    NOT?: NexusGenInputs['BillingInfoScalarWhereInput'][] | null; // [BillingInfoScalarWhereInput!]
-    OR?: NexusGenInputs['BillingInfoScalarWhereInput'][] | null; // [BillingInfoScalarWhereInput!]
-    startOfBillingPeriod?: NexusGenInputs['NullableIntFilter'] | null; // NullableIntFilter
-    stripeCustomerId?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
-    stripeSubscriptionId?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
-    User?: NexusGenInputs['UserFilter'] | null; // UserFilter
-    willCancelAtEndOfPeriod?: NexusGenInputs['BooleanFilter'] | null; // BooleanFilter
-  }
-  BillingInfoUpdateManyDataInput: { // input type
-    billingFrequency?: NexusGenEnums['BillingFrequency'] | null; // BillingFrequency
-    endOfBillingPeriod?: number | null; // Int
-    id?: string | null; // String
-    isPremiumActive?: boolean | null; // Boolean
-    startOfBillingPeriod?: number | null; // Int
-    stripeCustomerId?: string | null; // String
-    stripeSubscriptionId?: string | null; // String
-    willCancelAtEndOfPeriod?: boolean | null; // Boolean
-  }
-  BillingInfoUpdateManyWithWhereNestedInput: { // input type
-    data: NexusGenInputs['BillingInfoUpdateManyDataInput']; // BillingInfoUpdateManyDataInput!
-    where: NexusGenInputs['BillingInfoScalarWhereInput']; // BillingInfoScalarWhereInput!
-  }
-  BillingInfoUpdateManyWithoutCardInput: { // input type
-    connect?: NexusGenInputs['BillingInfoWhereUniqueInput'][] | null; // [BillingInfoWhereUniqueInput!]
-    create?: NexusGenInputs['BillingInfoCreateWithoutCardInput'][] | null; // [BillingInfoCreateWithoutCardInput!]
-    delete?: NexusGenInputs['BillingInfoWhereUniqueInput'][] | null; // [BillingInfoWhereUniqueInput!]
-    deleteMany?: NexusGenInputs['BillingInfoScalarWhereInput'][] | null; // [BillingInfoScalarWhereInput!]
-    disconnect?: NexusGenInputs['BillingInfoWhereUniqueInput'][] | null; // [BillingInfoWhereUniqueInput!]
-    set?: NexusGenInputs['BillingInfoWhereUniqueInput'][] | null; // [BillingInfoWhereUniqueInput!]
-    update?: NexusGenInputs['BillingInfoUpdateWithWhereUniqueWithoutCardInput'][] | null; // [BillingInfoUpdateWithWhereUniqueWithoutCardInput!]
-    updateMany?: NexusGenInputs['BillingInfoUpdateManyWithWhereNestedInput'][] | null; // [BillingInfoUpdateManyWithWhereNestedInput!]
-    upsert?: NexusGenInputs['BillingInfoUpsertWithWhereUniqueWithoutCardInput'][] | null; // [BillingInfoUpsertWithWhereUniqueWithoutCardInput!]
-  }
   BillingInfoUpdateOneWithoutUserInput: { // input type
     connect?: NexusGenInputs['BillingInfoWhereUniqueInput'] | null; // BillingInfoWhereUniqueInput
     create?: NexusGenInputs['BillingInfoCreateWithoutUserInput'] | null; // BillingInfoCreateWithoutUserInput
@@ -310,21 +259,6 @@ export interface NexusGenInputs {
     disconnect?: boolean | null; // Boolean
     update?: NexusGenInputs['BillingInfoUpdateWithoutUserDataInput'] | null; // BillingInfoUpdateWithoutUserDataInput
     upsert?: NexusGenInputs['BillingInfoUpsertWithoutUserInput'] | null; // BillingInfoUpsertWithoutUserInput
-  }
-  BillingInfoUpdateWithWhereUniqueWithoutCardInput: { // input type
-    data: NexusGenInputs['BillingInfoUpdateWithoutCardDataInput']; // BillingInfoUpdateWithoutCardDataInput!
-    where: NexusGenInputs['BillingInfoWhereUniqueInput']; // BillingInfoWhereUniqueInput!
-  }
-  BillingInfoUpdateWithoutCardDataInput: { // input type
-    billingFrequency?: NexusGenEnums['BillingFrequency'] | null; // BillingFrequency
-    endOfBillingPeriod?: number | null; // Int
-    id?: string | null; // String
-    isPremiumActive?: boolean | null; // Boolean
-    startOfBillingPeriod?: number | null; // Int
-    stripeCustomerId?: string | null; // String
-    stripeSubscriptionId?: string | null; // String
-    User?: NexusGenInputs['UserUpdateManyWithoutBillingInput'] | null; // UserUpdateManyWithoutBillingInput
-    willCancelAtEndOfPeriod?: boolean | null; // Boolean
   }
   BillingInfoUpdateWithoutUserDataInput: { // input type
     billingFrequency?: NexusGenEnums['BillingFrequency'] | null; // BillingFrequency
@@ -336,11 +270,6 @@ export interface NexusGenInputs {
     stripeCustomerId?: string | null; // String
     stripeSubscriptionId?: string | null; // String
     willCancelAtEndOfPeriod?: boolean | null; // Boolean
-  }
-  BillingInfoUpsertWithWhereUniqueWithoutCardInput: { // input type
-    create: NexusGenInputs['BillingInfoCreateWithoutCardInput']; // BillingInfoCreateWithoutCardInput!
-    update: NexusGenInputs['BillingInfoUpdateWithoutCardDataInput']; // BillingInfoUpdateWithoutCardDataInput!
-    where: NexusGenInputs['BillingInfoWhereUniqueInput']; // BillingInfoWhereUniqueInput!
   }
   BillingInfoUpsertWithoutUserInput: { // input type
     create: NexusGenInputs['BillingInfoCreateWithoutUserInput']; // BillingInfoCreateWithoutUserInput!
@@ -381,15 +310,6 @@ export interface NexusGenInputs {
     id?: string | null; // String
     last4Digits: string; // String!
     stripePaymentMethodId: string; // String!
-  }
-  CardUpdateInput: { // input type
-    BillingInfo?: NexusGenInputs['BillingInfoUpdateManyWithoutCardInput'] | null; // BillingInfoUpdateManyWithoutCardInput
-    brand?: string | null; // String
-    expMonth?: number | null; // Int
-    expYear?: number | null; // Int
-    id?: string | null; // String
-    last4Digits?: string | null; // String
-    stripePaymentMethodId?: string | null; // String
   }
   CardUpdateOneWithoutBillingInfoInput: { // input type
     connect?: NexusGenInputs['CardWhereUniqueInput'] | null; // CardWhereUniqueInput
@@ -1773,10 +1693,6 @@ export interface NexusGenInputs {
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
   }
-  UserCreateManyWithoutBillingInput: { // input type
-    connect?: NexusGenInputs['UserWhereUniqueInput'][] | null; // [UserWhereUniqueInput!]
-    create?: NexusGenInputs['UserCreateWithoutBillingInput'][] | null; // [UserCreateWithoutBillingInput!]
-  }
   UserCreateOneWithoutCompanyInput: { // input type
     connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
     create?: NexusGenInputs['UserCreateWithoutCompanyInput'] | null; // UserCreateWithoutCompanyInput
@@ -1788,20 +1704,6 @@ export interface NexusGenInputs {
   UserCreateOneWithoutResumeInput: { // input type
     connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
     create?: NexusGenInputs['UserCreateWithoutResumeInput'] | null; // UserCreateWithoutResumeInput
-  }
-  UserCreateWithoutBillingInput: { // input type
-    Company?: NexusGenInputs['CompanyCreateManyWithoutUserInput'] | null; // CompanyCreateManyWithoutUserInput
-    email: string; // String!
-    emailConfirmationToken?: string | null; // String
-    googleId?: string | null; // String
-    hasCompletedOnboarding?: boolean | null; // Boolean
-    hasVerifiedEmail?: boolean | null; // Boolean
-    id?: string | null; // String
-    JobApplication?: NexusGenInputs['JobApplicationCreateManyWithoutUserInput'] | null; // JobApplicationCreateManyWithoutUserInput
-    password?: string | null; // String
-    resetToken?: string | null; // String
-    resetTokenExpiry?: number | null; // Float
-    Resume?: NexusGenInputs['ResumeCreateManyWithoutUserInput'] | null; // ResumeCreateManyWithoutUserInput
   }
   UserCreateWithoutCompanyInput: { // input type
     Billing?: NexusGenInputs['BillingInfoCreateOneWithoutUserInput'] | null; // BillingInfoCreateOneWithoutUserInput
@@ -1850,50 +1752,6 @@ export interface NexusGenInputs {
     none?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     some?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
   }
-  UserScalarWhereInput: { // input type
-    AND?: NexusGenInputs['UserScalarWhereInput'][] | null; // [UserScalarWhereInput!]
-    billing?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
-    Company?: NexusGenInputs['CompanyFilter'] | null; // CompanyFilter
-    email?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    emailConfirmationToken?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
-    googleId?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
-    hasCompletedOnboarding?: NexusGenInputs['BooleanFilter'] | null; // BooleanFilter
-    hasVerifiedEmail?: NexusGenInputs['NullableBooleanFilter'] | null; // NullableBooleanFilter
-    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    JobApplication?: NexusGenInputs['JobApplicationFilter'] | null; // JobApplicationFilter
-    NOT?: NexusGenInputs['UserScalarWhereInput'][] | null; // [UserScalarWhereInput!]
-    OR?: NexusGenInputs['UserScalarWhereInput'][] | null; // [UserScalarWhereInput!]
-    password?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
-    resetToken?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
-    resetTokenExpiry?: NexusGenInputs['NullableFloatFilter'] | null; // NullableFloatFilter
-    Resume?: NexusGenInputs['ResumeFilter'] | null; // ResumeFilter
-  }
-  UserUpdateManyDataInput: { // input type
-    email?: string | null; // String
-    emailConfirmationToken?: string | null; // String
-    googleId?: string | null; // String
-    hasCompletedOnboarding?: boolean | null; // Boolean
-    hasVerifiedEmail?: boolean | null; // Boolean
-    id?: string | null; // String
-    password?: string | null; // String
-    resetToken?: string | null; // String
-    resetTokenExpiry?: number | null; // Float
-  }
-  UserUpdateManyWithWhereNestedInput: { // input type
-    data: NexusGenInputs['UserUpdateManyDataInput']; // UserUpdateManyDataInput!
-    where: NexusGenInputs['UserScalarWhereInput']; // UserScalarWhereInput!
-  }
-  UserUpdateManyWithoutBillingInput: { // input type
-    connect?: NexusGenInputs['UserWhereUniqueInput'][] | null; // [UserWhereUniqueInput!]
-    create?: NexusGenInputs['UserCreateWithoutBillingInput'][] | null; // [UserCreateWithoutBillingInput!]
-    delete?: NexusGenInputs['UserWhereUniqueInput'][] | null; // [UserWhereUniqueInput!]
-    deleteMany?: NexusGenInputs['UserScalarWhereInput'][] | null; // [UserScalarWhereInput!]
-    disconnect?: NexusGenInputs['UserWhereUniqueInput'][] | null; // [UserWhereUniqueInput!]
-    set?: NexusGenInputs['UserWhereUniqueInput'][] | null; // [UserWhereUniqueInput!]
-    update?: NexusGenInputs['UserUpdateWithWhereUniqueWithoutBillingInput'][] | null; // [UserUpdateWithWhereUniqueWithoutBillingInput!]
-    updateMany?: NexusGenInputs['UserUpdateManyWithWhereNestedInput'][] | null; // [UserUpdateManyWithWhereNestedInput!]
-    upsert?: NexusGenInputs['UserUpsertWithWhereUniqueWithoutBillingInput'][] | null; // [UserUpsertWithWhereUniqueWithoutBillingInput!]
-  }
   UserUpdateOneWithoutCompanyInput: { // input type
     connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
     create?: NexusGenInputs['UserCreateWithoutCompanyInput'] | null; // UserCreateWithoutCompanyInput
@@ -1917,24 +1775,6 @@ export interface NexusGenInputs {
     disconnect?: boolean | null; // Boolean
     update?: NexusGenInputs['UserUpdateWithoutResumeDataInput'] | null; // UserUpdateWithoutResumeDataInput
     upsert?: NexusGenInputs['UserUpsertWithoutResumeInput'] | null; // UserUpsertWithoutResumeInput
-  }
-  UserUpdateWithWhereUniqueWithoutBillingInput: { // input type
-    data: NexusGenInputs['UserUpdateWithoutBillingDataInput']; // UserUpdateWithoutBillingDataInput!
-    where: NexusGenInputs['UserWhereUniqueInput']; // UserWhereUniqueInput!
-  }
-  UserUpdateWithoutBillingDataInput: { // input type
-    Company?: NexusGenInputs['CompanyUpdateManyWithoutUserInput'] | null; // CompanyUpdateManyWithoutUserInput
-    email?: string | null; // String
-    emailConfirmationToken?: string | null; // String
-    googleId?: string | null; // String
-    hasCompletedOnboarding?: boolean | null; // Boolean
-    hasVerifiedEmail?: boolean | null; // Boolean
-    id?: string | null; // String
-    JobApplication?: NexusGenInputs['JobApplicationUpdateManyWithoutUserInput'] | null; // JobApplicationUpdateManyWithoutUserInput
-    password?: string | null; // String
-    resetToken?: string | null; // String
-    resetTokenExpiry?: number | null; // Float
-    Resume?: NexusGenInputs['ResumeUpdateManyWithoutUserInput'] | null; // ResumeUpdateManyWithoutUserInput
   }
   UserUpdateWithoutCompanyDataInput: { // input type
     Billing?: NexusGenInputs['BillingInfoUpdateOneWithoutUserInput'] | null; // BillingInfoUpdateOneWithoutUserInput
@@ -1977,11 +1817,6 @@ export interface NexusGenInputs {
     password?: string | null; // String
     resetToken?: string | null; // String
     resetTokenExpiry?: number | null; // Float
-  }
-  UserUpsertWithWhereUniqueWithoutBillingInput: { // input type
-    create: NexusGenInputs['UserCreateWithoutBillingInput']; // UserCreateWithoutBillingInput!
-    update: NexusGenInputs['UserUpdateWithoutBillingDataInput']; // UserUpdateWithoutBillingDataInput!
-    where: NexusGenInputs['UserWhereUniqueInput']; // UserWhereUniqueInput!
   }
   UserUpsertWithoutCompanyInput: { // input type
     create: NexusGenInputs['UserCreateWithoutCompanyInput']; // UserCreateWithoutCompanyInput!
@@ -2030,8 +1865,6 @@ export interface NexusGenEnums {
 
 export interface NexusGenRootTypes {
   AwsFileData: prisma.AwsFileData;
-  BillingInfo: prisma.BillingInfo;
-  Card: prisma.Card;
   Company: prisma.Company;
   CompanyContact: prisma.CompanyContact;
   CompanyEdge: { // root type
@@ -2075,10 +1908,6 @@ export interface NexusGenRootTypes {
     cursor: string; // String!
     node: NexusGenRootTypes['Resume']; // Resume!
   }
-  StripeSubscription: { // root type
-    clientSecret: string; // String!
-    status: string; // String!
-  }
   User: prisma.User;
   String: string;
   Int: number;
@@ -2113,25 +1942,16 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
   AwsFileDataWhereInput: NexusGenInputs['AwsFileDataWhereInput'];
   AwsFileDataWhereUniqueInput: NexusGenInputs['AwsFileDataWhereUniqueInput'];
   BillingInfoCreateOneWithoutUserInput: NexusGenInputs['BillingInfoCreateOneWithoutUserInput'];
-  BillingInfoCreateWithoutCardInput: NexusGenInputs['BillingInfoCreateWithoutCardInput'];
   BillingInfoCreateWithoutUserInput: NexusGenInputs['BillingInfoCreateWithoutUserInput'];
   BillingInfoFilter: NexusGenInputs['BillingInfoFilter'];
-  BillingInfoScalarWhereInput: NexusGenInputs['BillingInfoScalarWhereInput'];
-  BillingInfoUpdateManyDataInput: NexusGenInputs['BillingInfoUpdateManyDataInput'];
-  BillingInfoUpdateManyWithWhereNestedInput: NexusGenInputs['BillingInfoUpdateManyWithWhereNestedInput'];
-  BillingInfoUpdateManyWithoutCardInput: NexusGenInputs['BillingInfoUpdateManyWithoutCardInput'];
   BillingInfoUpdateOneWithoutUserInput: NexusGenInputs['BillingInfoUpdateOneWithoutUserInput'];
-  BillingInfoUpdateWithWhereUniqueWithoutCardInput: NexusGenInputs['BillingInfoUpdateWithWhereUniqueWithoutCardInput'];
-  BillingInfoUpdateWithoutCardDataInput: NexusGenInputs['BillingInfoUpdateWithoutCardDataInput'];
   BillingInfoUpdateWithoutUserDataInput: NexusGenInputs['BillingInfoUpdateWithoutUserDataInput'];
-  BillingInfoUpsertWithWhereUniqueWithoutCardInput: NexusGenInputs['BillingInfoUpsertWithWhereUniqueWithoutCardInput'];
   BillingInfoUpsertWithoutUserInput: NexusGenInputs['BillingInfoUpsertWithoutUserInput'];
   BillingInfoWhereInput: NexusGenInputs['BillingInfoWhereInput'];
   BillingInfoWhereUniqueInput: NexusGenInputs['BillingInfoWhereUniqueInput'];
   BooleanFilter: NexusGenInputs['BooleanFilter'];
   CardCreateOneWithoutBillingInfoInput: NexusGenInputs['CardCreateOneWithoutBillingInfoInput'];
   CardCreateWithoutBillingInfoInput: NexusGenInputs['CardCreateWithoutBillingInfoInput'];
-  CardUpdateInput: NexusGenInputs['CardUpdateInput'];
   CardUpdateOneWithoutBillingInfoInput: NexusGenInputs['CardUpdateOneWithoutBillingInfoInput'];
   CardUpdateWithoutBillingInfoDataInput: NexusGenInputs['CardUpdateWithoutBillingInfoDataInput'];
   CardUpsertWithoutBillingInfoInput: NexusGenInputs['CardUpsertWithoutBillingInfoInput'];
@@ -2297,28 +2117,19 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
   ResumeWhereInput: NexusGenInputs['ResumeWhereInput'];
   ResumeWhereUniqueInput: NexusGenInputs['ResumeWhereUniqueInput'];
   StringFilter: NexusGenInputs['StringFilter'];
-  UserCreateManyWithoutBillingInput: NexusGenInputs['UserCreateManyWithoutBillingInput'];
   UserCreateOneWithoutCompanyInput: NexusGenInputs['UserCreateOneWithoutCompanyInput'];
   UserCreateOneWithoutJobApplicationInput: NexusGenInputs['UserCreateOneWithoutJobApplicationInput'];
   UserCreateOneWithoutResumeInput: NexusGenInputs['UserCreateOneWithoutResumeInput'];
-  UserCreateWithoutBillingInput: NexusGenInputs['UserCreateWithoutBillingInput'];
   UserCreateWithoutCompanyInput: NexusGenInputs['UserCreateWithoutCompanyInput'];
   UserCreateWithoutJobApplicationInput: NexusGenInputs['UserCreateWithoutJobApplicationInput'];
   UserCreateWithoutResumeInput: NexusGenInputs['UserCreateWithoutResumeInput'];
   UserFilter: NexusGenInputs['UserFilter'];
-  UserScalarWhereInput: NexusGenInputs['UserScalarWhereInput'];
-  UserUpdateManyDataInput: NexusGenInputs['UserUpdateManyDataInput'];
-  UserUpdateManyWithWhereNestedInput: NexusGenInputs['UserUpdateManyWithWhereNestedInput'];
-  UserUpdateManyWithoutBillingInput: NexusGenInputs['UserUpdateManyWithoutBillingInput'];
   UserUpdateOneWithoutCompanyInput: NexusGenInputs['UserUpdateOneWithoutCompanyInput'];
   UserUpdateOneWithoutJobApplicationInput: NexusGenInputs['UserUpdateOneWithoutJobApplicationInput'];
   UserUpdateOneWithoutResumeInput: NexusGenInputs['UserUpdateOneWithoutResumeInput'];
-  UserUpdateWithWhereUniqueWithoutBillingInput: NexusGenInputs['UserUpdateWithWhereUniqueWithoutBillingInput'];
-  UserUpdateWithoutBillingDataInput: NexusGenInputs['UserUpdateWithoutBillingDataInput'];
   UserUpdateWithoutCompanyDataInput: NexusGenInputs['UserUpdateWithoutCompanyDataInput'];
   UserUpdateWithoutJobApplicationDataInput: NexusGenInputs['UserUpdateWithoutJobApplicationDataInput'];
   UserUpdateWithoutResumeDataInput: NexusGenInputs['UserUpdateWithoutResumeDataInput'];
-  UserUpsertWithWhereUniqueWithoutBillingInput: NexusGenInputs['UserUpsertWithWhereUniqueWithoutBillingInput'];
   UserUpsertWithoutCompanyInput: NexusGenInputs['UserUpsertWithoutCompanyInput'];
   UserUpsertWithoutJobApplicationInput: NexusGenInputs['UserUpsertWithoutJobApplicationInput'];
   UserUpsertWithoutResumeInput: NexusGenInputs['UserUpsertWithoutResumeInput'];
@@ -2344,26 +2155,6 @@ export interface NexusGenFieldTypes {
     Resume: NexusGenRootTypes['Resume'][]; // [Resume!]!
     s3Url: string; // String!
     VersionId: string; // String!
-  }
-  BillingInfo: { // field return type
-    billingFrequency: NexusGenEnums['BillingFrequency'] | null; // BillingFrequency
-    Card: NexusGenRootTypes['Card'] | null; // Card
-    endOfBillingPeriod: number | null; // Int
-    id: string; // String!
-    isPremiumActive: boolean; // Boolean!
-    startOfBillingPeriod: number | null; // Int
-    stripeCustomerId: string | null; // String
-    stripeSubscriptionId: string | null; // String
-    User: NexusGenRootTypes['User'][]; // [User!]!
-    willCancelAtEndOfPeriod: boolean; // Boolean!
-  }
-  Card: { // field return type
-    brand: string; // String!
-    expMonth: number; // Int!
-    expYear: number; // Int!
-    id: string; // String!
-    last4Digits: string; // String!
-    stripePaymentMethodId: string; // String!
   }
   Company: { // field return type
     Contacts: NexusGenRootTypes['CompanyContact'][]; // [CompanyContact!]!
@@ -2452,8 +2243,6 @@ export interface NexusGenFieldTypes {
     value: any; // DateTime!
   }
   Mutation: { // field return type
-    cancelSubscription: NexusGenRootTypes['User']; // User!
-    checkSubscriptionPaymentHasSucceeded: boolean; // Boolean!
     completeOnboarding: boolean; // Boolean!
     createCompany: NexusGenRootTypes['Company']; // Company!
     createJobApplication: NexusGenRootTypes['JobApplication']; // JobApplication!
@@ -2465,15 +2254,11 @@ export interface NexusGenFieldTypes {
     login: NexusGenRootTypes['User']; // User!
     logout: boolean; // Boolean!
     requestPasswordReset: boolean; // Boolean!
-    requestVerifyEmail: boolean; // Boolean!
     resetPassword: NexusGenRootTypes['User']; // User!
     signup: NexusGenRootTypes['User']; // User!
     updateCompany: NexusGenRootTypes['Company']; // Company!
-    updateCreditCard: NexusGenRootTypes['User']; // User!
     updateJobApplication: NexusGenRootTypes['JobApplication']; // JobApplication!
     updateResume: NexusGenRootTypes['Resume']; // Resume!
-    upgradeUser: NexusGenRootTypes['StripeSubscription']; // StripeSubscription!
-    verifyEmail: boolean; // Boolean!
   }
   PageInfo: { // field return type
     endCursor: string | null; // String
@@ -2521,12 +2306,7 @@ export interface NexusGenFieldTypes {
     cursor: string; // String!
     node: NexusGenRootTypes['Resume']; // Resume!
   }
-  StripeSubscription: { // field return type
-    clientSecret: string; // String!
-    status: string; // String!
-  }
   User: { // field return type
-    Billing: NexusGenRootTypes['BillingInfo'] | null; // BillingInfo
     Company: NexusGenRootTypes['Company'][]; // [Company!]!
     email: string; // String!
     hasCompletedOnboarding: boolean; // Boolean!
@@ -2556,15 +2336,6 @@ export interface NexusGenArgTypes {
     Resume: { // args
       after?: NexusGenInputs['ResumeWhereUniqueInput'] | null; // ResumeWhereUniqueInput
       before?: NexusGenInputs['ResumeWhereUniqueInput'] | null; // ResumeWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
-      skip?: number | null; // Int
-    }
-  }
-  BillingInfo: {
-    User: { // args
-      after?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
-      before?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       skip?: number | null; // Int
@@ -2673,9 +2444,6 @@ export interface NexusGenArgTypes {
       rating?: number | null; // Int
       website?: string | null; // String
     }
-    updateCreditCard: { // args
-      card: NexusGenInputs['CardUpdateInput']; // CardUpdateInput!
-    }
     updateJobApplication: { // args
       applicationStatus?: NexusGenEnums['ApplicationStatus'] | null; // ApplicationStatus
       companyId?: string | null; // ID
@@ -2703,15 +2471,6 @@ export interface NexusGenArgTypes {
       id: string; // ID!
       name?: string | null; // String
       newFileVersion?: any | null; // Upload
-    }
-    upgradeUser: { // args
-      card: NexusGenInputs['CardUpdateWithoutBillingInfoDataInput']; // CardUpdateWithoutBillingInfoDataInput!
-      email: string; // String!
-      paymentMethodId: string; // String!
-      planId: string; // String!
-    }
-    verifyEmail: { // args
-      emailToken?: string | null; // String
     }
   }
   Query: {
@@ -2795,9 +2554,9 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "AwsFileData" | "BillingInfo" | "Card" | "Company" | "CompanyContact" | "CompanyEdge" | "GoogleMapsLocation" | "JobApplication" | "JobApplicationContact" | "JobApplicationEdge" | "JobApplicationResume" | "JobApplication_dateInterviewing" | "Mutation" | "PageInfo" | "Query" | "QueryCompanies_Connection" | "QueryJobApplications_Connection" | "QueryResumes_Connection" | "Resume" | "ResumeEdge" | "StripeSubscription" | "User";
+export type NexusGenObjectNames = "AwsFileData" | "Company" | "CompanyContact" | "CompanyEdge" | "GoogleMapsLocation" | "JobApplication" | "JobApplicationContact" | "JobApplicationEdge" | "JobApplicationResume" | "JobApplication_dateInterviewing" | "Mutation" | "PageInfo" | "Query" | "QueryCompanies_Connection" | "QueryJobApplications_Connection" | "QueryResumes_Connection" | "Resume" | "ResumeEdge" | "User";
 
-export type NexusGenInputNames = "AwsFileDataCreateManyWithoutResumeInput" | "AwsFileDataCreateOneWithoutCompanyInput" | "AwsFileDataCreateOneWithoutJobApplicationInput" | "AwsFileDataCreateWithoutCompanyInput" | "AwsFileDataCreateWithoutJobApplicationInput" | "AwsFileDataCreateWithoutResumeInput" | "AwsFileDataFilter" | "AwsFileDataScalarWhereInput" | "AwsFileDataUpdateManyDataInput" | "AwsFileDataUpdateManyWithWhereNestedInput" | "AwsFileDataUpdateManyWithoutResumeInput" | "AwsFileDataUpdateOneWithoutCompanyInput" | "AwsFileDataUpdateOneWithoutJobApplicationInput" | "AwsFileDataUpdateWithWhereUniqueWithoutResumeInput" | "AwsFileDataUpdateWithoutCompanyDataInput" | "AwsFileDataUpdateWithoutJobApplicationDataInput" | "AwsFileDataUpdateWithoutResumeDataInput" | "AwsFileDataUpsertWithWhereUniqueWithoutResumeInput" | "AwsFileDataUpsertWithoutCompanyInput" | "AwsFileDataUpsertWithoutJobApplicationInput" | "AwsFileDataWhereInput" | "AwsFileDataWhereUniqueInput" | "BillingInfoCreateOneWithoutUserInput" | "BillingInfoCreateWithoutCardInput" | "BillingInfoCreateWithoutUserInput" | "BillingInfoFilter" | "BillingInfoScalarWhereInput" | "BillingInfoUpdateManyDataInput" | "BillingInfoUpdateManyWithWhereNestedInput" | "BillingInfoUpdateManyWithoutCardInput" | "BillingInfoUpdateOneWithoutUserInput" | "BillingInfoUpdateWithWhereUniqueWithoutCardInput" | "BillingInfoUpdateWithoutCardDataInput" | "BillingInfoUpdateWithoutUserDataInput" | "BillingInfoUpsertWithWhereUniqueWithoutCardInput" | "BillingInfoUpsertWithoutUserInput" | "BillingInfoWhereInput" | "BillingInfoWhereUniqueInput" | "BooleanFilter" | "CardCreateOneWithoutBillingInfoInput" | "CardCreateWithoutBillingInfoInput" | "CardUpdateInput" | "CardUpdateOneWithoutBillingInfoInput" | "CardUpdateWithoutBillingInfoDataInput" | "CardUpsertWithoutBillingInfoInput" | "CardWhereInput" | "CardWhereUniqueInput" | "CompanyContactCreateManyWithoutCompanyInput" | "CompanyContactCreateWithoutCompanyInput" | "CompanyContactFilter" | "CompanyContactScalarWhereInput" | "CompanyContactUpdateManyDataInput" | "CompanyContactUpdateManyWithWhereNestedInput" | "CompanyContactUpdateManyWithoutCompanyInput" | "CompanyContactUpdateWithWhereUniqueWithoutCompanyInput" | "CompanyContactUpdateWithoutCompanyDataInput" | "CompanyContactUpsertWithWhereUniqueWithoutCompanyInput" | "CompanyContactWhereInput" | "CompanyContactWhereUniqueInput" | "CompanyContactsOrderByInput" | "CompanyCreateManyWithoutImageInput" | "CompanyCreateManyWithoutUserInput" | "CompanyCreateOneWithoutJobApplicationInput" | "CompanyCreateWithoutImageInput" | "CompanyCreateWithoutJobApplicationInput" | "CompanyCreateWithoutUserInput" | "CompanyFilter" | "CompanyScalarWhereInput" | "CompanyUpdateManyDataInput" | "CompanyUpdateManyWithWhereNestedInput" | "CompanyUpdateManyWithoutImageInput" | "CompanyUpdateManyWithoutUserInput" | "CompanyUpdateOneWithoutJobApplicationInput" | "CompanyUpdateWithWhereUniqueWithoutImageInput" | "CompanyUpdateWithWhereUniqueWithoutUserInput" | "CompanyUpdateWithoutImageDataInput" | "CompanyUpdateWithoutJobApplicationDataInput" | "CompanyUpdateWithoutUserDataInput" | "CompanyUpsertWithWhereUniqueWithoutImageInput" | "CompanyUpsertWithWhereUniqueWithoutUserInput" | "CompanyUpsertWithoutJobApplicationInput" | "CompanyWhereInput" | "CompanyWhereUniqueInput" | "DateTimeFilter" | "GoogleMapsLocationCreateInput" | "GoogleMapsLocationCreateOneWithoutJobApplicationInput" | "GoogleMapsLocationCreateWithoutJobApplicationInput" | "GoogleMapsLocationUpdateInput" | "GoogleMapsLocationUpdateOneWithoutJobApplicationInput" | "GoogleMapsLocationUpdateWithoutJobApplicationDataInput" | "GoogleMapsLocationUpsertWithoutJobApplicationInput" | "GoogleMapsLocationWhereInput" | "GoogleMapsLocationWhereUniqueInput" | "IntFilter" | "JobApplicationContactCreateManyWithoutJobApplicationInput" | "JobApplicationContactCreateWithoutJobApplicationInput" | "JobApplicationContactFilter" | "JobApplicationContactScalarWhereInput" | "JobApplicationContactUpdateManyDataInput" | "JobApplicationContactUpdateManyWithWhereNestedInput" | "JobApplicationContactUpdateManyWithoutJobApplicationInput" | "JobApplicationContactUpdateWithWhereUniqueWithoutJobApplicationInput" | "JobApplicationContactUpdateWithoutJobApplicationDataInput" | "JobApplicationContactUpsertWithWhereUniqueWithoutJobApplicationInput" | "JobApplicationContactWhereInput" | "JobApplicationContactWhereUniqueInput" | "JobApplicationContactsOrderByInput" | "JobApplicationCreateInput" | "JobApplicationCreateManyWithoutCompanyInput" | "JobApplicationCreateManyWithoutCoverLetterFileInput" | "JobApplicationCreateManyWithoutLocationInput" | "JobApplicationCreateManyWithoutResumeInput" | "JobApplicationCreateManyWithoutUserInput" | "JobApplicationCreateWithoutCompanyInput" | "JobApplicationCreateWithoutCoverLetterFileInput" | "JobApplicationCreateWithoutLocationInput" | "JobApplicationCreateWithoutResumeInput" | "JobApplicationCreateWithoutUserInput" | "JobApplicationFilter" | "JobApplicationOrderByInput" | "JobApplicationResumeCreateManyWithoutResumeInput" | "JobApplicationResumeCreateOneWithoutJobApplicationInput" | "JobApplicationResumeCreateWithoutJobApplicationInput" | "JobApplicationResumeCreateWithoutResumeInput" | "JobApplicationResumeFilter" | "JobApplicationResumeScalarWhereInput" | "JobApplicationResumeUpdateManyDataInput" | "JobApplicationResumeUpdateManyWithWhereNestedInput" | "JobApplicationResumeUpdateManyWithoutResumeInput" | "JobApplicationResumeUpdateOneWithoutJobApplicationInput" | "JobApplicationResumeUpdateWithWhereUniqueWithoutResumeInput" | "JobApplicationResumeUpdateWithoutJobApplicationDataInput" | "JobApplicationResumeUpdateWithoutResumeDataInput" | "JobApplicationResumeUpsertWithWhereUniqueWithoutResumeInput" | "JobApplicationResumeUpsertWithoutJobApplicationInput" | "JobApplicationResumeWhereInput" | "JobApplicationResumeWhereUniqueInput" | "JobApplicationScalarWhereInput" | "JobApplicationUpdateManyDataInput" | "JobApplicationUpdateManyWithWhereNestedInput" | "JobApplicationUpdateManyWithoutCompanyInput" | "JobApplicationUpdateManyWithoutCoverLetterFileInput" | "JobApplicationUpdateManyWithoutLocationInput" | "JobApplicationUpdateManyWithoutResumeInput" | "JobApplicationUpdateManyWithoutUserInput" | "JobApplicationUpdateWithWhereUniqueWithoutCompanyInput" | "JobApplicationUpdateWithWhereUniqueWithoutCoverLetterFileInput" | "JobApplicationUpdateWithWhereUniqueWithoutLocationInput" | "JobApplicationUpdateWithWhereUniqueWithoutResumeInput" | "JobApplicationUpdateWithWhereUniqueWithoutUserInput" | "JobApplicationUpdateWithoutCompanyDataInput" | "JobApplicationUpdateWithoutCoverLetterFileDataInput" | "JobApplicationUpdateWithoutLocationDataInput" | "JobApplicationUpdateWithoutResumeDataInput" | "JobApplicationUpdateWithoutUserDataInput" | "JobApplicationUpsertWithWhereUniqueWithoutCompanyInput" | "JobApplicationUpsertWithWhereUniqueWithoutCoverLetterFileInput" | "JobApplicationUpsertWithWhereUniqueWithoutLocationInput" | "JobApplicationUpsertWithWhereUniqueWithoutResumeInput" | "JobApplicationUpsertWithWhereUniqueWithoutUserInput" | "JobApplicationWhereInput" | "JobApplicationWhereUniqueInput" | "JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput" | "JobApplication_dateInterviewingCreateWithoutJobApplicationInput" | "JobApplication_dateInterviewingFilter" | "JobApplication_dateInterviewingScalarWhereInput" | "JobApplication_dateInterviewingUpdateManyDataInput" | "JobApplication_dateInterviewingUpdateManyWithWhereNestedInput" | "JobApplication_dateInterviewingUpdateManyWithoutJobApplicationInput" | "JobApplication_dateInterviewingUpdateWithWhereUniqueWithoutJobApplicationInput" | "JobApplication_dateInterviewingUpdateWithoutJobApplicationDataInput" | "JobApplication_dateInterviewingUpsertWithWhereUniqueWithoutJobApplicationInput" | "JobApplication_dateInterviewingWhereInput" | "JobApplication_dateInterviewingWhereUniqueInput" | "NullableBooleanFilter" | "NullableDateTimeFilter" | "NullableFloatFilter" | "NullableIntFilter" | "NullableStringFilter" | "QueryCompaniesOrderByInput" | "QueryJobApplicationsOrderByInput" | "QueryResumesOrderByInput" | "ResumeCreateManyWithoutUserInput" | "ResumeCreateManyWithoutVersionsInput" | "ResumeCreateOneWithoutJobApplicationResumeInput" | "ResumeCreateWithoutJobApplicationResumeInput" | "ResumeCreateWithoutUserInput" | "ResumeCreateWithoutVersionsInput" | "ResumeFilter" | "ResumeScalarWhereInput" | "ResumeUpdateManyDataInput" | "ResumeUpdateManyWithWhereNestedInput" | "ResumeUpdateManyWithoutUserInput" | "ResumeUpdateManyWithoutVersionsInput" | "ResumeUpdateOneWithoutJobApplicationResumeInput" | "ResumeUpdateWithWhereUniqueWithoutUserInput" | "ResumeUpdateWithWhereUniqueWithoutVersionsInput" | "ResumeUpdateWithoutJobApplicationResumeDataInput" | "ResumeUpdateWithoutUserDataInput" | "ResumeUpdateWithoutVersionsDataInput" | "ResumeUpsertWithWhereUniqueWithoutUserInput" | "ResumeUpsertWithWhereUniqueWithoutVersionsInput" | "ResumeUpsertWithoutJobApplicationResumeInput" | "ResumeVersionsOrderByInput" | "ResumeWhereInput" | "ResumeWhereUniqueInput" | "StringFilter" | "UserCreateManyWithoutBillingInput" | "UserCreateOneWithoutCompanyInput" | "UserCreateOneWithoutJobApplicationInput" | "UserCreateOneWithoutResumeInput" | "UserCreateWithoutBillingInput" | "UserCreateWithoutCompanyInput" | "UserCreateWithoutJobApplicationInput" | "UserCreateWithoutResumeInput" | "UserFilter" | "UserScalarWhereInput" | "UserUpdateManyDataInput" | "UserUpdateManyWithWhereNestedInput" | "UserUpdateManyWithoutBillingInput" | "UserUpdateOneWithoutCompanyInput" | "UserUpdateOneWithoutJobApplicationInput" | "UserUpdateOneWithoutResumeInput" | "UserUpdateWithWhereUniqueWithoutBillingInput" | "UserUpdateWithoutBillingDataInput" | "UserUpdateWithoutCompanyDataInput" | "UserUpdateWithoutJobApplicationDataInput" | "UserUpdateWithoutResumeDataInput" | "UserUpsertWithWhereUniqueWithoutBillingInput" | "UserUpsertWithoutCompanyInput" | "UserUpsertWithoutJobApplicationInput" | "UserUpsertWithoutResumeInput" | "UserWhereInput" | "UserWhereUniqueInput";
+export type NexusGenInputNames = "AwsFileDataCreateManyWithoutResumeInput" | "AwsFileDataCreateOneWithoutCompanyInput" | "AwsFileDataCreateOneWithoutJobApplicationInput" | "AwsFileDataCreateWithoutCompanyInput" | "AwsFileDataCreateWithoutJobApplicationInput" | "AwsFileDataCreateWithoutResumeInput" | "AwsFileDataFilter" | "AwsFileDataScalarWhereInput" | "AwsFileDataUpdateManyDataInput" | "AwsFileDataUpdateManyWithWhereNestedInput" | "AwsFileDataUpdateManyWithoutResumeInput" | "AwsFileDataUpdateOneWithoutCompanyInput" | "AwsFileDataUpdateOneWithoutJobApplicationInput" | "AwsFileDataUpdateWithWhereUniqueWithoutResumeInput" | "AwsFileDataUpdateWithoutCompanyDataInput" | "AwsFileDataUpdateWithoutJobApplicationDataInput" | "AwsFileDataUpdateWithoutResumeDataInput" | "AwsFileDataUpsertWithWhereUniqueWithoutResumeInput" | "AwsFileDataUpsertWithoutCompanyInput" | "AwsFileDataUpsertWithoutJobApplicationInput" | "AwsFileDataWhereInput" | "AwsFileDataWhereUniqueInput" | "BillingInfoCreateOneWithoutUserInput" | "BillingInfoCreateWithoutUserInput" | "BillingInfoFilter" | "BillingInfoUpdateOneWithoutUserInput" | "BillingInfoUpdateWithoutUserDataInput" | "BillingInfoUpsertWithoutUserInput" | "BillingInfoWhereInput" | "BillingInfoWhereUniqueInput" | "BooleanFilter" | "CardCreateOneWithoutBillingInfoInput" | "CardCreateWithoutBillingInfoInput" | "CardUpdateOneWithoutBillingInfoInput" | "CardUpdateWithoutBillingInfoDataInput" | "CardUpsertWithoutBillingInfoInput" | "CardWhereInput" | "CardWhereUniqueInput" | "CompanyContactCreateManyWithoutCompanyInput" | "CompanyContactCreateWithoutCompanyInput" | "CompanyContactFilter" | "CompanyContactScalarWhereInput" | "CompanyContactUpdateManyDataInput" | "CompanyContactUpdateManyWithWhereNestedInput" | "CompanyContactUpdateManyWithoutCompanyInput" | "CompanyContactUpdateWithWhereUniqueWithoutCompanyInput" | "CompanyContactUpdateWithoutCompanyDataInput" | "CompanyContactUpsertWithWhereUniqueWithoutCompanyInput" | "CompanyContactWhereInput" | "CompanyContactWhereUniqueInput" | "CompanyContactsOrderByInput" | "CompanyCreateManyWithoutImageInput" | "CompanyCreateManyWithoutUserInput" | "CompanyCreateOneWithoutJobApplicationInput" | "CompanyCreateWithoutImageInput" | "CompanyCreateWithoutJobApplicationInput" | "CompanyCreateWithoutUserInput" | "CompanyFilter" | "CompanyScalarWhereInput" | "CompanyUpdateManyDataInput" | "CompanyUpdateManyWithWhereNestedInput" | "CompanyUpdateManyWithoutImageInput" | "CompanyUpdateManyWithoutUserInput" | "CompanyUpdateOneWithoutJobApplicationInput" | "CompanyUpdateWithWhereUniqueWithoutImageInput" | "CompanyUpdateWithWhereUniqueWithoutUserInput" | "CompanyUpdateWithoutImageDataInput" | "CompanyUpdateWithoutJobApplicationDataInput" | "CompanyUpdateWithoutUserDataInput" | "CompanyUpsertWithWhereUniqueWithoutImageInput" | "CompanyUpsertWithWhereUniqueWithoutUserInput" | "CompanyUpsertWithoutJobApplicationInput" | "CompanyWhereInput" | "CompanyWhereUniqueInput" | "DateTimeFilter" | "GoogleMapsLocationCreateInput" | "GoogleMapsLocationCreateOneWithoutJobApplicationInput" | "GoogleMapsLocationCreateWithoutJobApplicationInput" | "GoogleMapsLocationUpdateInput" | "GoogleMapsLocationUpdateOneWithoutJobApplicationInput" | "GoogleMapsLocationUpdateWithoutJobApplicationDataInput" | "GoogleMapsLocationUpsertWithoutJobApplicationInput" | "GoogleMapsLocationWhereInput" | "GoogleMapsLocationWhereUniqueInput" | "IntFilter" | "JobApplicationContactCreateManyWithoutJobApplicationInput" | "JobApplicationContactCreateWithoutJobApplicationInput" | "JobApplicationContactFilter" | "JobApplicationContactScalarWhereInput" | "JobApplicationContactUpdateManyDataInput" | "JobApplicationContactUpdateManyWithWhereNestedInput" | "JobApplicationContactUpdateManyWithoutJobApplicationInput" | "JobApplicationContactUpdateWithWhereUniqueWithoutJobApplicationInput" | "JobApplicationContactUpdateWithoutJobApplicationDataInput" | "JobApplicationContactUpsertWithWhereUniqueWithoutJobApplicationInput" | "JobApplicationContactWhereInput" | "JobApplicationContactWhereUniqueInput" | "JobApplicationContactsOrderByInput" | "JobApplicationCreateInput" | "JobApplicationCreateManyWithoutCompanyInput" | "JobApplicationCreateManyWithoutCoverLetterFileInput" | "JobApplicationCreateManyWithoutLocationInput" | "JobApplicationCreateManyWithoutResumeInput" | "JobApplicationCreateManyWithoutUserInput" | "JobApplicationCreateWithoutCompanyInput" | "JobApplicationCreateWithoutCoverLetterFileInput" | "JobApplicationCreateWithoutLocationInput" | "JobApplicationCreateWithoutResumeInput" | "JobApplicationCreateWithoutUserInput" | "JobApplicationFilter" | "JobApplicationOrderByInput" | "JobApplicationResumeCreateManyWithoutResumeInput" | "JobApplicationResumeCreateOneWithoutJobApplicationInput" | "JobApplicationResumeCreateWithoutJobApplicationInput" | "JobApplicationResumeCreateWithoutResumeInput" | "JobApplicationResumeFilter" | "JobApplicationResumeScalarWhereInput" | "JobApplicationResumeUpdateManyDataInput" | "JobApplicationResumeUpdateManyWithWhereNestedInput" | "JobApplicationResumeUpdateManyWithoutResumeInput" | "JobApplicationResumeUpdateOneWithoutJobApplicationInput" | "JobApplicationResumeUpdateWithWhereUniqueWithoutResumeInput" | "JobApplicationResumeUpdateWithoutJobApplicationDataInput" | "JobApplicationResumeUpdateWithoutResumeDataInput" | "JobApplicationResumeUpsertWithWhereUniqueWithoutResumeInput" | "JobApplicationResumeUpsertWithoutJobApplicationInput" | "JobApplicationResumeWhereInput" | "JobApplicationResumeWhereUniqueInput" | "JobApplicationScalarWhereInput" | "JobApplicationUpdateManyDataInput" | "JobApplicationUpdateManyWithWhereNestedInput" | "JobApplicationUpdateManyWithoutCompanyInput" | "JobApplicationUpdateManyWithoutCoverLetterFileInput" | "JobApplicationUpdateManyWithoutLocationInput" | "JobApplicationUpdateManyWithoutResumeInput" | "JobApplicationUpdateManyWithoutUserInput" | "JobApplicationUpdateWithWhereUniqueWithoutCompanyInput" | "JobApplicationUpdateWithWhereUniqueWithoutCoverLetterFileInput" | "JobApplicationUpdateWithWhereUniqueWithoutLocationInput" | "JobApplicationUpdateWithWhereUniqueWithoutResumeInput" | "JobApplicationUpdateWithWhereUniqueWithoutUserInput" | "JobApplicationUpdateWithoutCompanyDataInput" | "JobApplicationUpdateWithoutCoverLetterFileDataInput" | "JobApplicationUpdateWithoutLocationDataInput" | "JobApplicationUpdateWithoutResumeDataInput" | "JobApplicationUpdateWithoutUserDataInput" | "JobApplicationUpsertWithWhereUniqueWithoutCompanyInput" | "JobApplicationUpsertWithWhereUniqueWithoutCoverLetterFileInput" | "JobApplicationUpsertWithWhereUniqueWithoutLocationInput" | "JobApplicationUpsertWithWhereUniqueWithoutResumeInput" | "JobApplicationUpsertWithWhereUniqueWithoutUserInput" | "JobApplicationWhereInput" | "JobApplicationWhereUniqueInput" | "JobApplication_dateInterviewingCreateManyWithoutJobApplicationInput" | "JobApplication_dateInterviewingCreateWithoutJobApplicationInput" | "JobApplication_dateInterviewingFilter" | "JobApplication_dateInterviewingScalarWhereInput" | "JobApplication_dateInterviewingUpdateManyDataInput" | "JobApplication_dateInterviewingUpdateManyWithWhereNestedInput" | "JobApplication_dateInterviewingUpdateManyWithoutJobApplicationInput" | "JobApplication_dateInterviewingUpdateWithWhereUniqueWithoutJobApplicationInput" | "JobApplication_dateInterviewingUpdateWithoutJobApplicationDataInput" | "JobApplication_dateInterviewingUpsertWithWhereUniqueWithoutJobApplicationInput" | "JobApplication_dateInterviewingWhereInput" | "JobApplication_dateInterviewingWhereUniqueInput" | "NullableBooleanFilter" | "NullableDateTimeFilter" | "NullableFloatFilter" | "NullableIntFilter" | "NullableStringFilter" | "QueryCompaniesOrderByInput" | "QueryJobApplicationsOrderByInput" | "QueryResumesOrderByInput" | "ResumeCreateManyWithoutUserInput" | "ResumeCreateManyWithoutVersionsInput" | "ResumeCreateOneWithoutJobApplicationResumeInput" | "ResumeCreateWithoutJobApplicationResumeInput" | "ResumeCreateWithoutUserInput" | "ResumeCreateWithoutVersionsInput" | "ResumeFilter" | "ResumeScalarWhereInput" | "ResumeUpdateManyDataInput" | "ResumeUpdateManyWithWhereNestedInput" | "ResumeUpdateManyWithoutUserInput" | "ResumeUpdateManyWithoutVersionsInput" | "ResumeUpdateOneWithoutJobApplicationResumeInput" | "ResumeUpdateWithWhereUniqueWithoutUserInput" | "ResumeUpdateWithWhereUniqueWithoutVersionsInput" | "ResumeUpdateWithoutJobApplicationResumeDataInput" | "ResumeUpdateWithoutUserDataInput" | "ResumeUpdateWithoutVersionsDataInput" | "ResumeUpsertWithWhereUniqueWithoutUserInput" | "ResumeUpsertWithWhereUniqueWithoutVersionsInput" | "ResumeUpsertWithoutJobApplicationResumeInput" | "ResumeVersionsOrderByInput" | "ResumeWhereInput" | "ResumeWhereUniqueInput" | "StringFilter" | "UserCreateOneWithoutCompanyInput" | "UserCreateOneWithoutJobApplicationInput" | "UserCreateOneWithoutResumeInput" | "UserCreateWithoutCompanyInput" | "UserCreateWithoutJobApplicationInput" | "UserCreateWithoutResumeInput" | "UserFilter" | "UserUpdateOneWithoutCompanyInput" | "UserUpdateOneWithoutJobApplicationInput" | "UserUpdateOneWithoutResumeInput" | "UserUpdateWithoutCompanyDataInput" | "UserUpdateWithoutJobApplicationDataInput" | "UserUpdateWithoutResumeDataInput" | "UserUpsertWithoutCompanyInput" | "UserUpsertWithoutJobApplicationInput" | "UserUpsertWithoutResumeInput" | "UserWhereInput" | "UserWhereUniqueInput";
 
 export type NexusGenEnumNames = "ApplicationStatus" | "BillingFrequency" | "JobDecision" | "OrderByArg";
 
