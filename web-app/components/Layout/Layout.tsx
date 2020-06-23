@@ -28,20 +28,14 @@ import {
     Link as ChakraLink,
     IconButton,
     ModalOverlay,
-    AlertIcon,
-    Alert,
-    CloseButton,
-    useToast,
 } from '@robertcooper/chakra-ui-core';
 import Logo from '../Logo/Logo';
 import { mediaQueries, styled, customTheme } from '../../utils/styles/theme';
 import logoPng from '../../assets/icons/logo.png';
 import Tooltip from '../Tooltip/Tooltip';
 import SettingsModal from '../SettingsModal/SettingsModal';
-import { logoutMutation, requestVerifyEmailMutation } from '../../graphql/mutations';
+import { logoutMutation } from '../../graphql/mutations';
 import { LogoutMutation } from '../../graphql/generated/LogoutMutation';
-import { CurrentUserQuery } from '../../graphql/generated/CurrentUserQuery';
-import { RequestVerifyEmailMutation } from '../../graphql/generated/RequestVerifyEmailMutation';
 
 const SkipToContent = styled(ChakraLink)<{ linkPosition: 'start' | 'end' }>`
     clip: rect(1px, 1px, 1px, 1px);
@@ -303,37 +297,11 @@ const MenuItems: React.FC<{ pathname: Router['pathname']; menuItems: MenuItem[];
     );
 };
 
-type Props = {
-    user: CurrentUserQuery['me'];
-};
+type Props = {};
 
-const Layout: React.FC<Props> = ({ children, user }) => {
+const Layout: React.FC<Props> = ({ children }) => {
     const client = useApolloClient();
-    const toast = useToast();
     const [showMenu, setShowMenu] = useState(false);
-    const [isShowingEmailVerificationWarning, setIsShowingEmailVerificationWarning] = useState(true);
-    const [requestVerifyEmail] = useMutation<RequestVerifyEmailMutation>(requestVerifyEmailMutation, {
-        onCompleted: () => {
-            toast({
-                title: 'Email sent',
-                description: `Click the link in your email to verify your email`,
-                status: 'success',
-                duration: 5000,
-                isClosable: true,
-                position: 'top',
-            });
-        },
-        onError: () => {
-            toast({
-                title: 'Error',
-                description: `Unable to send verification email`,
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-                position: 'top',
-            });
-        },
-    });
     const { isOpen: isOpenSettings, onClose: onCloseSettings, onOpen: onOpenSettings } = useDisclosure();
     const [isOpen, setIsOpen] = useState(false);
     const onClose = (): void => setIsOpen(false);
@@ -483,38 +451,7 @@ const Layout: React.FC<Props> = ({ children, user }) => {
                 </AlertDialogContent>
             </AlertDialog>
             <SettingsModal isOpen={isOpenSettings} onClose={onCloseSettings} />
-            <Main id="main-content">
-                {user?.hasVerifiedEmail === false && isShowingEmailVerificationWarning && (
-                    <Alert status="warning" mb={6}>
-                        <AlertIcon />
-                        <Text marginY={0}>
-                            {`Your account email is not verified. Please click the verification link in your email to verify
-                        your email. `}
-                            <Button
-                                ml={1}
-                                mr={1}
-                                height="auto"
-                                fontWeight={600}
-                                fontSize="inherit"
-                                variant="unstyled"
-                                onClick={(): void => {
-                                    requestVerifyEmail();
-                                }}
-                            >
-                                Click here
-                            </Button>{' '}
-                            to resend verification email.
-                        </Text>
-                        <CloseButton
-                            onClick={(): void => setIsShowingEmailVerificationWarning(false)}
-                            position="absolute"
-                            right="8px"
-                            top="6px"
-                        />
-                    </Alert>
-                )}
-                {children}
-            </Main>
+            <Main id="main-content">{children}</Main>
             <SkipToContent tabIndex={0} href="#skip-to-content" linkPosition="end">
                 Go back to start
             </SkipToContent>

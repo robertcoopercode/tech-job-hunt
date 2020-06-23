@@ -258,18 +258,6 @@ export interface BillingInfoCreateOneWithoutUserInput {
   create?: BillingInfoCreateWithoutUserInput | null;
 }
 
-export interface BillingInfoCreateWithoutCardInput {
-  billingFrequency?: BillingFrequency | null;
-  endOfBillingPeriod?: number | null;
-  id?: string | null;
-  isPremiumActive?: boolean | null;
-  startOfBillingPeriod?: number | null;
-  stripeCustomerId?: string | null;
-  stripeSubscriptionId?: string | null;
-  User?: UserCreateManyWithoutBillingInput | null;
-  willCancelAtEndOfPeriod?: boolean | null;
-}
-
 export interface BillingInfoCreateWithoutUserInput {
   billingFrequency?: BillingFrequency | null;
   Card?: CardCreateOneWithoutBillingInfoInput | null;
@@ -288,50 +276,6 @@ export interface BillingInfoFilter {
   some?: BillingInfoWhereInput | null;
 }
 
-export interface BillingInfoScalarWhereInput {
-  AND?: BillingInfoScalarWhereInput[] | null;
-  billingFrequency?: BillingFrequency | null;
-  card?: NullableStringFilter | null;
-  endOfBillingPeriod?: NullableIntFilter | null;
-  id?: StringFilter | null;
-  isPremiumActive?: BooleanFilter | null;
-  NOT?: BillingInfoScalarWhereInput[] | null;
-  OR?: BillingInfoScalarWhereInput[] | null;
-  startOfBillingPeriod?: NullableIntFilter | null;
-  stripeCustomerId?: NullableStringFilter | null;
-  stripeSubscriptionId?: NullableStringFilter | null;
-  User?: UserFilter | null;
-  willCancelAtEndOfPeriod?: BooleanFilter | null;
-}
-
-export interface BillingInfoUpdateManyDataInput {
-  billingFrequency?: BillingFrequency | null;
-  endOfBillingPeriod?: number | null;
-  id?: string | null;
-  isPremiumActive?: boolean | null;
-  startOfBillingPeriod?: number | null;
-  stripeCustomerId?: string | null;
-  stripeSubscriptionId?: string | null;
-  willCancelAtEndOfPeriod?: boolean | null;
-}
-
-export interface BillingInfoUpdateManyWithWhereNestedInput {
-  data: BillingInfoUpdateManyDataInput;
-  where: BillingInfoScalarWhereInput;
-}
-
-export interface BillingInfoUpdateManyWithoutCardInput {
-  connect?: BillingInfoWhereUniqueInput[] | null;
-  create?: BillingInfoCreateWithoutCardInput[] | null;
-  delete?: BillingInfoWhereUniqueInput[] | null;
-  deleteMany?: BillingInfoScalarWhereInput[] | null;
-  disconnect?: BillingInfoWhereUniqueInput[] | null;
-  set?: BillingInfoWhereUniqueInput[] | null;
-  update?: BillingInfoUpdateWithWhereUniqueWithoutCardInput[] | null;
-  updateMany?: BillingInfoUpdateManyWithWhereNestedInput[] | null;
-  upsert?: BillingInfoUpsertWithWhereUniqueWithoutCardInput[] | null;
-}
-
 export interface BillingInfoUpdateOneWithoutUserInput {
   connect?: BillingInfoWhereUniqueInput | null;
   create?: BillingInfoCreateWithoutUserInput | null;
@@ -339,23 +283,6 @@ export interface BillingInfoUpdateOneWithoutUserInput {
   disconnect?: boolean | null;
   update?: BillingInfoUpdateWithoutUserDataInput | null;
   upsert?: BillingInfoUpsertWithoutUserInput | null;
-}
-
-export interface BillingInfoUpdateWithWhereUniqueWithoutCardInput {
-  data: BillingInfoUpdateWithoutCardDataInput;
-  where: BillingInfoWhereUniqueInput;
-}
-
-export interface BillingInfoUpdateWithoutCardDataInput {
-  billingFrequency?: BillingFrequency | null;
-  endOfBillingPeriod?: number | null;
-  id?: string | null;
-  isPremiumActive?: boolean | null;
-  startOfBillingPeriod?: number | null;
-  stripeCustomerId?: string | null;
-  stripeSubscriptionId?: string | null;
-  User?: UserUpdateManyWithoutBillingInput | null;
-  willCancelAtEndOfPeriod?: boolean | null;
 }
 
 export interface BillingInfoUpdateWithoutUserDataInput {
@@ -368,12 +295,6 @@ export interface BillingInfoUpdateWithoutUserDataInput {
   stripeCustomerId?: string | null;
   stripeSubscriptionId?: string | null;
   willCancelAtEndOfPeriod?: boolean | null;
-}
-
-export interface BillingInfoUpsertWithWhereUniqueWithoutCardInput {
-  create: BillingInfoCreateWithoutCardInput;
-  update: BillingInfoUpdateWithoutCardDataInput;
-  where: BillingInfoWhereUniqueInput;
 }
 
 export interface BillingInfoUpsertWithoutUserInput {
@@ -420,16 +341,6 @@ export interface CardCreateWithoutBillingInfoInput {
   id?: string | null;
   last4Digits: string;
   stripePaymentMethodId: string;
-}
-
-export interface CardUpdateInput {
-  BillingInfo?: BillingInfoUpdateManyWithoutCardInput | null;
-  brand?: string | null;
-  expMonth?: number | null;
-  expYear?: number | null;
-  id?: string | null;
-  last4Digits?: string | null;
-  stripePaymentMethodId?: string | null;
 }
 
 export interface CardUpdateOneWithoutBillingInfoInput {
@@ -1920,11 +1831,6 @@ export interface StringFilter {
   startsWith?: string | null;
 }
 
-export interface UserCreateManyWithoutBillingInput {
-  connect?: UserWhereUniqueInput[] | null;
-  create?: UserCreateWithoutBillingInput[] | null;
-}
-
 export interface UserCreateOneWithoutCompanyInput {
   connect?: UserWhereUniqueInput | null;
   create?: UserCreateWithoutCompanyInput | null;
@@ -1938,21 +1844,6 @@ export interface UserCreateOneWithoutJobApplicationInput {
 export interface UserCreateOneWithoutResumeInput {
   connect?: UserWhereUniqueInput | null;
   create?: UserCreateWithoutResumeInput | null;
-}
-
-export interface UserCreateWithoutBillingInput {
-  Company?: CompanyCreateManyWithoutUserInput | null;
-  email: string;
-  emailConfirmationToken?: string | null;
-  googleId?: string | null;
-  hasCompletedOnboarding?: boolean | null;
-  hasVerifiedEmail?: boolean | null;
-  id?: string | null;
-  JobApplication?: JobApplicationCreateManyWithoutUserInput | null;
-  password?: string | null;
-  resetToken?: string | null;
-  resetTokenExpiry?: number | null;
-  Resume?: ResumeCreateManyWithoutUserInput | null;
 }
 
 export interface UserCreateWithoutCompanyInput {
@@ -2006,54 +1897,6 @@ export interface UserFilter {
   some?: UserWhereInput | null;
 }
 
-export interface UserScalarWhereInput {
-  AND?: UserScalarWhereInput[] | null;
-  billing?: NullableStringFilter | null;
-  Company?: CompanyFilter | null;
-  email?: StringFilter | null;
-  emailConfirmationToken?: NullableStringFilter | null;
-  googleId?: NullableStringFilter | null;
-  hasCompletedOnboarding?: BooleanFilter | null;
-  hasVerifiedEmail?: NullableBooleanFilter | null;
-  id?: StringFilter | null;
-  JobApplication?: JobApplicationFilter | null;
-  NOT?: UserScalarWhereInput[] | null;
-  OR?: UserScalarWhereInput[] | null;
-  password?: NullableStringFilter | null;
-  resetToken?: NullableStringFilter | null;
-  resetTokenExpiry?: NullableFloatFilter | null;
-  Resume?: ResumeFilter | null;
-}
-
-export interface UserUpdateManyDataInput {
-  email?: string | null;
-  emailConfirmationToken?: string | null;
-  googleId?: string | null;
-  hasCompletedOnboarding?: boolean | null;
-  hasVerifiedEmail?: boolean | null;
-  id?: string | null;
-  password?: string | null;
-  resetToken?: string | null;
-  resetTokenExpiry?: number | null;
-}
-
-export interface UserUpdateManyWithWhereNestedInput {
-  data: UserUpdateManyDataInput;
-  where: UserScalarWhereInput;
-}
-
-export interface UserUpdateManyWithoutBillingInput {
-  connect?: UserWhereUniqueInput[] | null;
-  create?: UserCreateWithoutBillingInput[] | null;
-  delete?: UserWhereUniqueInput[] | null;
-  deleteMany?: UserScalarWhereInput[] | null;
-  disconnect?: UserWhereUniqueInput[] | null;
-  set?: UserWhereUniqueInput[] | null;
-  update?: UserUpdateWithWhereUniqueWithoutBillingInput[] | null;
-  updateMany?: UserUpdateManyWithWhereNestedInput[] | null;
-  upsert?: UserUpsertWithWhereUniqueWithoutBillingInput[] | null;
-}
-
 export interface UserUpdateOneWithoutCompanyInput {
   connect?: UserWhereUniqueInput | null;
   create?: UserCreateWithoutCompanyInput | null;
@@ -2079,26 +1922,6 @@ export interface UserUpdateOneWithoutResumeInput {
   disconnect?: boolean | null;
   update?: UserUpdateWithoutResumeDataInput | null;
   upsert?: UserUpsertWithoutResumeInput | null;
-}
-
-export interface UserUpdateWithWhereUniqueWithoutBillingInput {
-  data: UserUpdateWithoutBillingDataInput;
-  where: UserWhereUniqueInput;
-}
-
-export interface UserUpdateWithoutBillingDataInput {
-  Company?: CompanyUpdateManyWithoutUserInput | null;
-  email?: string | null;
-  emailConfirmationToken?: string | null;
-  googleId?: string | null;
-  hasCompletedOnboarding?: boolean | null;
-  hasVerifiedEmail?: boolean | null;
-  id?: string | null;
-  JobApplication?: JobApplicationUpdateManyWithoutUserInput | null;
-  password?: string | null;
-  resetToken?: string | null;
-  resetTokenExpiry?: number | null;
-  Resume?: ResumeUpdateManyWithoutUserInput | null;
 }
 
 export interface UserUpdateWithoutCompanyDataInput {
@@ -2144,12 +1967,6 @@ export interface UserUpdateWithoutResumeDataInput {
   password?: string | null;
   resetToken?: string | null;
   resetTokenExpiry?: number | null;
-}
-
-export interface UserUpsertWithWhereUniqueWithoutBillingInput {
-  create: UserCreateWithoutBillingInput;
-  update: UserUpdateWithoutBillingDataInput;
-  where: UserWhereUniqueInput;
 }
 
 export interface UserUpsertWithoutCompanyInput {

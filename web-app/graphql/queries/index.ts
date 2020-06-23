@@ -4,20 +4,6 @@ export const currentUserQuery = gql`
     query CurrentUserQuery {
         me {
             id
-            Billing {
-                billingFrequency
-                isPremiumActive
-                startOfBillingPeriod
-                endOfBillingPeriod
-                willCancelAtEndOfPeriod
-                stripeCustomerId
-                Card {
-                    brand
-                    last4Digits
-                    expMonth
-                    expYear
-                }
-            }
             email
             hasVerifiedEmail
             hasCompletedOnboarding

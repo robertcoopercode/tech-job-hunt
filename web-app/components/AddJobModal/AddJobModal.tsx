@@ -3,26 +3,13 @@ import { useMutation, useQuery, useApolloClient, useLazyQuery } from '@apollo/re
 import styled from '@emotion/styled';
 import { Formik, Form, FormikConfig, useFormikContext } from 'formik';
 import * as Yup from 'yup';
-import {
-    useToast,
-    ModalBody,
-    ModalFooter,
-    Alert,
-    AlertIcon,
-    AlertTitle,
-    AlertDescription,
-} from '@robertcooper/chakra-ui-core';
+import { useToast, ModalBody, ModalFooter } from '@robertcooper/chakra-ui-core';
 import debounce from 'lodash.debounce';
 import { useRouter } from 'next/router';
 import Modal from '../Modal/Modal';
 import InputField from '../InputField/InputField';
 import ChakraButton from '../ChakraButton/ChakraButton';
-import {
-    suggestedCompaniesQuery,
-    currentUserQuery,
-    jobApplicationsCountQuery,
-    companyQuery,
-} from '../../graphql/queries';
+import { suggestedCompaniesQuery, companyQuery } from '../../graphql/queries';
 import { customTheme } from '../../utils/styles/theme';
 import { getError } from '../../utils/getError';
 import { createJobApplicationMutation } from '../../graphql/mutations';
@@ -36,9 +23,7 @@ import { DropdownSearchOption } from '../ViewJobModal/ViewJobModal';
 import ToggleWithLabel from '../Toggle/ToggleWithLabel';
 import { useGooglePlacesService } from '../../utils/hooks/useGooglePlacesService';
 import { useModalQuery } from '../../utils/hooks/useModalQuery';
-import { QueryParamKeys, freeTierJobLimit } from '../../utils/constants';
-import { CurrentUserQuery } from '../../graphql/generated/CurrentUserQuery';
-import { JobApplicationsCountQuery } from '../../graphql/generated/JobApplicationsCountQuery';
+import { QueryParamKeys } from '../../utils/constants';
 import { CompanyQuery, CompanyQueryVariables } from '../../graphql/generated/CompanyQuery';
 
 interface Props {
@@ -108,7 +93,6 @@ const AddJobModalContents: React.FC<Props> = ({ onClose, isOpen }) => {
         isValid,
         setFieldTouched,
     } = useFormikContext<FormSchema>();
-    const { data: currentUserData } = useQuery<CurrentUserQuery>(currentUserQuery);
     const { onOpen: onOpenAddCompany } = useModalQuery(QueryParamKeys.ADD_COMPANY);
     const router = useRouter();
     const selectedCompanyQuery = router.query[QueryParamKeys.SELECTED_COMPANY_ID] as string | undefined;
@@ -128,8 +112,6 @@ const AddJobModalContents: React.FC<Props> = ({ onClose, isOpen }) => {
         location,
         setLocation,
     ] = useGooglePlacesService();
-
-    const { data: jobApplicationsCount } = useQuery<JobApplicationsCountQuery>(jobApplicationsCountQuery);
 
     const {
         data: suggestedCompanies,
@@ -165,23 +147,10 @@ const AddJobModalContents: React.FC<Props> = ({ onClose, isOpen }) => {
     const companyOptions: DropdownSearchOption[] =
         suggestedCompanies?.companies.nodes.map((company): DropdownSearchOption => convertToOption(company)) ?? [];
 
-    const isFreeUser = !currentUserData?.me?.Billing?.isPremiumActive;
-    const hasReachedFreeTierLimit =
-        isFreeUser &&
-        jobApplicationsCount?.jobApplications.totalCount !== undefined &&
-        jobApplicationsCount?.jobApplications.totalCount >= freeTierJobLimit;
-
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Add job" size="md">
             <>
                 <ModalBody>
-                    {hasReachedFreeTierLimit && (
-                        <Alert status="error" mb={8}>
-                            <AlertIcon />
-                            <AlertTitle mr={2}>Jobs limit reached!</AlertTitle>
-                            <AlertDescription>Upgrade to premium.</AlertDescription>
-                        </Alert>
-                    )}
                     <Form id="add-job-form">
                         <FormWrapper>
                             <DropdownSearchField
@@ -252,12 +221,7 @@ const AddJobModalContents: React.FC<Props> = ({ onClose, isOpen }) => {
                     </Form>
                 </ModalBody>
                 <ModalFooter d="flex" flexDirection="column" alignItems="flex-end">
-                    <ChakraButton
-                        form="add-job-form"
-                        type="submit"
-                        isLoading={isSubmitting}
-                        isDisabled={!isValid || hasReachedFreeTierLimit}
-                    >
+                    <ChakraButton form="add-job-form" type="submit" isLoading={isSubmitting} isDisabled={!isValid}>
                         Save
                     </ChakraButton>
                 </ModalFooter>

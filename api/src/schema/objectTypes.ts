@@ -19,7 +19,6 @@ export const User = objectType({
         t.model.id();
         t.model.email();
         t.model.hasCompletedOnboarding();
-        t.model.Billing();
         t.model.Company();
         t.model.JobApplication();
         t.model.Resume();
@@ -148,42 +147,5 @@ export const CompanyContact = objectType({
         t.model.order();
         t.model.phone();
         t.model.position();
-    },
-});
-
-export const BillingInfo = objectType({
-    name: 'BillingInfo',
-    definition(t) {
-        t.model.billingFrequency();
-        t.model.Card();
-        t.model.endOfBillingPeriod();
-        t.model.id();
-        t.model.isPremiumActive();
-        t.model.startOfBillingPeriod();
-        t.model.stripeCustomerId();
-        t.model.stripeSubscriptionId();
-        t.model.willCancelAtEndOfPeriod();
-        t.model.Card();
-        t.model.User();
-    },
-});
-
-export const Card = objectType({
-    name: 'Card',
-    definition(t) {
-        t.model.id();
-        t.model.brand();
-        t.model.expMonth();
-        t.model.expYear();
-        t.model.last4Digits();
-        t.model.stripePaymentMethodId();
-    },
-});
-
-export const StripeSubscription = objectType({
-    name: 'StripeSubscription',
-    definition(t) {
-        t.string('status');
-        t.string('clientSecret');
     },
 });

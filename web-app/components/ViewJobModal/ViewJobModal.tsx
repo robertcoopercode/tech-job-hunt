@@ -1,10 +1,6 @@
 import { useApolloClient, useMutation, useQuery, useLazyQuery } from '@apollo/react-hooks';
 import styled from '@emotion/styled';
 import {
-    Alert,
-    AlertDescription,
-    AlertIcon,
-    AlertTitle,
     Box,
     Button,
     IconButton,
@@ -22,27 +18,20 @@ import React, { ChangeEvent, useCallback, useState, useEffect } from 'react';
 import { MdRemoveCircle } from 'react-icons/md';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
-import { CurrentUserQuery } from '../../graphql/generated/CurrentUserQuery';
 import {
     DeleteJobApplicationMutation,
     DeleteJobApplicationMutationVariables,
 } from '../../graphql/generated/DeleteJobApplicationMutation';
 import { ApplicationStatus, JobDecision } from '../../graphql/generated/graphql-global-types';
 import { JobApplicationQuery, JobApplicationQuery_jobApplication } from '../../graphql/generated/JobApplicationQuery';
-import { JobApplicationsCountQuery } from '../../graphql/generated/JobApplicationsCountQuery';
 import { SuggestedCompanies } from '../../graphql/generated/SuggestedCompanies';
 import {
     UpdateJobApplicationMutation,
     UpdateJobApplicationMutationVariables,
 } from '../../graphql/generated/UpdateJobApplicationMutation';
 import { deleteJobApplicationMutation, updateJobApplicationMutation } from '../../graphql/mutations';
-import {
-    currentUserQuery,
-    jobApplicationsCountQuery,
-    suggestedCompaniesQuery,
-    companyQuery,
-} from '../../graphql/queries';
-import { freeTierJobLimit, QueryParamKeys } from '../../utils/constants';
+import { suggestedCompaniesQuery, companyQuery } from '../../graphql/queries';
+import { QueryParamKeys } from '../../utils/constants';
 import { createNewContact } from '../../utils/createNewContact';
 import { formateDateForInput as formatDateForInput } from '../../utils/formatDate';
 import { getError } from '../../utils/getError';
@@ -284,10 +273,6 @@ const ViewJobModalContents: React.FC<
         onClose: onCloseUnsavedChanges,
     } = useDisclosure();
 
-    const { data: jobApplicationsCount, loading: loadingJobApplicationsCount } = useQuery<JobApplicationsCountQuery>(
-        jobApplicationsCountQuery
-    );
-
     const [getCompany] = useLazyQuery<CompanyQuery, CompanyQueryVariables>(companyQuery, {
         onCompleted: (data) => {
             if (data.company !== null) {
@@ -295,8 +280,6 @@ const ViewJobModalContents: React.FC<
             }
         },
     });
-    const { data: currentUserData, loading: currentUserLoading } = useQuery<CurrentUserQuery>(currentUserQuery);
-
     const [isLoadingCompanySearchResults, setIsLoadingCompanySearchResults] = useState(false);
     const [companySearchQuery, setCompanySearchQuery] = useState('');
 
@@ -380,29 +363,16 @@ const ViewJobModalContents: React.FC<
         }
     };
 
-    const isFreeUser = !currentUserData?.me?.Billing?.isPremiumActive;
-    const hasReachedFreeTierLimit =
-        isFreeUser &&
-        jobApplicationsCount?.jobApplications.totalCount !== undefined &&
-        jobApplicationsCount?.jobApplications.totalCount > freeTierJobLimit;
-
     return (
         <>
             <Modal isOpen={isOpen} onClose={(): void => handleClose(dirty)} title={`Job details`}>
-                {currentUserLoading || loadingJobApplicationsCount || !jobApplication ? (
+                {!jobApplication ? (
                     <ModalBody paddingY={24}>
                         <Loader />
                     </ModalBody>
                 ) : (
                     <>
                         <ModalBody paddingY={4}>
-                            {hasReachedFreeTierLimit && (
-                                <Alert status="error" mb={8}>
-                                    <AlertIcon />
-                                    <AlertTitle mr={2}>Jobs limit reached!</AlertTitle>
-                                    <AlertDescription>Upgrade to premium in order to update.</AlertDescription>
-                                </Alert>
-                            )}
                             <StyledForm as={Form} id="update-job-form">
                                 <BasicInfoSection
                                     setFieldValue={setFieldValue}
