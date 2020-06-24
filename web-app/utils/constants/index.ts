@@ -37,5 +37,3 @@ export enum pageSizes {
 }
 
 export const defaultNumberOfTableRows = parseInt(pageSizes.level2, 10);
-
-export const freeTierJobLimit = 10;
